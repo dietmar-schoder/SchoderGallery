@@ -1,0 +1,118 @@
+﻿@page "/"
+@using SchoderGallery.Builders
+@using SchoderGallery.Constants
+@inject NavigationManager Nav
+@inject IFacadeBuilder FacadeBuilder
+@inject IJSRuntime JS
+
+<PageTitle>Schoder Gallery</PageTitle>
+
+<div>
+    @((MarkupString)SvgContent)
+</div>
+
+@code {
+    private string SvgContent = "";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var size = await JS.InvokeAsync<ScreenSize>("getScreenSize");
+
+            SvgContent = FacadeBuilder.GetSvg(size.Width, size.Height);
+
+            StateHasChanged();
+        }
+    }
+}
+
+
+@* <svg width="@svgWidth" height="@svgHeight">
+    <rect x="0" y="0" width="@svgWidth" height="@svgHeight" fill="lightgray" stroke="black" stroke-width="2" />
+
+    @for (int row = 0; row < floors; row++)
+    {
+        @for (int col = 0; col < columns; col++)
+        {
+            int x = margin + col * (windowWidth + spacing);
+            int y = margin + row * (windowHeight + spacing);
+
+            if (row == 0) // Top row with letters
+            {
+                int posX = x + windowWidth / 2;
+                int topY = y + windowHeight / 2 - 15;
+                int bottomY = y + windowHeight / 2 + 37;
+
+                <g>
+                    <text x="@posX" y="@topY"
+                          text-anchor="middle" font-size="@(windowHeight * 0.3)"
+                          font-family="sans-serif" fill="#636363">
+                        @letters1[col]
+                    </text>
+                    <text x="@posX" y="@bottomY"
+                          text-anchor="middle" font-size="@(windowHeight * 0.3)"
+                          font-family="sans-serif" fill="#636363">
+                        @letters2[col]
+                    </text>
+                </g>
+            }
+            else if (row == floors - 1 && col == columns / 2) // Entrance
+            {
+                int doorX = margin + (columns / 2 - 1) * (windowWidth + spacing);
+                int doorWidth = 3 * windowWidth + 2 * spacing;
+                double doorHeight = windowHeight + margin - 0.5;
+
+                <g style="cursor:pointer;" @onclick="GoToGroundFloor">
+                    <rect x="@doorX" y="@y" width="@doorWidth" height="@doorHeight"
+                        fill="#C6C6C6" stroke="black" stroke-width="1" />
+                    <text x="@(doorX + doorWidth / 2)" y="@(y + (windowHeight + margin)/2 - 12)"
+                          text-anchor="middle" dominant-baseline="middle"
+                          font-size="@(windowHeight * 0.15)" font-family="sans-serif"
+                          fill="#636363" letter-spacing="8">
+                        ENTRANCE
+                    </text>
+                </g>
+            }
+            else if (row == floors - 1 && (col == columns / 2 - 1 || col == columns / 2 + 1)) // Adjacent to entrance
+            {
+            }
+            else // Regular window
+            {
+                <rect x="@x" y="@y" width="@windowWidth" height="@windowHeight"
+                      fill="white" stroke="black" stroke-width="1" />
+                @for (int pc = 1; pc < 3; pc++)
+                {
+                    <line x1="@(x + pc * windowWidth / 3)" y1="@y"
+                          x2="@(x + pc * windowWidth / 3)" y2="@(y + windowHeight)"
+                          stroke="gray" stroke-width="1" />
+                }
+                @for (int pr = 1; pr < 5; pr++)
+                {
+                    <line x1="@x" y1="@(y + pr * windowHeight / 5)"
+                          x2="@(x + windowWidth)" y2="@(y + pr * windowHeight / 5)"
+                          stroke="gray" stroke-width="1" />
+                }
+            }
+        }
+    }
+</svg>
+
+@code {
+    private int floors = 7;
+    private int columns = 7;
+    private int windowWidth = 54;
+    private int windowHeight = 95;
+    private int spacing = 27;
+    private int margin = 27;
+    private int svgWidth => margin * 2 + columns * (windowWidth + spacing) - spacing;
+    private int svgHeight => margin * 2 + floors * (windowHeight + spacing) - spacing;
+    private string letters1 = "SCHODER";
+    private string letters2 = "GALLERY";
+
+    private void GoToGroundFloor()
+    {
+        Nav.NavigateTo("/GroundFloor");
+    }
+}
+ *@
