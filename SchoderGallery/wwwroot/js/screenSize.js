@@ -1,6 +1,6 @@
 ﻿window.getScreenSize = () => {
     return {
-        width: window.innerWidth,
-        height: window.innerHeight
+        width: document.documentElement.clientWidth,
+        height: document.documentElement.clientHeight
     };
 };
