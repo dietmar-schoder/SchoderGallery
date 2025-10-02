@@ -3,6 +3,8 @@
 public interface IConstants
 {
     ScreenMode ScreenMode { get; }
+    int ScreenMargin => 2;
+    int RowsColumns => 7;
 
     string White => "#FFFFFF";
     string LightGray => "#C0C3C3";
@@ -10,10 +12,6 @@ public interface IConstants
     string DarkGray => "#404343";
     string Black => "#000303";
 
-    int NumberOfFloors { get; }
-    int NumberOfWindowsPerFloor { get; }
-
-    double GapToColumnWidthRatio { get; }
-    double WindowMarginToGapRatio { get; }
-    double WindowHeightToWidthRatio { get; }
+    double GapToRowColumnWidthRatio => .3;
+    double WindowMarginToGapRatio => .5;
 }

@@ -12,17 +12,17 @@ public abstract class BaseBuilder(IConstantsFactory constantsFactory) : IFacadeB
 {
     private StringBuilder _svg;
 
+    protected IConstants _constants;
     protected int _width;
     protected int _height;
-    protected IConstants _constants;
 
     protected ScreenMode ScreenMode => _width > _height ? ScreenMode.Landscape : ScreenMode.Portrait;
 
-    public string GetSvg(int width, int height)
+    public string GetSvg(int screenWidth, int screenHeight)
     {
-        _width = width;
-        _height = height;
         _constants = constantsFactory.GetConstants(ScreenMode);
+        _width = screenWidth - _constants.ScreenMargin * 2;
+        _height = screenHeight - _constants.ScreenMargin * 2;
         _svg = new StringBuilder();
         Draw();
         return $"<svg width='{_width}' height='{_height}'>{_svg}</svg>";
