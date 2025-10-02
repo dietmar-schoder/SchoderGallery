@@ -17,6 +17,6 @@ window.initResizeHandler = (dotNetObject) => {
                 height: document.documentElement.clientHeight
             };
             dotNetObject.invokeMethodAsync('OnResize', size);
-        }, 20);
+        }, 1);
     });
 };

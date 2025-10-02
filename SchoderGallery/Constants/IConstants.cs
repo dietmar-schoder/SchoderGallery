@@ -5,13 +5,15 @@ public interface IConstants
     ScreenMode ScreenMode { get; }
     int ScreenMargin => 2;
     int RowsColumns => 7;
+    int NbrOfHorizontalWindowSections { get; }
+    int NbrOfVerticalWindowSections { get; }
 
     string White => "#FFFFFF";
     string LightGray => "#C0C3C3";
-    string MediumGray => "#808484";
+    string Gray => "#808484";
     string DarkGray => "#404343";
     string Black => "#000303";
 
     double GapToRowColumnWidthRatio => .3;
-    double WindowMarginToGapRatio => .5;
+    double WindowMarginToGapRatio => 1;
 }
