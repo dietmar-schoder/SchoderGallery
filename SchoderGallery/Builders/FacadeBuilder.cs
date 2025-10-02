@@ -1,56 +1,36 @@
 ﻿using SchoderGallery.Constants;
-using System.Text;
 
 namespace SchoderGallery.Builders;
 
-public interface IFacadeBuilder
+public class FacadeBuilder(IConstantsFactory constantsFactory)
+    : BaseBuilder(constantsFactory), IFacadeBuilder
 {
-    string GetSvg(int width, int height);
-}
-
-public class FacadeBuilder(IConstantsFactory constantsFactory) : IFacadeBuilder
-{
-    public string GetSvg(int width, int height)
-    {
-        var screenMode = width > height ? ScreenMode.Landscape : ScreenMode.Portrait;
-        var constants = constantsFactory.GetConstants(screenMode);
-        return $"<svg width='{width - 8}' height='{height - 8}'>{DrawBuilding(constants, width - 8, height - 8)}</svg>";
-    }
-
-    private static string DrawBuilding(IConstants constants, int totalWidth, int totalHeight)
+    protected override void Draw()
     {
         int x = 0;
         int y = 0;
-        var svg = new StringBuilder();
 
-        int columns = constants.NumberOfWindowsPerFloor;
+        int columns = _constants.NumberOfWindowsPerFloor;
+        int gap = (int)(_width / _constants.NumberOfWindowsPerFloor * _constants.GapToColumnWidthRatio);
+        int margin = (int)(gap * _constants.WindowMarginToGapRatio);
 
-        int gap = (int)(totalWidth / constants.NumberOfWindowsPerFloor * constants.GapToColumnWidthRatio);
-        int margin = (int)(gap * constants.WindowMarginToGapRatio);
-
-        int availableWidthForWindows = totalWidth - (2 * margin) - ((columns - 1) * gap);
+        int availableWidthForWindows = _width - (2 * margin) - ((columns - 1) * gap);
         int windowWidth = availableWidthForWindows / columns;
         int remainder = availableWidthForWindows - (windowWidth * columns);
         int rightOuterBorder = Math.Max(2, remainder);
 
-        int buildingWidth = totalWidth - (x + rightOuterBorder);
-        int buildingHeight = totalHeight;
+        _width -= rightOuterBorder;
 
-        int windowHeight = (int)(windowWidth * constants.WindowHeightToWidthRatio);
+        int windowHeight = (int)(windowWidth * _constants.WindowHeightToWidthRatio);
 
         int windowY = y + margin;
 
-        svg.Append(
-            $"<rect x='{x}' y='{y}' width='{buildingWidth}' height='{buildingHeight}' " +
-            $"fill='none' stroke='black' stroke-width='1' />"
-        );
-        
+        Svg($"<rect x='0' y='0' width='{_width}' height='{_height}' fill='{_constants.LightGray}' stroke='none' />");
+
         for (int i = 0; i < columns; i++)
         {
             int posX = x + margin + i * (windowWidth + gap);
-            svg.Append($"<rect x='{posX}' y='{windowY}' width='{windowWidth}' height='{windowHeight}' fill='blue' />");
+            Svg($"<rect x='{posX}' y='{windowY}' width='{windowWidth}' height='{windowHeight}' fill='blue' />");
         }
-
-        return svg.ToString();
     }
 }
