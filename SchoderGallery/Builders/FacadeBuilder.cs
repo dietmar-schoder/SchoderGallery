@@ -2,10 +2,7 @@
 
 namespace SchoderGallery.Builders;
 
-public interface IFacadeBuilder : IBuilder
-{
-    string GetSvg(int width, int height);
-}
+public interface IFacadeBuilder : IBuilder { }
 
 public class FacadeBuilder(IConstantsFactory constantsFactory)
     : BaseBuilder(constantsFactory), IBuilder, IFacadeBuilder

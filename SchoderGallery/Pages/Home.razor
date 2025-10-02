@@ -1,47 +1,8 @@
 ﻿@page "/"
 @using SchoderGallery.Builders
-@using SchoderGallery.Constants
-@inject NavigationManager Nav
+@using SchoderGallery.Components
 @inject IFacadeBuilder FacadeBuilder
-@inject IJSRuntime JS
 
 <PageTitle>Schoder Gallery</PageTitle>
 
-<div style="width:100vw; height:100vh; display:flex; justify-content:center; align-items:center;">
-    <svg width="@FacadeBuilder.SvgWidth" height="@FacadeBuilder.SvgHeight">
-        @((MarkupString)SvgContent)
-
-        @foreach (var area in FacadeBuilder.ClickableAreas)
-        {
-            <rect x="@area.X" y="@area.Y" width="@area.Width" height="@area.Height"
-                  fill="transparent" stroke="none"
-                  style="cursor:pointer;"
-                  @onclick="() => Nav.NavigateTo(area.Page)">
-            </rect>
-        }
-    </svg>
-</div>
-
-@code {
-    private string SvgContent = string.Empty;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            var size = await JS.InvokeAsync<ScreenSize>("getScreenSize");
-
-            SvgContent = FacadeBuilder.GetSvg(size.Width, size.Height);
-            StateHasChanged();
-
-            await JS.InvokeVoidAsync("initResizeHandler", DotNetObjectReference.Create(this));
-        }
-    }
-
-    [JSInvokable]
-    public async Task OnResize(ScreenSize size)
-    {
-        SvgContent = FacadeBuilder.GetSvg(size.Width, size.Height);
-        await InvokeAsync(StateHasChanged);
-    }
-}
+<BuildingRenderer TBuilder="IFacadeBuilder" Builder="FacadeBuilder" />

@@ -1,8 +1,12 @@
-﻿window.getScreenSize = () => {
+﻿function createScreenSize() {
     return {
         width: document.documentElement.clientWidth,
         height: document.documentElement.clientHeight
     };
+}
+
+window.getScreenSize = () => {
+    return createScreenSize();
 };
 
 window.initResizeHandler = (dotNetObject) => {
@@ -12,11 +16,7 @@ window.initResizeHandler = (dotNetObject) => {
         clearTimeout(resizeTimeout);
 
         resizeTimeout = setTimeout(() => {
-            const size = {
-                width: document.documentElement.clientWidth,
-                height: document.documentElement.clientHeight
-            };
-            dotNetObject.invokeMethodAsync('OnResize', size);
+            dotNetObject.invokeMethodAsync('OnResize', createScreenSize());
         }, 1);
     });
 };

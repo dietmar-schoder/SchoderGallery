@@ -1,0 +1,44 @@
+﻿@using SchoderGallery.Builders
+@using SchoderGallery.Constants
+@typeparam TBuilder where TBuilder : IBuilder
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<div style="width:100vw; height:100vh; display:flex; justify-content:center; align-items:center;">
+    <svg width="@Builder.SvgWidth" height="@Builder.SvgHeight">
+        @((MarkupString)SvgContent)
+
+        @foreach (var area in Builder.ClickableAreas)
+        {
+            <rect x="@area.X" y="@area.Y" width="@area.Width" height="@area.Height"
+                  fill="transparent" stroke="none"
+                  style="cursor:pointer;"
+                  @onclick="() => Nav.NavigateTo(area.Page)">
+            </rect>
+        }
+    </svg>
+</div>
+
+@code {
+    [Parameter] public TBuilder Builder { get; set; } = default!;
+    private string SvgContent = string.Empty;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var size = await JS.InvokeAsync<ScreenSize>("getScreenSize");
+            SvgContent = Builder.GetSvgContent(size.Width, size.Height);
+            StateHasChanged();
+
+            await JS.InvokeVoidAsync("initResizeHandler", DotNetObjectReference.Create(this));
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnResize(ScreenSize size)
+    {
+        SvgContent = Builder.GetSvgContent(size.Width, size.Height);
+        await InvokeAsync(StateHasChanged);
+    }
+}

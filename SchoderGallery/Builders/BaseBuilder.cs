@@ -5,6 +5,7 @@ namespace SchoderGallery.Builders;
 
 public interface IBuilder
 {
+    string GetSvgContent(int screenWidth, int screenHeight);
     int SvgWidth { get; set; }
     int SvgHeight { get; set; }
     List<ClickableArea> ClickableAreas { get; }
@@ -35,7 +36,7 @@ public abstract class BaseBuilder(IConstantsFactory constantsFactory) : IBuilder
     public int SvgHeight { get; set; }
     public List<ClickableArea> ClickableAreas { get; } = [];
 
-    public string GetSvg(int screenWidth, int screenHeight)
+    public string GetSvgContent(int screenWidth, int screenHeight)
     {
         _constants = constantsFactory.GetConstants(ScreenMode);
         SvgWidth = Math.Max(240, screenWidth - _constants.ScreenMargin * 2);
