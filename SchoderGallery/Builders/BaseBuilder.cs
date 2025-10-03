@@ -3,20 +3,11 @@ using System.Text;
 
 namespace SchoderGallery.Builders;
 
-public interface IBuilder
+public abstract class BaseBuilder(SettingsFactory settingsFactory) : IBuilder
 {
-    string GetSvgContent(int screenWidth, int screenHeight);
-    int SvgWidth { get; set; }
-    int SvgHeight { get; set; }
-    List<ClickableArea> ClickableAreas { get; }
-}
-
-public abstract class BaseBuilder(ISettingsFactory constantsFactory) : IBuilder
-{
-    private StringBuilder _svg;
-
-    protected Random _rand = new();
-    protected ISettings _constants;
+    protected StringBuilder _svg;
+    protected Random _random = new();
+    protected ISettings _settings;
 
     protected int _rowsColumns;
     protected int _gap;
@@ -32,26 +23,27 @@ public abstract class BaseBuilder(ISettingsFactory constantsFactory) : IBuilder
     protected int ShortSize => ScreenMode == ScreenMode.Portrait ? SvgWidth : SvgHeight;
     protected int ShortWindowSize => ScreenMode == ScreenMode.Portrait ? _windowWidth : _windowHeight;
 
+    public abstract BuilderType Type { get; }
     public int SvgWidth { get; set; }
     public int SvgHeight { get; set; }
     public List<ClickableArea> ClickableAreas { get; } = [];
 
     public string GetSvgContent(int screenWidth, int screenHeight)
     {
-        _constants = constantsFactory.GetConstants(screenWidth, screenHeight);
-        SvgWidth = Math.Max(240, screenWidth - _constants.ScreenMargin * 2);
-        SvgHeight = Math.Max(240, screenHeight - _constants.ScreenMargin * 2);
+        _settings = settingsFactory.GetSettings(screenWidth, screenHeight);
+        SvgWidth = Math.Max(240, screenWidth - _settings.ScreenMargin * 2);
+        SvgHeight = Math.Max(240, screenHeight - _settings.ScreenMargin * 2);
         _svg = new StringBuilder();
-        _rowsColumns = _constants.RowsColumns;
+        _rowsColumns = _settings.RowsColumns;
 
-        _gap = (int)(ShortSize / _rowsColumns * _constants.GapToRowColumnWidthRatio);
-        _margin = (int)(_gap * _constants.WindowMarginToGapRatio);
+        _gap = (int)(ShortSize / _rowsColumns * _settings.GapToRowColumnWidthRatio);
+        _margin = (int)(_gap * _settings.WindowMarginToGapRatio);
         int totalGapSpace = _gap * (_rowsColumns - 1) + 2 * _margin;
         _windowWidth = WindowWidth(totalGapSpace);
         _windowHeight = WindowHeight(totalGapSpace);
 
-        _windowGlassColumns = _constants.NbrOfHorizontalWindowSections;
-        _windowGlassRows = _constants.NbrOfVerticalWindowSections;
+        _windowGlassColumns = _settings.NbrOfHorizontalWindowSections;
+        _windowGlassRows = _settings.NbrOfVerticalWindowSections;
         _windowGlassColumnWidth = (int)Math.Round((double)(_windowWidth - 1) / _windowGlassColumns);
         _windowGlassRowHeight = (int)Math.Round((double)(_windowHeight - 1) / _windowGlassRows);
         Draw();
@@ -64,8 +56,8 @@ public abstract class BaseBuilder(ISettingsFactory constantsFactory) : IBuilder
 
     protected string SkyColour()
     {
-        int gray = _rand.Next(245, 256);
-        int blue = Math.Min(255, gray + _rand.Next(0, 256 - gray));
+        int gray = _random.Next(245, 256);
+        int blue = Math.Min(255, gray + _random.Next(0, 256 - gray));
         return $"#{gray:X2}{gray:X2}{blue:X2}";
     }
 

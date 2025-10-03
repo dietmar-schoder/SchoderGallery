@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using SchoderGallery;
+using SchoderGallery.Algorithms;
 using SchoderGallery.Builders;
 using SchoderGallery.Settings;
 
@@ -10,10 +11,13 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-builder.Services.AddScoped<ISettingsFactory, SettingsFactory>();
+builder.Services.AddSingleton<ColourGenerator>();
+
+builder.Services.AddScoped<SettingsFactory>();
 builder.Services.AddScoped<ISettings, PortraitSettings>();
 builder.Services.AddScoped<ISettings, LandscapeSettings>();
 
-builder.Services.AddScoped<IFacadeBuilder, FacadeBuilder>();
+builder.Services.AddScoped<BuilderFactory>();
+builder.Services.AddScoped<IBuilder, FacadeBuilder>();
 
 await builder.Build().RunAsync();

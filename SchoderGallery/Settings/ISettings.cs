@@ -1,4 +1,6 @@
-﻿namespace SchoderGallery.Settings;
+﻿using System.Text;
+
+namespace SchoderGallery.Settings;
 
 public interface ISettings
 {
@@ -15,10 +17,22 @@ public interface ISettings
     string White => "#FFFFFF";
     string LightGray => "#C0C3C3";
     string Gray => "#808484";
-    string DarkerGray => "#707474";
     string DarkGray => "#404343";
     string Black => "#000303";
+    string LinkBackground => "#C0C3C3";
+    string[] MixedColours => ["#FF6700", "#FF073A", "#FF6EC7", "#1F51FF", "#39FF14", "#FFFF33"];
 
     double GapToRowColumnWidthRatio => .3;
     double WindowMarginToGapRatio => 1;
+
+    void DrawFacadeLetters(
+        StringBuilder svg,
+        ISettings settings,
+        int totalWidth,
+        int rowsColumns,
+        int margin,
+        int gap,
+        int windowWidth,
+        int windowHeight,
+        int shortWindowSize);
 }

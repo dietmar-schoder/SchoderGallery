@@ -1,8 +1,7 @@
 ﻿@page "/"
 @using SchoderGallery.Builders
 @using SchoderGallery.Components
-@inject IFacadeBuilder FacadeBuilder
 
 <PageTitle>Schoder Gallery</PageTitle>
 
-<BuildingRenderer TBuilder="IFacadeBuilder" Builder="FacadeBuilder" />
+<BuildingRenderer BuilderType=BuilderType.Facade />

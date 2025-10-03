@@ -1,15 +1,12 @@
 ﻿namespace SchoderGallery.Settings;
 
-public interface ISettingsFactory
+public class SettingsFactory(IEnumerable<ISettings> settingsList)
 {
-    ISettings GetConstants(int screenWidth, int screenHeight);
-}
+    private readonly Dictionary<ScreenMode, ISettings> _settingsList = settingsList.ToDictionary(b => b.ScreenMode, b => b);
 
-public class SettingsFactory(IEnumerable<ISettings> constantsList) : ISettingsFactory
-{
-    public ISettings GetConstants(int screenWidth, int screenHeight) =>
-        constantsList.FirstOrDefault(c => c.ScreenMode == GetScreenMode(screenWidth, screenHeight));
+    public ISettings GetSettings(int screenWidth, int screenHeight) =>
+        _settingsList[GetScreenMode(screenWidth > screenHeight)];
 
-    private static ScreenMode GetScreenMode(int screenWidth, int screenHeight) =>
-        screenWidth > screenHeight ? ScreenMode.Landscape : ScreenMode.Portrait;
+    private static ScreenMode GetScreenMode(bool landscapeMode) =>
+        landscapeMode ? ScreenMode.Landscape : ScreenMode.Portrait;
 }
