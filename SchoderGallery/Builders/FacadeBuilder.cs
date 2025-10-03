@@ -7,7 +7,7 @@ public class FacadeBuilder(SettingsFactory settingsFactory, ColourGenerator colo
     : BaseBuilder(settingsFactory), IBuilder
 {
     public BuilderType Type => BuilderType.Facade;
-    public int Interval => 500;
+    public int Interval => 5000;
 
     protected override void Draw()
     {
@@ -15,8 +15,7 @@ public class FacadeBuilder(SettingsFactory settingsFactory, ColourGenerator colo
         DrawFrontWall();
         DrawWindowsAndDoor();
 
-        void DrawFrontWall() =>
-            Svg($"<rect x='0' y='0' width='{SvgWidth}' height='{SvgHeight}' fill='{_settings.LightGray}' stroke='none' />");
+        void DrawFrontWall() => Area(0, 0, SvgWidth, SvgHeight, _settings.LightGray);
 
         void DrawWindowsAndDoor()
         {
@@ -36,9 +35,8 @@ public class FacadeBuilder(SettingsFactory settingsFactory, ColourGenerator colo
 
                     if (row != _rowsColumns - 1 || column < _rowsColumns / 2 - 1 || column > _rowsColumns / 2 + 1)
                     {
-                        DrawWindowFrames1(lineX, lineY, _windowWidth - 1, _windowHeight - 1);
+                        DrawWindowFrames(lineX - 1, lineY - 1, _windowWidth - 2, _windowHeight - 2);
                         DrawWindowGlasses(x, y, _windowWidth - 1, _windowHeight - 1);
-                        DrawWindowFrames2(lineX, lineY, _windowWidth - 1, _windowHeight - 1);
                     }
                 }
             }
@@ -48,64 +46,42 @@ public class FacadeBuilder(SettingsFactory settingsFactory, ColourGenerator colo
 
         void DrawWindowGlasses(int x, int y, int width, int height)
         {
-            Svg($"<rect x='{x}' y='{y}' width='{width}' height='{height}' fill='{_settings.White}' stroke='none' />");
-
             for (int col = 0; col < _windowGlassColumns; col++)
             {
                 for (int row = 0; row < _windowGlassRows; row++)
                 {
-                    double glassX = x + col * _windowGlassColumnWidth;
-                    double glassY = y + row * _windowGlassRowHeight;
-                    Svg($"<rect x='{glassX}' y='{glassY}'" +
-                        $" width='{_windowGlassColumnWidth - 1}' height='{_windowGlassRowHeight - 1}'" +
-                        $" fill='{SkyColour()}' stroke='none' />");
+                    double glassX = x + col * _windowGlassColumnWidth - 0.5;
+                    double glassY = y + row * _windowGlassRowHeight - 0.5;
+                    Area(glassX, glassY, _windowGlassColumnWidth - 1, _windowGlassRowHeight - 1, SkyColour());
                 }
             }
         }
 
-        void DrawWindowFrames1(double x, double y, int width, int height) =>
-            Svg($"<rect x='{x - _settings.ShadowOffset}' y='{y - _settings.ShadowOffset}'" +
-                $" width='{width}' height='{height}'" +
-                $" fill='{_settings.DarkGray}' stroke='{_settings.Black}' stroke-width='1' />");
-
-        void DrawWindowFrames2(double x, double y, int width, int height)
+        void DrawWindowFrames(double x, double y, int width, int height)
         {
-            for (int i = 1; i < _windowGlassColumns; i++)
-            {
-                double xPos = x + i * _windowGlassColumnWidth;
-                Svg($"<line x1='{xPos}' y1='{y}' x2='{xPos}' y2='{y + height}' stroke='{_settings.DarkGray}' stroke-width='1' />");
-            }
-
-            for (int j = 1; j < _windowGlassRows; j++)
-            {
-                double yPos = y + j * _windowGlassRowHeight;
-                Svg($"<line x1='{x}' y1='{yPos}' x2='{x + width}' y2='{yPos}' stroke='{_settings.DarkGray}' stroke-width='1' />");
-            }
-
-            Svg($"<rect x='{x}' y='{y}' width='{width}' height='{height}' fill='none' stroke='{_settings.Gray}' stroke-width='1' />");
+            Area(x + _settings.ShadowOffset, y + _settings.ShadowOffset, width, height, _settings.White, _settings.White);
+            Area(x - _settings.ShadowOffset, y - _settings.ShadowOffset, width, height, _settings.DarkGray, _settings.Black);
         }
 
         void DrawDoor(double x, double y)
         {
             int doorWidth = 3 * _windowWidth + 2 * _gap;
-            int doorHeight = _windowHeight + _margin + 1;
+            int doorHeight = _windowHeight + _margin - 3;
 
-            Svg($"<rect x='{x - _settings.ShadowOffset}' y='{y - _settings.ShadowOffset}'" +
-                $" width='{doorWidth}' height='{doorHeight}' " +
-                $"fill='{_settings.DarkGray}' stroke='{_settings.Black}' stroke-width='1' />");
-            Svg($"<rect x='{x}' y='{y}' width='{doorWidth}' height='{doorHeight}' " +
-                $"fill='{_settings.Gray}' stroke='{_settings.DarkGray}' stroke-width='1' />");
+            Area(x + _settings.ShadowOffset, y + _settings.ShadowOffset, doorWidth, doorHeight, _settings.White, _settings.White);
+            Area(x - _settings.ShadowOffset, y - _settings.ShadowOffset, doorWidth, doorHeight, _settings.DarkGray, _settings.Black);
+            Area(x, y, doorWidth, doorHeight, _settings.Gray);
 
             DrawDoorDeco(x, y, doorWidth / 2, doorHeight);
             DrawDoorDeco(x + doorWidth / 2, y, doorWidth / 2, doorHeight);
 
             var xMiddle = x + doorWidth / 2;
-            Svg($"<line x1='{xMiddle}' y1='{y}' x2='{xMiddle}' y2='{y + doorHeight}' stroke='{_settings.DarkGray}' stroke-width='2' />");
+            VerticalLine(xMiddle, y, doorHeight, _settings.DarkGray, 2);
 
             DrawEntranceText((int)xMiddle + 1, (int)y + 1, _gap, _settings.Gray);
             DrawEntranceText((int)xMiddle - 1, (int)y - 1, _gap, _settings.DarkGray);
 
-            ClickableAreas.Add(new ClickableArea((int)x, (int)y, doorWidth, doorHeight, "/GroundFloor"));
+            ClickableAreas.Add(new ClickableArea((int)x, (int)y - _gap, doorWidth, doorHeight + _gap, "/GroundFloor"));
         }
 
         void DrawDoorDeco(double x, double y, int doorWidth, int doorHeight)
@@ -126,9 +102,7 @@ public class FacadeBuilder(SettingsFactory settingsFactory, ColourGenerator colo
                 {
                     double decoX = x + column * decoColumnWidth;
                     double decoY = y + row * decoRowHeight;
-                    Svg($"<rect x='{decoX}' y='{decoY}'" +
-                        $" width='{decoColumnWidth - 1}' height='{decoRowHeight - 1}'" +
-                        $" fill='{_settings.MixedColours[colourMatrix[cx, ry]]}' stroke='none' />");
+                    Area(decoX, decoY, decoColumnWidth - 1, decoRowHeight - 1, _settings.MixedColours[colourMatrix[cx, ry]]);
                 }
             }
         }

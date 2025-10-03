@@ -16,8 +16,8 @@ public abstract class BaseBuilder(SettingsFactory settingsFactory)
     protected int _windowHeight;
     protected int _windowGlassColumns;
     protected int _windowGlassRows;
-    protected int _windowGlassColumnWidth;
-    protected int _windowGlassRowHeight;
+    protected double _windowGlassColumnWidth;
+    protected double _windowGlassRowHeight;
 
     protected ScreenMode ScreenMode => SvgWidth > SvgHeight ? ScreenMode.Landscape : ScreenMode.Portrait;
     protected int ShortSize => ScreenMode == ScreenMode.Portrait ? SvgWidth : SvgHeight;
@@ -43,8 +43,8 @@ public abstract class BaseBuilder(SettingsFactory settingsFactory)
 
         _windowGlassColumns = _settings.NbrOfHorizontalWindowSections;
         _windowGlassRows = _settings.NbrOfVerticalWindowSections;
-        _windowGlassColumnWidth = (int)Math.Round((double)(_windowWidth - 1) / _windowGlassColumns);
-        _windowGlassRowHeight = (int)Math.Round((double)(_windowHeight - 1) / _windowGlassRows);
+        _windowGlassColumnWidth = (_windowWidth - 1.0) / _windowGlassColumns;
+        _windowGlassRowHeight = (_windowHeight - 1.0) / _windowGlassRows;
         Draw();
         return _svg.ToString();
     }
@@ -59,6 +59,27 @@ public abstract class BaseBuilder(SettingsFactory settingsFactory)
         int blue = Math.Min(255, gray + _random.Next(0, 256 - gray));
         return $"#{gray:X2}{gray:X2}{blue:X2}";
     }
+
+    protected void Border(double x, double y, int width, int height, string colour, int thickness = 1) =>
+        Svg($"<rect x='{x + 0.5}' y='{y + 0.5}'" +
+            $" width='{width - 1}' height='{height - 1}'" +
+            $" fill='none' stroke='{colour}' stroke-width='{thickness}' />");
+
+    protected void Area(double x, double y, double width, double height, string colour) =>
+        Svg($"<rect x='{x}' y='{y}'" +
+            $" width='{width}' height='{height}'" +
+            $" fill='{colour}' stroke='none' />");
+
+    protected void Area(double x, double y, int width, int height, string colour, string borderColour, int thickness = 1) =>
+        Svg($"<rect x='{x + 0.5}' y='{y + 0.5}'" +
+            $" width='{width - 1}' height='{height - 1}'" +
+            $" fill='{colour}' stroke='{borderColour}' stroke-width='{thickness}' />");
+
+    protected void VerticalLine(double x, double y, int length, string colour, int thickness = 1) =>
+        Svg($"<line x1='{x}' y1='{y}' x2='{x}' y2='{y + length}' stroke='{colour}' stroke-width='{thickness}' />");
+
+    protected void HorizontalLine(double x, double y, int length, string colour, int thickness = 1) =>
+        Svg($"<line x1='{x}' y1='{y}' x2='{x + length}' y2='{y}' stroke='{colour}' stroke-width='{thickness}' />");
 
     private int WindowWidth(int totalGapSpace)
     {

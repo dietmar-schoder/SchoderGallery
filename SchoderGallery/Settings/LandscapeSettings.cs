@@ -1,5 +1,4 @@
-﻿using System.Runtime;
-using System.Text;
+﻿using System.Text;
 
 namespace SchoderGallery.Settings;
 

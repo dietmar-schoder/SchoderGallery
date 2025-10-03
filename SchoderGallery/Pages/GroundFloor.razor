@@ -1,9 +1,12 @@
 ﻿@page "/GroundFloor"
-@inject NavigationManager Nav
+@using SchoderGallery.Builders
+@using SchoderGallery.Components
 
-<PageTitle>Ground Floor</PageTitle>
+<PageTitle>Schoder Gallery - Ground Floor</PageTitle>
 
-<svg width="@svgWidth" height="@svgHeight">
+<BuildingRenderer BuilderType=BuilderType.GroundFloor />
+
+@* <svg width="@svgWidth" height="@svgHeight">
     <!-- Outer walls -->
     <rect x="0" y="0" width="@svgWidth" height="@svgHeight"
           fill="#F5F5F5" stroke="black" stroke-width="2" />
@@ -48,19 +51,4 @@
         }
     }
 </svg>
-
-@code {
-    private int floors = 7;
-    private int columns = 7;
-    private int windowWidth = 54;
-    private int windowHeight = 95;
-    private int spacing = 27;
-    private int margin = 27;
-    private int svgWidth => margin * 2 + columns * (windowWidth + spacing) - spacing;
-    private int svgHeight => margin * 2 + floors * (windowHeight + spacing) - spacing;
-
-    private void GoHome()
-    {
-        Nav.NavigateTo("/");
-    }
-}
+ *@

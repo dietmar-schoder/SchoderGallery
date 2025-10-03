@@ -19,5 +19,6 @@ builder.Services.AddScoped<ISettings, LandscapeSettings>();
 
 builder.Services.AddScoped<BuilderFactory>();
 builder.Services.AddScoped<IBuilder, FacadeBuilder>();
+builder.Services.AddScoped<IBuilder, GroundFloorBuilder>();
 
 await builder.Build().RunAsync();

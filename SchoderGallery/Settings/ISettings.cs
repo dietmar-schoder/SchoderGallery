@@ -7,7 +7,7 @@ public interface ISettings
     string SchoderText => "Schoder";
     string GalleryText => "Gallery";
     ScreenMode ScreenMode { get; }
-    int ScreenMargin => 2;
+    int ScreenMargin => 4;
     int RowsColumns => 7;
     int NbrOfHorizontalWindowSections { get; }
     int NbrOfVerticalWindowSections { get; }
@@ -25,6 +25,7 @@ public interface ISettings
 
     double GapToRowColumnWidthRatio => .3;
     double WindowMarginToGapRatio => 1;
+    int WallThickness => 8;
 
     void DrawFacadeLetters(
         StringBuilder svg,
