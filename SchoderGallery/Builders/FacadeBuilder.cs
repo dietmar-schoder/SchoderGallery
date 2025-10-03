@@ -6,7 +6,8 @@ namespace SchoderGallery.Builders;
 public class FacadeBuilder(SettingsFactory settingsFactory, ColourGenerator colourGenerator)
     : BaseBuilder(settingsFactory), IBuilder
 {
-    public override BuilderType Type => BuilderType.Facade;
+    public BuilderType Type => BuilderType.Facade;
+    public int Interval => 1000;
 
     protected override void Draw()
     {
@@ -101,8 +102,8 @@ public class FacadeBuilder(SettingsFactory settingsFactory, ColourGenerator colo
             var xMiddle = x + doorWidth / 2;
             Svg($"<line x1='{xMiddle}' y1='{y}' x2='{xMiddle}' y2='{y + doorHeight}' stroke='{_settings.DarkGray}' stroke-width='1' />");
 
-            DrawEntranceText((int)x + 1, (int)y + 1, doorWidth, doorHeight, _settings.DarkGray, showBackground: true);
-            DrawEntranceText((int)x - 1, (int)y - 1, doorWidth, doorHeight, _settings.White);
+            DrawEntranceText((int)xMiddle + 1, (int)y + 1, _gap, _settings.Gray);
+            DrawEntranceText((int)xMiddle - 1, (int)y - 1, _gap, _settings.DarkGray);
 
             ClickableAreas.Add(new ClickableArea((int)x, (int)y, doorWidth, doorHeight, "/GroundFloor"));
         }
@@ -117,7 +118,7 @@ public class FacadeBuilder(SettingsFactory settingsFactory, ColourGenerator colo
 
             int matrixColumns = (decoColumns + 1) / 2;
             int matrixRows = (decoRows + 1) / 2;
-            var colourMatrix = ColourGenerator.FillMatrixWithColours(_random, matrixColumns, matrixRows, _settings.MixedColours.Length);
+            var colourMatrix = colourGenerator.FillMatrixWithColours(_random, matrixColumns, matrixRows, _settings.MixedColours.Length);
 
             for (int column = 1, cx = 0; column < decoColumns; column += 2, cx++)
             {
@@ -132,40 +133,16 @@ public class FacadeBuilder(SettingsFactory settingsFactory, ColourGenerator colo
             }
         }
 
-        void DrawEntranceText(int x, int y, int w, int h, string colour, bool showBackground = false)
-        {
-            string Label = "WELCOME";
-            double fontSize = h * 0.2;
-            double textWidth = fontSize * 1 * Label.Length;
-            double padding = fontSize * 0.3;
-            double rectX = x + w / 2 - textWidth / 2 - padding;
-            double rectY = y + h / 2 - fontSize * 0.6 - padding / 2;
-            double rectWidth = textWidth + padding * 2;
-            double rectHeight = fontSize * 1.2 + padding;
-
-            if (showBackground)
-            {
-                Svg($@"
-                    <rect 
-                        x='{rectX}' 
-                        y='{rectY}' 
-                        width='{rectWidth}' 
-                        height='{rectHeight}' 
-                        fill='{_settings.LinkBackground}' 
-                        opacity='0.5' />");
-            }
-            Svg($@"
-                <text 
-                    x='{x + w / 2}' 
-                    y='{y + h / 2}' 
-                    text-anchor='middle' 
-                    dominant-baseline='central' 
-                    font-size='{fontSize}' 
+        void DrawEntranceText(int x, int y, int gap, string colour) =>
+            Svg($@"<text 
+                    x='{x}' 
+                    y='{y - gap / 2 + 2}' 
+                    text-anchor='Middle' 
+                    dominant-baseline='Middle' 
+                    font-size='{gap * 0.5}' 
                     font-family='sans-serif' 
                     fill='{colour}' 
-                    letter-spacing='6'>{Label}</text>
-            ");
-        }
+                    letter-spacing='6'>ENTRANCE</text>");
 
         int MakeOdd(int value) =>
             (value % 2 == 0) ? value + 1 : value;

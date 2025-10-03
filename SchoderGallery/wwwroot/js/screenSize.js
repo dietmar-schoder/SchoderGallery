@@ -9,7 +9,7 @@ window.getScreenSize = () => {
     return createScreenSize();
 };
 
-window.initResizeHandler = (dotNetObject) => {
+window.initResizeHandler = (dotNetObject, interval) => {
     let resizeTimeout;
 
     window.addEventListener('resize', () => {
@@ -19,4 +19,10 @@ window.initResizeHandler = (dotNetObject) => {
             dotNetObject.invokeMethodAsync('OnResize', createScreenSize());
         }, 1);
     });
+
+    if (interval > 0) {
+        setInterval(() => {
+            dotNetObject.invokeMethodAsync('OnResize', createScreenSize());
+        }, interval);
+    }
 };

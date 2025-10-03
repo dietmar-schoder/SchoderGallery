@@ -20,7 +20,8 @@ public interface ISettings
     string DarkGray => "#404343";
     string Black => "#000303";
     string LinkBackground => "#C0C3C3";
-    string[] MixedColours => ["#FF6700", "#FF073A", "#FF6EC7", "#1F51FF", "#39FF14", "#FFFF33"];
+    //string[] MixedColours => ["#FF6700", "#FF073A", "#FF6EC7", "#1F51FF", "#39FF14", "#FFFF33"];
+    string[] MixedColours => ["#111111", "#333333", "#555555", "#777777", "#AAAAAA", "#DDDDDD"];
 
     double GapToRowColumnWidthRatio => .3;
     double WindowMarginToGapRatio => 1;

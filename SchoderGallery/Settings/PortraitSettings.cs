@@ -7,7 +7,7 @@ public class PortraitSettings : ISettings
     public ScreenMode ScreenMode => ScreenMode.Portrait;
     public int NbrOfHorizontalWindowSections => 3;
     public int NbrOfVerticalWindowSections => 5;
-    public int NbrOfDoorDecoColumns => 14;
+    public int NbrOfDoorDecoColumns => 21;
     public void DrawFacadeLetters(
         StringBuilder svg,
         ISettings settings,

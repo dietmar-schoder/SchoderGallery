@@ -3,7 +3,7 @@ using System.Text;
 
 namespace SchoderGallery.Builders;
 
-public abstract class BaseBuilder(SettingsFactory settingsFactory) : IBuilder
+public abstract class BaseBuilder(SettingsFactory settingsFactory)
 {
     protected StringBuilder _svg;
     protected Random _random = new();
@@ -23,7 +23,6 @@ public abstract class BaseBuilder(SettingsFactory settingsFactory) : IBuilder
     protected int ShortSize => ScreenMode == ScreenMode.Portrait ? SvgWidth : SvgHeight;
     protected int ShortWindowSize => ScreenMode == ScreenMode.Portrait ? _windowWidth : _windowHeight;
 
-    public abstract BuilderType Type { get; }
     public int SvgWidth { get; set; }
     public int SvgHeight { get; set; }
     public List<ClickableArea> ClickableAreas { get; } = [];

@@ -2,7 +2,7 @@
 
 public class ColourGenerator
 {
-    public static int[,] FillMatrixWithColours(Random random, int columns, int rows, int nbrOfColours)
+    public int[,] FillMatrixWithColours(Random random, int columns, int rows, int nbrOfColours)
     {
         int[,] matrix = new int[columns, rows];
         bool[] allowed = new bool[nbrOfColours];

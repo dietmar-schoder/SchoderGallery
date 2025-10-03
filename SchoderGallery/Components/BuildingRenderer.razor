@@ -27,6 +27,7 @@
 
     private IBuilder Builder;
     private string SvgContent;
+    private DotNetObjectReference<BuildingRenderer> _dotNetRef;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -39,7 +40,8 @@
 
             StateHasChanged();
 
-            await JS.InvokeVoidAsync("initResizeHandler", DotNetObjectReference.Create(this));
+            _dotNetRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("initResizeHandler", _dotNetRef, Builder.Interval);
         }
     }
 
@@ -48,5 +50,10 @@
     {
         SvgContent = Builder.GetSvgContent(size.Width, size.Height);
         await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        _dotNetRef?.Dispose();
     }
 }

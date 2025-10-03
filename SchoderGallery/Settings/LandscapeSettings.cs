@@ -8,7 +8,7 @@ public class LandscapeSettings : ISettings
     public ScreenMode ScreenMode => ScreenMode.Landscape;
     public int NbrOfHorizontalWindowSections => 5;
     public int NbrOfVerticalWindowSections => 3;
-    public int NbrOfDoorDecoColumns => 21;
+    public int NbrOfDoorDecoColumns => 35;
     public void DrawFacadeLetters(
         StringBuilder svg,
         ISettings settings,
