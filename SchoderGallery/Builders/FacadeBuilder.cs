@@ -7,7 +7,7 @@ public class FacadeBuilder(SettingsFactory settingsFactory, ColourGenerator colo
     : BaseBuilder(settingsFactory), IBuilder
 {
     public BuilderType Type => BuilderType.Facade;
-    public int Interval => 1000;
+    public int Interval => 500;
 
     protected override void Draw()
     {
@@ -100,7 +100,7 @@ public class FacadeBuilder(SettingsFactory settingsFactory, ColourGenerator colo
             DrawDoorDeco(x + doorWidth / 2, y, doorWidth / 2, doorHeight);
 
             var xMiddle = x + doorWidth / 2;
-            Svg($"<line x1='{xMiddle}' y1='{y}' x2='{xMiddle}' y2='{y + doorHeight}' stroke='{_settings.DarkGray}' stroke-width='1' />");
+            Svg($"<line x1='{xMiddle}' y1='{y}' x2='{xMiddle}' y2='{y + doorHeight}' stroke='{_settings.DarkGray}' stroke-width='2' />");
 
             DrawEntranceText((int)xMiddle + 1, (int)y + 1, _gap, _settings.Gray);
             DrawEntranceText((int)xMiddle - 1, (int)y - 1, _gap, _settings.DarkGray);
