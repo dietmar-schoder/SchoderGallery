@@ -1,4 +1,4 @@
-﻿using SchoderGallery.Constants;
+﻿using SchoderGallery.Settings;
 using System.Text;
 
 namespace SchoderGallery.Builders;
@@ -11,12 +11,12 @@ public interface IBuilder
     List<ClickableArea> ClickableAreas { get; }
 }
 
-public abstract class BaseBuilder(IConstantsFactory constantsFactory) : IBuilder
+public abstract class BaseBuilder(ISettingsFactory constantsFactory) : IBuilder
 {
     private StringBuilder _svg;
 
     protected Random _rand = new();
-    protected IConstants _constants;
+    protected ISettings _constants;
 
     protected int _rowsColumns;
     protected int _gap;
@@ -38,7 +38,7 @@ public abstract class BaseBuilder(IConstantsFactory constantsFactory) : IBuilder
 
     public string GetSvgContent(int screenWidth, int screenHeight)
     {
-        _constants = constantsFactory.GetConstants(ScreenMode);
+        _constants = constantsFactory.GetConstants(screenWidth, screenHeight);
         SvgWidth = Math.Max(240, screenWidth - _constants.ScreenMargin * 2);
         SvgHeight = Math.Max(240, screenHeight - _constants.ScreenMargin * 2);
         _svg = new StringBuilder();

@@ -1,4 +1,4 @@
-﻿namespace SchoderGallery.Constants;
+﻿namespace SchoderGallery.Settings;
 
 public enum ScreenMode
 {
