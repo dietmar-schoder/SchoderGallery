@@ -8,13 +8,9 @@ public class Visitor
 
     public BuilderType CurrentFloor { get; private set; }
 
-    public Visitor()
-    {
+    public Visitor() =>
         CurrentFloor = BuilderType.GroundFloor;
-    }
 
-    public void MoveToFloor(BuilderType newFloor)
-    {
+    public void MoveToFloor(BuilderType newFloor) =>
         CurrentFloor = newFloor;
-    }
 }

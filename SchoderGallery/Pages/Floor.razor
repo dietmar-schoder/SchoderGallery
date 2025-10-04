@@ -1,0 +1,11 @@
+﻿@page "/Floor/{floorNumber:int}"
+@using SchoderGallery.Builders
+@using SchoderGallery.Components
+@using SchoderGallery.Navigation
+@inject NavigationService Navigation
+
+<BuildingRenderer BuilderType=@Navigation.GetBuilderType(FloorNumber) />
+
+@code {
+    [Parameter] public int FloorNumber { get; set; }
+}

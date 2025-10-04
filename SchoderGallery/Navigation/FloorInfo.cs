@@ -2,4 +2,4 @@
 
 namespace SchoderGallery.Navigation;
 
-public record FloorInfo(BuilderType FloorType, int LiftColumn, int LiftRow, int LiftButtonCaption, string LiftLabel, string Page);
+public record FloorInfo(BuilderType FloorType, int LiftColumn, int LiftRow, string LiftLabel, string Page);

@@ -1,11 +1,15 @@
 ﻿@using SchoderGallery.Builders
+@using SchoderGallery.Navigation
 @using SchoderGallery.Settings
 @inject BuilderFactory BuilderFactory
 @inject NavigationManager Nav
+@inject NavigationService Navigation
 @inject IJSRuntime JS
 
 @if (Builder is not null)
 {
+    <PageTitle>@PageTitle</PageTitle>
+
     <div style="width:100vw; height:100vh; display:flex; justify-content:center; align-items:center;">
         <svg width="@Builder.SvgWidth" height="@Builder.SvgHeight">
             @((MarkupString)SvgContent)
@@ -28,6 +32,9 @@
     private IBuilder Builder;
     private string SvgContent;
     private DotNetObjectReference<BuildingRenderer> _dotNetRef;
+
+    private string PageTitle => 
+        $"Schoder Gallery{(BuilderType == BuilderType.Facade ? string.Empty : $" - {Navigation.Floors[BuilderType].LiftLabel}")}";
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

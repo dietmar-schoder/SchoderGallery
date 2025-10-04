@@ -12,16 +12,24 @@ window.getScreenSize = () => {
 window.initResizeHandler = (dotNetObject, interval) => {
     let resizeTimeout;
 
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimeout);
+    if (window._resizeIntervalId) {
+        clearInterval(window._resizeIntervalId);
+        window._resizeIntervalId = null;
+    }
 
+    window.removeEventListener('resize', window._resizeHandler);
+
+    window._resizeHandler = () => {
+        clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
             dotNetObject.invokeMethodAsync('OnResize', createScreenSize());
         }, 1);
-    });
+    };
+
+    window.addEventListener('resize', window._resizeHandler);
 
     if (interval > 0) {
-        setInterval(() => {
+        window._resizeIntervalId = setInterval(() => {
             dotNetObject.invokeMethodAsync('OnResize', createScreenSize());
         }, interval);
     }

@@ -15,7 +15,7 @@ public class LiftBuilder(
 
     protected override void Draw()
     {
-        var floors = _navigation.Floors.Values;
+        var floors = _navigation.GetFloors();
 
         int buttonSize = ShortWindowSize;
 
@@ -37,11 +37,11 @@ public class LiftBuilder(
             _svg.Circle(x - 4, y - 6, buttonSize + 8, _settings.Black, 2);
             _svg.Circle(x, y - 2, buttonSize, colour, isGroundFloor ? 2 : 1);
 
-            _svg.Text(x + radius, y + radius, floor.LiftButtonCaption.ToString(), (int)(_gap * 0.8), colour, 0);
+            _svg.Text(x + radius, y + radius, ((int)floor.FloorType).ToString(), (int)(_gap * 0.8), colour, 0);
 
             if (floor.LiftColumn == 0)
             {
-                ClickableAreas.Add(new ClickableArea(0, y - 6, SvgWidth / 2 - 2, buttonSize + 8, floor.Page));
+                ClickableAreas.Add(new ClickableArea(0, y - 6, SvgWidth / 2 - 2, buttonSize + 8, PageAndParam(floor)));
 
                 Svg($@"<text x='{x - _gap}' y='{y + buttonSize / 2}' 
                         text-anchor='end' dominant-baseline='middle' fill='{colour}' 
@@ -50,7 +50,7 @@ public class LiftBuilder(
             }
             else
             {
-                ClickableAreas.Add(new ClickableArea(SvgWidth / 2, y - 6, SvgWidth / 2 + 2, buttonSize + 8, floor.Page));
+                ClickableAreas.Add(new ClickableArea(SvgWidth / 2, y - 6, SvgWidth / 2 + 2, buttonSize + 8, PageAndParam(floor)));
 
                 Svg($@"<text x='{x + buttonSize + _gap}' y='{y + buttonSize / 2}' 
                         text-anchor='start' dominant-baseline='middle' fill='{colour}' 
@@ -58,5 +58,11 @@ public class LiftBuilder(
                         {floor.LiftLabel}</text>");
             }
         }
+
+        static string PageAndParam(FloorInfo floorInfo) =>
+            ((int)floorInfo.FloorType > 0 && (int)floorInfo.FloorType < 7)
+            || ((int)floorInfo.FloorType < 0 && (int)floorInfo.FloorType > -3)
+            ? $"{floorInfo.Page}/{(int)floorInfo.FloorType}"
+            : floorInfo.Page;
     }
 }
