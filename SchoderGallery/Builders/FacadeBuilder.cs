@@ -1,4 +1,5 @@
 ﻿using SchoderGallery.Algorithms;
+using SchoderGallery.Navigation;
 using SchoderGallery.Painters;
 using SchoderGallery.Settings;
 
@@ -7,10 +8,11 @@ namespace SchoderGallery.Builders;
 public class FacadeBuilder(
     SettingsFactory settingsFactory,
     SvgPainter svgPainter,
+    NavigationService navigation,
     ColourGenerator colourGenerator)
-    : BaseBuilder(settingsFactory, svgPainter), IBuilder
+    : BaseBuilder(settingsFactory, svgPainter, navigation), IBuilder
 {
-    public BuilderType Type => BuilderType.Facade;
+    public override BuilderType Type => BuilderType.Facade;
     public int Interval => 5000;
 
     protected override void Draw()

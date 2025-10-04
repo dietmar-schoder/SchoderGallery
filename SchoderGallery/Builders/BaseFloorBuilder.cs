@@ -8,10 +8,8 @@ public abstract class BaseFloorBuilder(
     SettingsFactory settingsFactory,
     SvgPainter svgPainter,
     NavigationService navigation)
-    : BaseBuilder(settingsFactory, svgPainter)
+    : BaseBuilder(settingsFactory, svgPainter, navigation)
 {
-    public abstract BuilderType Type { get; }
-
     protected override void Draw()
     {
         var wall = _settings.WallThickness;
@@ -66,7 +64,7 @@ public abstract class BaseFloorBuilder(
 
         void DrawFloorCaption()
         {
-            var floor = navigation.Floors[Type];
+            var floor = _navigation.Floors[Type];
             _svg.Text(SvgWidth / 2, SvgHeight / 2, floor.LiftLabel, _gap * 2, _settings.LightGray);
         }
     }

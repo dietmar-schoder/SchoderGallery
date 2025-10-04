@@ -1,7 +1,6 @@
 ﻿using SchoderGallery.Navigation;
 using SchoderGallery.Painters;
 using SchoderGallery.Settings;
-using System.Drawing;
 
 namespace SchoderGallery.Builders;
 
@@ -9,14 +8,14 @@ public class LiftBuilder(
     SettingsFactory settingsFactory,
     SvgPainter svgPainter,
     NavigationService navigation)
-    : BaseBuilder(settingsFactory, svgPainter), IBuilder
+    : BaseBuilder(settingsFactory, svgPainter, navigation), IBuilder
 {
-    public BuilderType Type => BuilderType.Lift;
+    public override BuilderType Type => BuilderType.Lift;
     public int Interval => 0;
 
     protected override void Draw()
     {
-        var floors = navigation.Floors.Values;
+        var floors = _navigation.Floors.Values;
 
         int buttonSize = ShortWindowSize;
 
@@ -32,7 +31,7 @@ public class LiftBuilder(
             int y = startY + floor.LiftRow * (buttonSize + _gap);
             int radius = buttonSize / 2;
             bool isGroundFloor = floor.FloorType == BuilderType.GroundFloor;
-            bool isCurrentFloor = floor.FloorType == BuilderType.Floor1; // This should be dynamic based on current visitor floor
+            bool isCurrentFloor = floor.FloorType == _navigation.GetVisitorFloor();
             var colour = isCurrentFloor ? _settings.LightGray: (isGroundFloor ? _settings.Black : _settings.DarkGray);
 
             _svg.Circle(x - 4, y - 6, buttonSize + 8, _settings.Black, 2);

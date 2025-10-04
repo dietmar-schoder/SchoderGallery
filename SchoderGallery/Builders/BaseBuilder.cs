@@ -1,11 +1,16 @@
-﻿using SchoderGallery.Painters;
+﻿using SchoderGallery.Navigation;
+using SchoderGallery.Painters;
 using SchoderGallery.Settings;
 
 namespace SchoderGallery.Builders;
 
-public abstract class BaseBuilder(SettingsFactory settingsFactory, SvgPainter svgPainter)
+public abstract class BaseBuilder(
+    SettingsFactory settingsFactory,
+    SvgPainter svgPainter,
+    NavigationService navigation)
 {
     protected readonly SvgPainter _svg = svgPainter;
+    protected readonly NavigationService _navigation = navigation;
     protected Random _random = new();
     protected ISettings _settings;
 
@@ -23,12 +28,15 @@ public abstract class BaseBuilder(SettingsFactory settingsFactory, SvgPainter sv
     protected int ShortSize => ScreenMode == ScreenMode.Portrait ? SvgWidth : SvgHeight;
     protected int ShortWindowSize => ScreenMode == ScreenMode.Portrait ? _windowWidth : _windowHeight;
 
+    public abstract BuilderType Type { get; }
+
     public int SvgWidth { get; set; }
     public int SvgHeight { get; set; }
     public List<ClickableArea> ClickableAreas { get; } = [];
 
     public string GetSvgContent(int screenWidth, int screenHeight)
     {
+        _navigation.SetVisitorFloor(Type);
         _settings = settingsFactory.GetSettings(screenWidth, screenHeight);
         SvgWidth = Math.Max(240, screenWidth - _settings.ScreenMargin * 2);
         SvgHeight = Math.Max(240, screenHeight - _settings.ScreenMargin * 2);

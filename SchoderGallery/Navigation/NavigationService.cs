@@ -4,6 +4,8 @@ namespace SchoderGallery.Navigation;
 
 public class NavigationService
 {
+    private Visitor _visitor;
+    
     public IReadOnlyDictionary<BuilderType, FloorInfo> Floors { get; } = new Dictionary<BuilderType, FloorInfo>
     {
         { BuilderType.Atelier, new FloorInfo(BuilderType.Atelier, 1, 0, 7, "Atelier", "/Atelier") },
@@ -21,4 +23,21 @@ public class NavigationService
     };
 
     public IEnumerable<FloorInfo> GetFloors() => Floors.Values;
+
+    public void SetVisitorFloor(BuilderType floor)
+    {
+        EnsureVisitor();
+        if (Floors.ContainsKey(floor))
+        {
+            _visitor.MoveToFloor(floor);
+        }
+    }
+
+    public BuilderType GetVisitorFloor()
+    {
+        EnsureVisitor();
+        return _visitor.CurrentFloor;
+    }
+
+    private void EnsureVisitor() => _visitor ??= new Visitor();
 }

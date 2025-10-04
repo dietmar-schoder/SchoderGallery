@@ -14,8 +14,9 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
 builder.Services.AddSingleton<ColourGenerator>();
-builder.Services.AddSingleton<NavigationService>();
 builder.Services.AddSingleton<SvgPainter>();
+
+builder.Services.AddScoped<NavigationService>();
 
 builder.Services.AddScoped<SettingsFactory>();
 builder.Services.AddScoped<ISettings, LandscapeSettings>();
