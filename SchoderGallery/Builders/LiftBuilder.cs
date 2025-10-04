@@ -31,14 +31,22 @@ public class LiftBuilder(
             int y = startY + floor.LiftRow * (buttonSize + _gap);
             int radius = buttonSize / 2;
 
-            _svg.Circle(x - 4, y - 6, buttonSize + 8, _settings.DarkGray, 2);
-            _svg.Circle(x, y - 2, buttonSize, _settings.DarkGray, 1);
+            _svg.Circle(x - 4, y - 6, buttonSize + 8, _settings.Black, 2);
+
+            if (floor.FloorType == BuilderType.GroundFloor)
+            {
+                _svg.Circle(x, y - 2, buttonSize, _settings.Black, 2);
+            }
+            else
+            {
+                _svg.Circle(x, y - 2, buttonSize, _settings.DarkGray, 1);
+            }
 
             _svg.Text(x + radius, y + radius, floor.LiftButtonCaption.ToString(), (int)(_gap * 0.8), _settings.Black, 0);
 
             if (floor.LiftColumn == 0)
             {
-                ClickableAreas.Add(new ClickableArea(0, y, SvgWidth / 2, buttonSize, floor.Page));
+                ClickableAreas.Add(new ClickableArea(0, y - 6, SvgWidth / 2 - 2, buttonSize + 8, floor.Page));
 
                 Svg($@"<text x='{x - _gap}' y='{y + buttonSize / 2}' 
                         text-anchor='end' dominant-baseline='middle' 
@@ -47,7 +55,7 @@ public class LiftBuilder(
             }
             else
             {
-                ClickableAreas.Add(new ClickableArea(SvgWidth / 2, y, SvgWidth / 2, buttonSize, floor.Page));
+                ClickableAreas.Add(new ClickableArea(SvgWidth / 2, y - 6, SvgWidth / 2 + 2, buttonSize + 8, floor.Page));
 
                 Svg($@"<text x='{x + buttonSize + _gap}' y='{y + buttonSize / 2}' 
                         text-anchor='start' dominant-baseline='middle' 
