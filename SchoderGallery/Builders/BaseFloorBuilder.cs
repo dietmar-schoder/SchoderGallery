@@ -1,0 +1,73 @@
+﻿using SchoderGallery.Navigation;
+using SchoderGallery.Painters;
+using SchoderGallery.Settings;
+
+namespace SchoderGallery.Builders;
+
+public abstract class BaseFloorBuilder(
+    SettingsFactory settingsFactory,
+    SvgPainter svgPainter,
+    NavigationService navigation)
+    : BaseBuilder(settingsFactory, svgPainter)
+{
+    public abstract BuilderType Type { get; }
+
+    protected override void Draw()
+    {
+        var wall = _settings.WallThickness;
+
+        DrawOuterWalls();
+        DrawWindowsAndDoor();
+        DrawFloorCaption();
+
+        int doorWidth = 3 * _windowWidth + 2 * _gap;
+        var x = (SvgWidth - (3 * _windowWidth + 2 * _gap)) / 2;
+        var xMiddle = x + doorWidth / 2;
+
+        ClickableAreas.Add(new ClickableArea(x, 0, doorWidth, wall + _gap * 2, "/Lift"));
+        _svg.TextLink(xMiddle, wall + _gap, "LIFT", _gap / 2, _settings);
+
+        void DrawOuterWalls()
+        {
+            _svg.Area(0, 0, SvgWidth, SvgHeight, _settings.LightGray, _settings.Black);
+            _svg.Area(wall, wall, SvgWidth - 2 * wall, SvgHeight - 2 * wall, _settings.White, _settings.DarkGray);
+        }
+
+        void DrawWindowsAndDoor()
+        {
+            for (int column = 0; column < _rowsColumns; column++)
+            {
+                int x = _margin + column * (_windowWidth + _gap);
+                if (column == _rowsColumns / 2 - 1)
+                {
+                    DrawDoor((SvgWidth - (3 * _windowWidth + 2 * _gap)) / 2, SvgHeight - wall);
+                    continue;
+                }
+
+                if (column < _rowsColumns / 2 - 1 || column > _rowsColumns / 2 + 1)
+                {
+                    DrawWindow(x, SvgHeight - wall);
+                }
+            }
+        }
+
+        void DrawDoor(double x, double y)
+        {
+            int doorWidth = 3 * _windowWidth + 2 * _gap;
+
+            _svg.Area(x, y - 1, doorWidth, wall + 1, _settings.Gray, _settings.Black);
+
+            var xMiddle = x + doorWidth / 2;
+            _svg.VerticalLine(xMiddle, y, wall, _settings.DarkGray, 2);
+        }
+
+        void DrawWindow(int x, int y) =>
+            _svg.Area(x, y - 1, _windowWidth, wall + 1, _settings.White, _settings.Black);
+
+        void DrawFloorCaption()
+        {
+            var floor = navigation.Floors[Type];
+            _svg.Text(SvgWidth / 2, SvgHeight / 2, floor.LiftLabel, _gap * 2, _settings.LightGray);
+        }
+    }
+}

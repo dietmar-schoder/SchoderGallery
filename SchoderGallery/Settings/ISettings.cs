@@ -1,4 +1,4 @@
-﻿using System.Text;
+﻿using SchoderGallery.Painters;
 
 namespace SchoderGallery.Settings;
 
@@ -12,7 +12,7 @@ public interface ISettings
     int NbrOfHorizontalWindowSections { get; }
     int NbrOfVerticalWindowSections { get; }
     int NbrOfDoorDecoColumns { get; }
-    double ShadowOffset => 1;
+    int ShadowOffset => 1;
 
     string White => "#FFFFFF";
     string LightGray => "#C0C3C3";
@@ -28,7 +28,7 @@ public interface ISettings
     int WallThickness => 8;
 
     void DrawFacadeLetters(
-        StringBuilder svg,
+        SvgPainter svgPainter,
         ISettings settings,
         int totalWidth,
         int rowsColumns,

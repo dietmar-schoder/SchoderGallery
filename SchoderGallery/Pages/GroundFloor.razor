@@ -1,54 +1,7 @@
-﻿@page "/GroundFloor"
+﻿@page "/Floor1"
 @using SchoderGallery.Builders
 @using SchoderGallery.Components
 
-<PageTitle>Schoder Gallery - Ground Floor</PageTitle>
+<PageTitle>Schoder Gallery - Floor 1</PageTitle>
 
-<BuildingRenderer BuilderType=BuilderType.GroundFloor />
-
-@* <svg width="@svgWidth" height="@svgHeight">
-    <!-- Outer walls -->
-    <rect x="0" y="0" width="@svgWidth" height="@svgHeight"
-          fill="#F5F5F5" stroke="black" stroke-width="2" />
-
-    <!-- Bottom wall -->
-    <line x1="0" y1="@svgHeight" x2="@svgWidth" y2="@svgHeight" stroke="black" stroke-width="2" />
-
-    <!-- Bottom door and windows -->
-    @for (int col = 0; col < columns; col++)
-    {
-        int x = margin + col * (windowWidth + spacing);
-        int rectHeight = 6; // thickness of window/door on floor plan
-        int y = svgHeight - rectHeight;
-
-        if (col <= 1 || col >= 5)
-        {
-            <!-- Windows on bottom row -->
-            <rect x="@x" y="@y" width="@windowWidth" height="@(rectHeight - 0.5)"
-                  fill="white" stroke="black" stroke-width="1" />
-        }
-        else
-        {
-            <!-- Entrance spanning columns 2,3,4 -->
-            if (col == 2)
-            {
-                int doorX = x;
-                int doorWidth = 3 * windowWidth + 2 * spacing;
-                <rect x="@doorX" y="@y" width="@doorWidth" height="@(rectHeight - 0.5)"
-                      fill="#C6C6C6" stroke="black" stroke-width="1" />
-
-                <!-- EXIT clickable label -->
-                <g style="cursor:pointer;" @onclick="GoHome">
-                    <text x="@(doorX + doorWidth / 2)" y="@(y - 10)"
-                          text-anchor="middle" dominant-baseline="middle"
-                          font-size="@(windowHeight * 0.15)" font-family="sans-serif"
-                          fill="#636363" letter-spacing="8">
-                        EXIT
-                    </text>
-                </g>
-        
-            }
-        }
-    }
-</svg>
- *@
+<BuildingRenderer BuilderType=BuilderType.Floor1 />

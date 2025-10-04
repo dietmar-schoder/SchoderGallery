@@ -1,11 +1,11 @@
-﻿using SchoderGallery.Settings;
-using System.Text;
+﻿using SchoderGallery.Painters;
+using SchoderGallery.Settings;
 
 namespace SchoderGallery.Builders;
 
-public abstract class BaseBuilder(SettingsFactory settingsFactory)
+public abstract class BaseBuilder(SettingsFactory settingsFactory, SvgPainter svgPainter)
 {
-    protected StringBuilder _svg;
+    protected readonly SvgPainter _svg = svgPainter;
     protected Random _random = new();
     protected ISettings _settings;
 
@@ -32,7 +32,8 @@ public abstract class BaseBuilder(SettingsFactory settingsFactory)
         _settings = settingsFactory.GetSettings(screenWidth, screenHeight);
         SvgWidth = Math.Max(240, screenWidth - _settings.ScreenMargin * 2);
         SvgHeight = Math.Max(240, screenHeight - _settings.ScreenMargin * 2);
-        _svg = new StringBuilder();
+        _svg.Clear();
+        ClickableAreas.Clear();
         _rowsColumns = _settings.RowsColumns;
 
         _gap = (int)(ShortSize / _rowsColumns * _settings.GapToRowColumnWidthRatio);
@@ -46,40 +47,12 @@ public abstract class BaseBuilder(SettingsFactory settingsFactory)
         _windowGlassColumnWidth = (_windowWidth - 1.0) / _windowGlassColumns;
         _windowGlassRowHeight = (_windowHeight - 1.0) / _windowGlassRows;
         Draw();
-        return _svg.ToString();
+        return _svg.SvgContent();
     }
 
     protected void Svg(string svgCode) => _svg.Append(svgCode);
 
     protected abstract void Draw();
-
-    protected string SkyColour()
-    {
-        int gray = _random.Next(245, 256);
-        int blue = Math.Min(255, gray + _random.Next(0, 256 - gray));
-        return $"#{gray:X2}{gray:X2}{blue:X2}";
-    }
-
-    protected void Border(double x, double y, int width, int height, string colour, int thickness = 1) =>
-        Svg($"<rect x='{x + 0.5}' y='{y + 0.5}'" +
-            $" width='{width - 1}' height='{height - 1}'" +
-            $" fill='none' stroke='{colour}' stroke-width='{thickness}' />");
-
-    protected void Area(double x, double y, double width, double height, string colour) =>
-        Svg($"<rect x='{x}' y='{y}'" +
-            $" width='{width}' height='{height}'" +
-            $" fill='{colour}' stroke='none' />");
-
-    protected void Area(double x, double y, int width, int height, string colour, string borderColour, int thickness = 1) =>
-        Svg($"<rect x='{x + 0.5}' y='{y + 0.5}'" +
-            $" width='{width - 1}' height='{height - 1}'" +
-            $" fill='{colour}' stroke='{borderColour}' stroke-width='{thickness}' />");
-
-    protected void VerticalLine(double x, double y, int length, string colour, int thickness = 1) =>
-        Svg($"<line x1='{x}' y1='{y}' x2='{x}' y2='{y + length}' stroke='{colour}' stroke-width='{thickness}' />");
-
-    protected void HorizontalLine(double x, double y, int length, string colour, int thickness = 1) =>
-        Svg($"<line x1='{x}' y1='{y}' x2='{x + length}' y2='{y}' stroke='{colour}' stroke-width='{thickness}' />");
 
     private int WindowWidth(int totalGapSpace)
     {

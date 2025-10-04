@@ -1,23 +1,26 @@
 ﻿using SchoderGallery.Algorithms;
+using SchoderGallery.Painters;
 using SchoderGallery.Settings;
 
 namespace SchoderGallery.Builders;
 
-public class FacadeBuilder(SettingsFactory settingsFactory, ColourGenerator colourGenerator)
-    : BaseBuilder(settingsFactory), IBuilder
+public class FacadeBuilder(
+    SettingsFactory settingsFactory,
+    SvgPainter svgPainter,
+    ColourGenerator colourGenerator)
+    : BaseBuilder(settingsFactory, svgPainter), IBuilder
 {
     public BuilderType Type => BuilderType.Facade;
     public int Interval => 5000;
 
     protected override void Draw()
     {
-        ClickableAreas.Clear();
         DrawFrontWall();
-        DrawWindowsAndDoor();
+        DrawDoorAndWindows();
 
-        void DrawFrontWall() => Area(0, 0, SvgWidth, SvgHeight, _settings.LightGray);
+        void DrawFrontWall() => _svg.Area(0, 0, SvgWidth, SvgHeight, _settings.LightGray);
 
-        void DrawWindowsAndDoor()
+        void DrawDoorAndWindows()
         {
             for (int row = 1; row < _rowsColumns; row++)
             {
@@ -52,15 +55,15 @@ public class FacadeBuilder(SettingsFactory settingsFactory, ColourGenerator colo
                 {
                     double glassX = x + col * _windowGlassColumnWidth - 0.5;
                     double glassY = y + row * _windowGlassRowHeight - 0.5;
-                    Area(glassX, glassY, _windowGlassColumnWidth - 1, _windowGlassRowHeight - 1, SkyColour());
+                    _svg.Area(glassX, glassY, _windowGlassColumnWidth - 1, _windowGlassRowHeight - 1, SkyColour());
                 }
             }
         }
 
         void DrawWindowFrames(double x, double y, int width, int height)
         {
-            Area(x + _settings.ShadowOffset, y + _settings.ShadowOffset, width, height, _settings.White, _settings.White);
-            Area(x - _settings.ShadowOffset, y - _settings.ShadowOffset, width, height, _settings.DarkGray, _settings.Black);
+            _svg.Sunlight(x, y, width, height, _settings);
+            _svg.Area(x, y, width, height, _settings.Gray);
         }
 
         void DrawDoor(double x, double y)
@@ -68,15 +71,14 @@ public class FacadeBuilder(SettingsFactory settingsFactory, ColourGenerator colo
             int doorWidth = 3 * _windowWidth + 2 * _gap;
             int doorHeight = _windowHeight + _margin - 3;
 
-            Area(x + _settings.ShadowOffset, y + _settings.ShadowOffset, doorWidth, doorHeight, _settings.White, _settings.White);
-            Area(x - _settings.ShadowOffset, y - _settings.ShadowOffset, doorWidth, doorHeight, _settings.DarkGray, _settings.Black);
-            Area(x, y, doorWidth, doorHeight, _settings.Gray);
+            _svg.Sunlight(x, y, doorWidth, doorHeight, _settings);
+            _svg.Area(x, y, doorWidth, doorHeight, _settings.Gray);
 
             DrawDoorDeco(x, y, doorWidth / 2, doorHeight);
             DrawDoorDeco(x + doorWidth / 2, y, doorWidth / 2, doorHeight);
 
             var xMiddle = x + doorWidth / 2;
-            VerticalLine(xMiddle, y, doorHeight, _settings.DarkGray, 2);
+            _svg.VerticalLine(xMiddle, y, doorHeight, _settings.DarkGray, 2);
 
             DrawEntranceText((int)xMiddle + 1, (int)y + 1, _gap, _settings.Gray);
             DrawEntranceText((int)xMiddle - 1, (int)y - 1, _gap, _settings.DarkGray);
@@ -102,7 +104,7 @@ public class FacadeBuilder(SettingsFactory settingsFactory, ColourGenerator colo
                 {
                     double decoX = x + column * decoColumnWidth;
                     double decoY = y + row * decoRowHeight;
-                    Area(decoX, decoY, decoColumnWidth - 1, decoRowHeight - 1, _settings.MixedColours[colourMatrix[cx, ry]]);
+                    _svg.Area(decoX, decoY, decoColumnWidth - 1, decoRowHeight - 1, _settings.MixedColours[colourMatrix[cx, ry]]);
                 }
             }
         }
@@ -111,8 +113,8 @@ public class FacadeBuilder(SettingsFactory settingsFactory, ColourGenerator colo
             Svg($@"<text 
                     x='{x}' 
                     y='{y - gap / 2 + 2}' 
-                    text-anchor='Middle' 
-                    dominant-baseline='Middle' 
+                    text-anchor='middle' 
+                    dominant-baseline='middle' 
                     font-size='{gap * 0.5}' 
                     font-family='sans-serif' 
                     fill='{colour}' 
@@ -120,5 +122,12 @@ public class FacadeBuilder(SettingsFactory settingsFactory, ColourGenerator colo
 
         int MakeOdd(int value) =>
             (value % 2 == 0) ? value + 1 : value;
+
+        string SkyColour()
+        {
+            int gray = _random.Next(245, 256);
+            int blue = Math.Min(255, gray + _random.Next(0, 256 - gray));
+            return $"#{gray:X2}{gray:X2}{blue:X2}";
+        }
     }
 }

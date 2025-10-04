@@ -1,4 +1,4 @@
-﻿using System.Text;
+﻿using SchoderGallery.Painters;
 
 namespace SchoderGallery.Settings;
 
@@ -9,7 +9,7 @@ public class PortraitSettings : ISettings
     public int NbrOfVerticalWindowSections => 5;
     public int NbrOfDoorDecoColumns => 21;
     public void DrawFacadeLetters(
-        StringBuilder svg,
+        SvgPainter svgPainter,
         ISettings settings,
         int totalWidth,
         int rowsColumns,
@@ -23,11 +23,11 @@ public class PortraitSettings : ISettings
         {
             int x = margin + column * (windowWidth + gap);
             var y = margin + windowHeight / 5;
-            svg.Append(Letter(settings.SchoderText[column], x + 1, y + 1, windowWidth, settings.Gray));
-            svg.Append(Letter(settings.SchoderText[column], x - 1, y - 1, windowWidth, settings.DarkGray));
+            svgPainter.Append(Letter(settings.SchoderText[column], x + 1, y + 1, windowWidth, settings.Gray));
+            svgPainter.Append(Letter(settings.SchoderText[column], x - 1, y - 1, windowWidth, settings.DarkGray));
             y = margin + windowHeight * 4 / 5;
-            svg.Append(Letter(settings.GalleryText[column], x + 1, y + 1, windowWidth, settings.Gray));
-            svg.Append(Letter(settings.GalleryText[column], x - 1, y - 1, windowWidth, settings.DarkGray));
+            svgPainter.Append(Letter(settings.GalleryText[column], x + 1, y + 1, windowWidth, settings.Gray));
+            svgPainter.Append(Letter(settings.GalleryText[column], x - 1, y - 1, windowWidth, settings.DarkGray));
 
             string Letter(char letter, int x, int y, int w, string colour) =>
                 $"<text x='{x + w / 2.0}' y='{y}' " +
