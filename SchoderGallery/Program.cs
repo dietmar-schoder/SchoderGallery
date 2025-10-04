@@ -23,9 +23,19 @@ builder.Services.AddScoped<ISettings, LandscapeSettings>();
 builder.Services.AddScoped<ISettings, PortraitSettings>();
 
 builder.Services.AddScoped<BuilderFactory>();
+builder.Services.AddScoped<IBuilder, AtelierBuilder>();
+builder.Services.AddScoped<IBuilder, Basement1Builder>();
+builder.Services.AddScoped<IBuilder, Basement2Builder>();
+builder.Services.AddScoped<IBuilder, DepotBuilder>();
 builder.Services.AddScoped<IBuilder, FacadeBuilder>();
 builder.Services.AddScoped<IBuilder, Floor1Builder>();
+builder.Services.AddScoped<IBuilder, Floor2Builder>();
+builder.Services.AddScoped<IBuilder, Floor3Builder>();
+builder.Services.AddScoped<IBuilder, Floor4Builder>();
+builder.Services.AddScoped<IBuilder, Floor5Builder>();
+builder.Services.AddScoped<IBuilder, Floor6Builder>();
 builder.Services.AddScoped<IBuilder, GroundFloorBuilder>();
 builder.Services.AddScoped<IBuilder, LiftBuilder>();
+builder.Services.AddScoped<IBuilder, SiteManagementBuilder>();
 
 await builder.Build().RunAsync();
