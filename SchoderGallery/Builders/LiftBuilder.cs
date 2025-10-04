@@ -1,6 +1,7 @@
 ﻿using SchoderGallery.Navigation;
 using SchoderGallery.Painters;
 using SchoderGallery.Settings;
+using System.Drawing;
 
 namespace SchoderGallery.Builders;
 
@@ -30,26 +31,21 @@ public class LiftBuilder(
             int x = startX + floor.LiftColumn * (buttonSize + _gap);
             int y = startY + floor.LiftRow * (buttonSize + _gap);
             int radius = buttonSize / 2;
+            bool isGroundFloor = floor.FloorType == BuilderType.GroundFloor;
+            bool isCurrentFloor = floor.FloorType == BuilderType.Floor1; // This should be dynamic based on current visitor floor
+            var colour = isCurrentFloor ? _settings.LightGray: (isGroundFloor ? _settings.Black : _settings.DarkGray);
 
             _svg.Circle(x - 4, y - 6, buttonSize + 8, _settings.Black, 2);
+            _svg.Circle(x, y - 2, buttonSize, colour, isGroundFloor ? 2 : 1);
 
-            if (floor.FloorType == BuilderType.GroundFloor)
-            {
-                _svg.Circle(x, y - 2, buttonSize, _settings.Black, 2);
-            }
-            else
-            {
-                _svg.Circle(x, y - 2, buttonSize, _settings.DarkGray, 1);
-            }
-
-            _svg.Text(x + radius, y + radius, floor.LiftButtonCaption.ToString(), (int)(_gap * 0.8), _settings.Black, 0);
+            _svg.Text(x + radius, y + radius, floor.LiftButtonCaption.ToString(), (int)(_gap * 0.8), colour, 0);
 
             if (floor.LiftColumn == 0)
             {
                 ClickableAreas.Add(new ClickableArea(0, y - 6, SvgWidth / 2 - 2, buttonSize + 8, floor.Page));
 
                 Svg($@"<text x='{x - _gap}' y='{y + buttonSize / 2}' 
-                        text-anchor='end' dominant-baseline='middle' 
+                        text-anchor='end' dominant-baseline='middle' fill='{colour}' 
                         font-size='{_gap * 0.6}' font-family='sans-serif'>
                         {floor.LiftLabel}</text>");
             }
@@ -58,7 +54,7 @@ public class LiftBuilder(
                 ClickableAreas.Add(new ClickableArea(SvgWidth / 2, y - 6, SvgWidth / 2 + 2, buttonSize + 8, floor.Page));
 
                 Svg($@"<text x='{x + buttonSize + _gap}' y='{y + buttonSize / 2}' 
-                        text-anchor='start' dominant-baseline='middle' 
+                        text-anchor='start' dominant-baseline='middle' fill='{colour}' 
                         font-size='{_gap * 0.6}' font-family='sans-serif'>
                         {floor.LiftLabel}</text>");
             }
