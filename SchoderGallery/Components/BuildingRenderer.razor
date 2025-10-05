@@ -10,7 +10,7 @@
 {
     <PageTitle>@PageTitle</PageTitle>
 
-    <div style="width:100vw; height:100vh; display:flex; justify-content:center; align-items:center;">
+    <div style="width:100vw; height:@_screenHeightPx; display:flex; justify-content:center; align-items:center;">
         <svg width="@Builder.SvgWidth" height="@Builder.SvgHeight">
             @((MarkupString)SvgContent)
 
@@ -29,6 +29,7 @@
 @code {
     [Parameter] public BuilderType BuilderType { get; set; }
 
+    private string _screenHeightPx = "100vh";
     private IBuilder Builder;
     private string SvgContent;
     private DotNetObjectReference<BuildingRenderer> _dotNetRef;
@@ -43,6 +44,7 @@
             Builder = BuilderFactory.GetBuilder(BuilderType);
 
             var size = await JS.InvokeAsync<ScreenSize>("getScreenSize");
+            _screenHeightPx = $"{size.Height}px";
             SvgContent = Builder.GetSvgContent(size.Width, size.Height);
 
             StateHasChanged();
@@ -55,6 +57,7 @@
     [JSInvokable]
     public async Task OnResize(ScreenSize size)
     {
+        _screenHeightPx = $"{size.Height}px";
         SvgContent = Builder.GetSvgContent(size.Width, size.Height);
         await InvokeAsync(StateHasChanged);
     }
