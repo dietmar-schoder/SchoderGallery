@@ -9,26 +9,38 @@ public interface IGalleryService
 
 public class GalleryService : IGalleryService
 {
-    public List<TodoDto> GetTodosAsync() =>
-        [
-            new("Display artworks in floors", new DateTime(2025, 10, 05), TodoStatus.InProgress),
-            new("Floor: start viewing artworks", new DateTime(2025, 10, 05), TodoStatus.InProgress),
-            new("Artwork: prev/next/back", new DateTime(2025, 10, 05), TodoStatus.InProgress),
-            new("Favicon Schoder Factory brick", new DateTime(2025, 10, 05), TodoStatus.InProgress),
+    public List<TodoDto> GetTodosAsync()
+    {
+        List<TodoDto> todos = [
+            new("Display artworks in floors", TodoStatus.InProgress),
+            new("Floor: start viewing artworks", TodoStatus.InProgress),
+            new("Artwork: prev/next/back", TodoStatus.InProgress),
 
-            new("Artwork: refresh", new DateTime(2025, 10, 06), TodoStatus.Planned),
-            new("Artwork: comments", new DateTime(2025, 10, 06), TodoStatus.Planned),
-            new("Artwork: buy", new DateTime(2025, 10, 06), TodoStatus.Planned),
-            new("Artwork: sell", new DateTime(2025, 10, 06), TodoStatus.Planned),
-            new("Cafe with payment and coffee as artworks", new DateTime(2025, 10, 06), TodoStatus.Planned),
-            new("Launch the SCHODER GALLERY", new DateTime(2025, 10, 30), TodoStatus.Planned),
+            new("Artwork: refresh", TodoStatus.Planned),
+            new("Artwork: comments", TodoStatus.Planned),
+            new("Artwork: buy", TodoStatus.Planned),
+            new("Artwork: sell", TodoStatus.Planned),
+            new("Cafe with payment and coffee as artworks", TodoStatus.Planned),
+            new("Launch the SCHODER GALLERY", TodoStatus.Planned),
 
-            new("Exhibition \"Find Me!\"", new DateTime(2025, 11, 07), TodoStatus.Planned),
-            new("Exhibition \"Hitler Eats Beigel\"", new DateTime(2025, 11, 08), TodoStatus.Planned),
-            new("Exhibition \"Who Am I?\"", new DateTime(2025, 11, 09), TodoStatus.Planned),
+            new("Exhibition \"Find Me!\"", TodoStatus.Planned),
+            new("Exhibition \"Hitler Eats Beigel\"", TodoStatus.Planned),
+            new("Exhibition \"Who Am I?\"", TodoStatus.Planned),
 
-            new("To do list", new DateTime(2025, 10, 05), TodoStatus.Finished),
-            new("Fix mobile margins", new DateTime(2025, 10, 05), TodoStatus.Finished),
-            new("Lift and floors", new DateTime(2025, 10, 04), TodoStatus.Finished),
+            new("Favicon Schoder Factory brick", TodoStatus.Finished, 5, 10, 2025),
+            new("To do list", TodoStatus.Finished, 5, 10, 2025),
+            new("Fix mobile margins", TodoStatus.Finished, 5, 10, 2025),
+            new("Lift and floors", TodoStatus.Finished, 4, 10, 2025),
         ];
+
+        var today = DateTime.UtcNow;
+        var nextday = today;
+        foreach (var todo in todos.Where(t => t.Date == default))
+        {
+            todo.Date = todo.Status == TodoStatus.InProgress ? today : nextday;
+            nextday = nextday.AddDays(1);
+        }
+
+        return [.. todos.OrderBy(t => t.Status).ThenBy(t => t.Date)];
+    }
 }

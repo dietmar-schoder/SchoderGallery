@@ -22,8 +22,8 @@ public abstract class BaseFloorBuilder(
         var x = (SvgWidth - (3 * _windowWidth + 2 * _gap)) / 2;
         var xMiddle = x + doorWidth / 2;
 
-        ClickableAreas.Add(new ClickableArea(x, 0, doorWidth, wall + _gap * 2, "/Lift"));
-        _svg.TextLink(xMiddle, wall + _gap, "LIFT", (int)(_gap * _settings.LinkFontSizeToGapRatio), _settings);
+        ClickableAreas.Add(new ClickableArea(x, 0, doorWidth, wall + _gap * 4, "/Lift"));
+        _svg.TextLink(xMiddle, wall + _gap * 2, "LIFT", (int)(_gap * _settings.LinkFontSizeToGapRatio), _settings);
 
         void DrawOuterWalls()
         {

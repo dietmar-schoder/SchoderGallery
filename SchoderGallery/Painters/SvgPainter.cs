@@ -43,7 +43,7 @@ public class SvgPainter
     public void Text(int x, int y, string content, int fontSize, string colour, int letterSpacing = 6) =>
         Append($"<text x='{x}' y='{y}' text-anchor='middle' dominant-baseline='middle' font-size='{fontSize}' font-family='sans-serif' fill='{colour}' letter-spacing='{letterSpacing}'>{content}</text>");
 
-    public void TextLeft(int x, int y, string content, int fontSize, string colour, int letterSpacing = 2) =>
+    public void TextLeft(int x, int y, string content, int fontSize, string colour, double letterSpacing = 1.6) =>
         Append($"<text x='{x}' y='{y}' dominant-baseline='middle' font-size='{fontSize}' font-family='sans-serif' fill='{colour}' letter-spacing='{letterSpacing}'>{content}</text>");
 
     public void TextLink(int x, int y, string content, int fontSize, ISettings settings)

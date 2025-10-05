@@ -22,8 +22,8 @@ public class GroundFloorBuilder(
         var x = (SvgWidth - (3 * _windowWidth + 2 * _gap)) / 2;
         var xMiddle = x + doorWidth / 2;
 
-        ClickableAreas.Add(new ClickableArea(x, SvgHeight - wall - _gap * 2, doorWidth, wall + _gap * 2, "/"));
+        ClickableAreas.Add(new ClickableArea(x, SvgHeight - wall - _gap * 4, doorWidth, wall + _gap * 4, "/"));
 
-        _svg.TextLink(xMiddle, SvgHeight - wall - _gap, "EXIT", (int)(_gap * _settings.LinkFontSizeToGapRatio), _settings);
+        _svg.TextLink(xMiddle, SvgHeight - wall - _gap * 2, "EXIT", (int)(_gap * _settings.LinkFontSizeToGapRatio), _settings);
     }
 }

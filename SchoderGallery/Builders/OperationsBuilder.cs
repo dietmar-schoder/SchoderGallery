@@ -21,14 +21,11 @@ public class OperationsBuilder(
 
         var wall = _settings.WallThickness;
 
-        var todos =  galleryService.GetTodosAsync()
-            .OrderBy(t => t.Status)
-            .ThenBy(t => t.Date)
-            .ToList(); ;
+        var todos =  galleryService.GetTodosAsync();
 
         foreach (var (todo, i) in todos.Select((value, i) => (value, i)))
         {
-            _svg.TextLeft(wall + _gap, wall + (i + 3) * _gap, TodoLine(todo, i + 1), (int)(_gap * 0.5), StatusColour(todo.Status));
+            _svg.TextLeft(wall + _gap, wall + (i + 4) * _gap, TodoLine(todo, i + 1), (int)(_gap * 0.4), StatusColour(todo.Status));
         }
 
         string TodoLine(TodoDto todo, int number)
