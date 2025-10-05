@@ -15,15 +15,19 @@ public abstract class BaseFloorBuilder(
         var wall = _settings.WallThickness;
 
         DrawOuterWalls();
-        DrawWindowsAndDoor();
+        if (Type == BuilderType.Atelier)
+        {
+        }
+        else if (Type == BuilderType.GroundFloor)
+        {
+            DrawWindowsAndDoor();
+        }
+        else if (Type > 0)
+        {
+            DrawWindows();
+        }
         DrawFloorCaption();
-
-        int doorWidth = 3 * _windowWidth + 2 * _gap;
-        var x = (SvgWidth - (3 * _windowWidth + 2 * _gap)) / 2;
-        var xMiddle = x + doorWidth / 2;
-
-        ClickableAreas.Add(new ClickableArea(x, 0, doorWidth, wall + _gap * 4, "/Lift"));
-        _svg.TextLink(xMiddle, wall + _gap * 2, "LIFT", (int)(_gap * _settings.LinkFontSizeToGapRatio), _settings);
+        DrawLiftLink();
 
         void DrawOuterWalls()
         {
@@ -33,8 +37,6 @@ public abstract class BaseFloorBuilder(
 
         void DrawWindowsAndDoor()
         {
-            if (Type == BuilderType.Atelier) { return; }
-
             for (int column = 0; column < _rowsColumns; column++)
             {
                 int x = _margin + column * (_windowWidth + _gap);
@@ -48,6 +50,15 @@ public abstract class BaseFloorBuilder(
                 {
                     DrawWindow(x, SvgHeight - wall);
                 }
+            }
+        }
+
+        void DrawWindows()
+        {
+            for (int column = 0; column < _rowsColumns; column++)
+            {
+                int x = _margin + column * (_windowWidth + _gap);
+                DrawWindow(x, SvgHeight - wall);
             }
         }
 
@@ -68,6 +79,16 @@ public abstract class BaseFloorBuilder(
         {
             var floor = _navigation.Floors[Type];
             _svg.Text(SvgWidth / 2, SvgHeight / 2, floor.LiftLabel, _gap * 2, _settings.LightGray);
+        }
+
+        void DrawLiftLink()
+        {
+            int doorWidth = 3 * _windowWidth + 2 * _gap;
+            var x = (SvgWidth - (3 * _windowWidth + 2 * _gap)) / 2;
+            var xMiddle = x + doorWidth / 2;
+
+            ClickableAreas.Add(new ClickableArea(x, 0, doorWidth, wall + _gap * 4, "/Lift"));
+            _svg.TextLink(xMiddle, wall + _gap * 2, "LIFT", (int)(_gap * _settings.LinkFontSizeToGapRatio), _settings);
         }
     }
 }
