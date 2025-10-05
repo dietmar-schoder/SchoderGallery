@@ -21,21 +21,22 @@ public class LiftBuilder(
         var floors = _navigation.GetFloors();
 
         int buttonSize = ShortWindowSize;
+        int buttonGap = (int)(_gap * 1.5);
 
-        int totalWidth = 2 * buttonSize + _gap;
-        int totalHeight = 6 * buttonSize + 5 * _gap;
+        int totalWidth = 2 * buttonSize + buttonGap;
+        int totalHeight = 6 * buttonSize + 5 * buttonGap;
 
         int startX = (SvgWidth - totalWidth) / 2;
         int startY = (SvgHeight - totalHeight) / 2;
 
         foreach (var floor in floors)
         {
-            int x = startX + floor.LiftColumn * (buttonSize + _gap);
-            int y = startY + floor.LiftRow * (buttonSize + _gap);
+            int x = startX + floor.LiftColumn * (buttonSize + buttonGap);
+            int y = startY + floor.LiftRow * (buttonSize + buttonGap);
             int radius = buttonSize / 2;
             bool isGroundFloor = floor.FloorType == BuilderType.GroundFloor;
             bool isCurrentFloor = floor.FloorType == _navigation.GetVisitorFloor();
-            var colour = isCurrentFloor ? _settings.LightGray: (isGroundFloor ? _settings.Black : _settings.DarkGray);
+            var colour = isCurrentFloor ? _settings.LightGray: (isGroundFloor ? _settings.Pink : _settings.DarkGray);
 
             _svg.Circle(x - 4, y - 6, buttonSize + 8, _settings.Black, 2);
             _svg.Circle(x, y - 2, buttonSize, colour, isGroundFloor ? 2 : 1);

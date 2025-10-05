@@ -33,6 +33,8 @@ public abstract class BaseFloorBuilder(
 
         void DrawWindowsAndDoor()
         {
+            if (Type == BuilderType.Atelier) { return; }
+
             for (int column = 0; column < _rowsColumns; column++)
             {
                 int x = _margin + column * (_windowWidth + _gap);

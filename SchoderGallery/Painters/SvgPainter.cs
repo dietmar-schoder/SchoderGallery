@@ -48,7 +48,7 @@ public class SvgPainter
 
     public void TextLink(int x, int y, string content, int fontSize, ISettings settings)
     {
-        Text(x + 1, y + 1, content, fontSize, settings.Gray);
-        Text(x - 1, y - 1, content, fontSize, settings.DarkGray);
+        Text(x + 1, y + 1, content, fontSize, settings.LightGray);
+        Text(x - 1, y - 1, content, fontSize, settings.Black);
     }
 }
