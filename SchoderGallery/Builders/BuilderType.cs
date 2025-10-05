@@ -20,5 +20,5 @@ public enum BuilderType
     Basement1 = -1,
     Basement2 = -2,
     Depot = -3,
-    SiteManagement = -4
+    Operations = -4
 }

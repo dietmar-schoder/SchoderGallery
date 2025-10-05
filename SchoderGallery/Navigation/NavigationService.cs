@@ -19,7 +19,7 @@ public class NavigationService
         { BuilderType.Basement1, new FloorInfo(BuilderType.Basement1, 0, 4, "Basement 1", "/Basement") },
         { BuilderType.Basement2, new FloorInfo(BuilderType.Basement2, 1, 4, "Basement 2", "/Basement") },
         { BuilderType.Depot, new FloorInfo(BuilderType.Depot, 0, 5, "Depot", "/Depot") },
-        { BuilderType.SiteManagement, new FloorInfo(BuilderType.SiteManagement, 1, 5, "Site Management", "/SiteManagement") },
+        { BuilderType.Operations, new FloorInfo(BuilderType.Operations, 1, 5, "Operations", "/Operations") },
 
         { BuilderType.Lift, new FloorInfo(BuilderType.Lift, -1, -1, "Lift", "/Lift") }
     };

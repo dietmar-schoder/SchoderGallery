@@ -98,7 +98,7 @@ public class FacadeBuilder(
 
             int matrixColumns = (decoColumns + 1) / 2;
             int matrixRows = (decoRows + 1) / 2;
-            var colourMatrix = colourGenerator.FillMatrixWithColours(_random, matrixColumns, matrixRows, _settings.MixedColours.Length);
+            var colourMatrix = colourGenerator.FillMatrixWithColours(_random, matrixColumns, matrixRows, _settings.MixedColoursBW.Length);
 
             for (int column = 1, cx = 0; column < decoColumns; column += 2, cx++)
             {
@@ -106,7 +106,7 @@ public class FacadeBuilder(
                 {
                     double decoX = x + column * decoColumnWidth;
                     double decoY = y + row * decoRowHeight;
-                    _svg.Area(decoX, decoY, decoColumnWidth - 1, decoRowHeight - 1, _settings.MixedColours[colourMatrix[cx, ry]]);
+                    _svg.Area(decoX, decoY, decoColumnWidth - 1, decoRowHeight - 1, _settings.MixedColoursBW[colourMatrix[cx, ry]]);
                 }
             }
         }
@@ -117,7 +117,7 @@ public class FacadeBuilder(
                     y='{y - gap / 2 + 2}' 
                     text-anchor='middle' 
                     dominant-baseline='middle' 
-                    font-size='{gap * 0.5}' 
+                    font-size='{gap * _settings.LinkFontSizeToGapRatio}' 
                     font-family='sans-serif' 
                     fill='{colour}' 
                     letter-spacing='6'>ENTRANCE</text>");

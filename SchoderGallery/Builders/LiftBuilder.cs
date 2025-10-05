@@ -10,6 +10,9 @@ public class LiftBuilder(
     NavigationService navigation)
     : BaseBuilder(settingsFactory, svgPainter, navigation), IBuilder
 {
+    private const double LiftButtonCaptionSizeFactor = 1;
+    private const double LiftLabelSizeFactor = 1;
+
     public override BuilderType Type => BuilderType.Lift;
     public int Interval => 0;
 
@@ -37,7 +40,7 @@ public class LiftBuilder(
             _svg.Circle(x - 4, y - 6, buttonSize + 8, _settings.Black, 2);
             _svg.Circle(x, y - 2, buttonSize, colour, isGroundFloor ? 2 : 1);
 
-            _svg.Text(x + radius, y + radius, ((int)floor.FloorType).ToString(), (int)(_gap * 0.8), colour, 0);
+            _svg.Text(x + radius, y + radius, ((int)floor.FloorType).ToString(), (int)(_gap * LiftButtonCaptionSizeFactor), colour, 0);
 
             if (floor.LiftColumn == 0)
             {
@@ -45,7 +48,7 @@ public class LiftBuilder(
 
                 Svg($@"<text x='{x - _gap}' y='{y + buttonSize / 2}' 
                         text-anchor='end' dominant-baseline='middle' fill='{colour}' 
-                        font-size='{_gap * 0.6}' font-family='sans-serif'>
+                        font-size='{_gap * LiftLabelSizeFactor}' font-family='sans-serif'>
                         {floor.LiftLabel}</text>");
             }
             else
@@ -54,7 +57,7 @@ public class LiftBuilder(
 
                 Svg($@"<text x='{x + buttonSize + _gap}' y='{y + buttonSize / 2}' 
                         text-anchor='start' dominant-baseline='middle' fill='{colour}' 
-                        font-size='{_gap * 0.6}' font-family='sans-serif'>
+                        font-size='{_gap * LiftLabelSizeFactor}' font-family='sans-serif'>
                         {floor.LiftLabel}</text>");
             }
         }

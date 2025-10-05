@@ -24,6 +24,6 @@ public class GroundFloorBuilder(
 
         ClickableAreas.Add(new ClickableArea(x, SvgHeight - wall - _gap * 2, doorWidth, wall + _gap * 2, "/"));
 
-        _svg.TextLink(xMiddle, SvgHeight - wall - _gap, "EXIT", _gap / 2, _settings);
+        _svg.TextLink(xMiddle, SvgHeight - wall - _gap, "EXIT", (int)(_gap * _settings.LinkFontSizeToGapRatio), _settings);
     }
 }

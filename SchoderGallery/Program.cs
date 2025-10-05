@@ -5,6 +5,7 @@ using SchoderGallery.Algorithms;
 using SchoderGallery.Builders;
 using SchoderGallery.Navigation;
 using SchoderGallery.Painters;
+using SchoderGallery.Services;
 using SchoderGallery.Settings;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -15,6 +16,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 builder.Services.AddSingleton<ColourGenerator>();
 builder.Services.AddSingleton<SvgPainter>();
+builder.Services.AddSingleton<IGalleryService, GalleryService>();
 
 builder.Services.AddScoped<NavigationService>();
 
@@ -36,6 +38,6 @@ builder.Services.AddScoped<IBuilder, Floor5Builder>();
 builder.Services.AddScoped<IBuilder, Floor6Builder>();
 builder.Services.AddScoped<IBuilder, GroundFloorBuilder>();
 builder.Services.AddScoped<IBuilder, LiftBuilder>();
-builder.Services.AddScoped<IBuilder, SiteManagementBuilder>();
+builder.Services.AddScoped<IBuilder, OperationsBuilder>();
 
 await builder.Build().RunAsync();
