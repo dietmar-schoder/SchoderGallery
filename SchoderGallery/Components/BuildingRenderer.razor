@@ -1,20 +1,17 @@
-﻿@using SchoderGallery.Builders
-@using SchoderGallery.Navigation
-@using SchoderGallery.Settings
-@inject BuilderFactory BuilderFactory
+﻿@inject BuilderFactory BuilderFactory
 @inject NavigationManager Nav
 @inject NavigationService Navigation
 @inject IJSRuntime JS
 
-@if (Builder is not null)
+@if (_builder is not null)
 {
-    <PageTitle>@PageTitle</PageTitle>
+    <PageTitle>@_pageTitle</PageTitle>
 
     <div style="width:100vw; height:@_screenHeightPx; display:flex; justify-content:center; align-items:center;">
-        <svg width="@Builder.SvgWidth" height="@Builder.SvgHeight">
-            @((MarkupString)SvgContent)
+        <svg width="@_builder.SvgWidth" height="@_builder.SvgHeight">
+            @((MarkupString)_svgContent)
 
-            @foreach (var area in Builder.ClickableAreas)
+            @foreach (var area in _builder.ClickableAreas)
             {
                 <rect x="@area.X" y="@area.Y" width="@area.Width" height="@area.Height"
                     fill="transparent" stroke="none"
@@ -30,27 +27,27 @@
     [Parameter] public BuilderType BuilderType { get; set; }
 
     private string _screenHeightPx = "100vh";
-    private IBuilder Builder;
-    private string SvgContent;
+    private IBuilder _builder;
+    private string _svgContent;
     private DotNetObjectReference<BuildingRenderer> _dotNetRef;
 
-    private string PageTitle => 
-        $"Schoder Gallery{(BuilderType == BuilderType.Facade ? string.Empty : $" - {Navigation.Floors[BuilderType].LiftLabel}")}";
+    private string _pageTitle => 
+        $"Schoder Gallery{(BuilderType == BuilderType.Facade ? string.Empty : $" - {Navigation.GetFloor(BuilderType).LiftLabel}")}";
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            Builder = BuilderFactory.GetBuilder(BuilderType);
+            _builder = BuilderFactory.GetBuilder(BuilderType);
 
             var size = await JS.InvokeAsync<ScreenSize>("getScreenSize");
             _screenHeightPx = $"{size.Height}px";
-            SvgContent = Builder.GetSvgContent(size.Width, size.Height);
+            _svgContent = _builder.GetSvgContent(size.Width, size.Height);
 
             StateHasChanged();
 
             _dotNetRef = DotNetObjectReference.Create(this);
-            await JS.InvokeVoidAsync("initResizeHandler", _dotNetRef, Builder.Interval);
+            await JS.InvokeVoidAsync("initResizeHandler", _dotNetRef, _builder.Interval);
         }
     }
 
@@ -58,7 +55,7 @@
     public async Task OnResize(ScreenSize size)
     {
         _screenHeightPx = $"{size.Height}px";
-        SvgContent = Builder.GetSvgContent(size.Width, size.Height);
+        _svgContent = _builder.GetSvgContent(size.Width, size.Height);
         await InvokeAsync(StateHasChanged);
     }
 

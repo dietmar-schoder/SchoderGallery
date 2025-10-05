@@ -13,8 +13,10 @@ public abstract class BaseFloorBuilder(
     protected override void Draw()
     {
         var wall = _settings.WallThickness;
+        var floor = _navigation.GetFloor(Type);
 
         DrawOuterWalls();
+
         if (Type == BuilderType.Atelier)
         {
         }
@@ -26,7 +28,15 @@ public abstract class BaseFloorBuilder(
         {
             DrawWindows();
         }
+
+        if (floor.IsArtworksFloor)
+        {
+            // DrawExhibitionInfo();
+            DrawArtworksLink();
+        }
+
         DrawFloorCaption();
+
         DrawLiftLink();
 
         void DrawOuterWalls()
@@ -75,11 +85,8 @@ public abstract class BaseFloorBuilder(
         void DrawWindow(int x, int y) =>
             _svg.Area(x, y - 1, _windowWidth, wall + 1, _settings.White, _settings.Black);
 
-        void DrawFloorCaption()
-        {
-            var floor = _navigation.Floors[Type];
+        void DrawFloorCaption() =>
             _svg.Text(SvgWidth / 2, SvgHeight / 2, floor.LiftLabel, _gap * 2, _settings.LightGray);
-        }
 
         void DrawLiftLink()
         {
@@ -89,6 +96,15 @@ public abstract class BaseFloorBuilder(
 
             ClickableAreas.Add(new ClickableArea(x, 0, doorWidth, wall + _gap * 4, "/Lift"));
             _svg.TextLink(xMiddle, wall + _gap * 2, "LIFT", (int)(_gap * _settings.LinkFontSizeToGapRatio), _settings);
+        }
+
+        void DrawArtworksLink()
+        {
+            var widthHalf = SvgWidth / 2;
+            var heightHalf = SvgHeight / 2;
+
+            ClickableAreas.Add(new ClickableArea(0, heightHalf, SvgWidth, heightHalf, $"/Artwork/0"));
+            _svg.TextLink(widthHalf, SvgHeight * 2 / 3, "ARTWORKS", (int)(_gap * _settings.LinkFontSizeToGapRatio), _settings);
         }
     }
 }

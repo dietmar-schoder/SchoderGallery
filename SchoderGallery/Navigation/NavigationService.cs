@@ -6,7 +6,7 @@ public class NavigationService
 {
     private Visitor _visitor;
     
-    public IReadOnlyDictionary<BuilderType, FloorInfo> Floors { get; } = new Dictionary<BuilderType, FloorInfo>
+    private readonly IReadOnlyDictionary<BuilderType, FloorInfo> _floors = new Dictionary<BuilderType, FloorInfo>
     {
         { BuilderType.Atelier, new FloorInfo(BuilderType.Atelier, 1, 0, "Atelier", "/Atelier") },
         { BuilderType.Floor6, new FloorInfo(BuilderType.Floor6, 0, 0, "Floor 6", "/Floor") },
@@ -24,9 +24,13 @@ public class NavigationService
         { BuilderType.Lift, new FloorInfo(BuilderType.Lift, -1, -1, "Lift", "/Lift") }
     };
 
-    public IEnumerable<FloorInfo> GetFloors() => Floors.Values.Where(f => f.LiftColumn > -1);
+    public IEnumerable<FloorInfo> GetFloors() => _floors.Values.Where(f => f.LiftColumn > -1);
 
-    public FloorInfo GetFloor(BuilderType type) => Floors.TryGetValue(type, out var floor) ? floor : null;
+    public FloorInfo GetFloor(BuilderType type) => _floors.TryGetValue(type, out var floor) ? floor : null;
+
+    public FloorInfo GetFloor(int floorNumber) => GetFloor((BuilderType)floorNumber);
+
+    public FloorInfo GetVisitorFloor() => GetFloor(GetVisitorFloorType());
 
     public BuilderType GetBuilderType(int floorNumber) =>
         Enum.TryParse<BuilderType>(floorNumber.ToString(), out var result) ? result : BuilderType.GroundFloor;
@@ -34,16 +38,16 @@ public class NavigationService
     public void SetVisitorFloor(BuilderType floor)
     {
         EnsureVisitor();
-        if (GetFloor(floor)?.LiftColumn > -1)
+        if (GetFloor(floor)?.IsFloor ?? false)
         {
             _visitor.MoveToFloor(floor);
         }
     }
 
-    public BuilderType GetVisitorFloor()
+    public BuilderType GetVisitorFloorType()
     {
         EnsureVisitor();
-        return _visitor.CurrentFloor;
+        return _visitor.CurrentFloorType;
     }
 
     private void EnsureVisitor() => _visitor ??= new Visitor();

@@ -6,11 +6,11 @@ public class Visitor
 {
     public Guid Id { get; } = Guid.NewGuid();
 
-    public BuilderType CurrentFloor { get; private set; }
+    public BuilderType CurrentFloorType { get; private set; }
 
     public Visitor() =>
-        CurrentFloor = BuilderType.GroundFloor;
+        CurrentFloorType = BuilderType.GroundFloor;
 
     public void MoveToFloor(BuilderType newFloor) =>
-        CurrentFloor = newFloor;
+        CurrentFloorType = newFloor;
 }

@@ -1,0 +1,62 @@
+﻿@page "/Artwork/{artworkId:int}"
+@inject NavigationManager Nav
+@inject NavigationService Navigation
+@inject IArtworkBuilder ArtworkBuilder
+@inject IJSRuntime JS
+
+@if (_svgContent?.Length > 0)
+{
+    <PageTitle>@_pageTitle</PageTitle>
+
+    <div style="width:100vw; height:@_screenHeightPx; display:flex; justify-content:center; align-items:center;">
+        <svg width="@ArtworkBuilder.SvgWidth" height="@ArtworkBuilder.SvgHeight">
+            @((MarkupString)_svgContent)
+
+            @foreach (var area in ArtworkBuilder.ClickableAreas)
+            {
+                <rect x="@area.X" y="@area.Y" width="@area.Width" height="@area.Height"
+                      fill="transparent" stroke="none"
+                      style="cursor:pointer;"
+                      @onclick="() => Nav.NavigateTo(area.Page)">
+                </rect>
+            }
+        </svg>
+    </div>
+}
+
+@code {
+    [Parameter] public int ArtworkId { get; set; }
+    // Navigate to the next artwork: render with new id, instead of navigating to the page again?
+    private string _screenHeightPx = "100vh";
+    private string _svgContent;
+    private DotNetObjectReference<Artwork> _dotNetRef;
+
+    private string _pageTitle => $"Schoder Gallery - Artwork {ArtworkId}";
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var size = await JS.InvokeAsync<ScreenSize>("getScreenSize");
+        _screenHeightPx = $"{size.Height}px";
+        _svgContent = ArtworkBuilder.GetArtworkHtml(size.Width, size.Height, ArtworkId);
+
+        if (firstRender)
+        {
+            StateHasChanged();
+
+            _dotNetRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("initResizeHandler", _dotNetRef, ArtworkBuilder.Interval);
+        }
+    }
+
+    [JSInvokable]
+    public async Task OnResize(ScreenSize size)
+    {
+        _screenHeightPx = $"{size.Height}px";
+        _svgContent = ArtworkBuilder.GetSvgContent(size.Width, size.Height);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        _dotNetRef?.Dispose();
+    }
+}

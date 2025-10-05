@@ -5,6 +5,8 @@ namespace SchoderGallery.Services;
 public interface IGalleryService
 {
     List<TodoDto> GetTodosAsync();
+    List<ArtworkDto> GetArtworksAsync(int floor);
+    ArtworkDto GetArtworkAsync(int floorNumber, int id);
 }
 
 public class GalleryService : IGalleryService
@@ -43,4 +45,17 @@ public class GalleryService : IGalleryService
 
         return [.. todos.OrderBy(t => t.Status).ThenBy(t => t.Date)];
     }
+
+    // Read them from the server when the list is outdated, else from cache
+    public List<ArtworkDto> GetArtworksAsync(int floorNumber) =>
+        [
+            new ArtworkDto(1, "Mona Lisa", -1, 2),
+            new ArtworkDto(2, "Starry Night", 1, 3),
+            new ArtworkDto(3, "The Scream", 2, -1),
+        ];
+
+    public ArtworkDto GetArtworkAsync(int floorNumber, int id) =>
+        id < 1
+            ? GetArtworksAsync(floorNumber).FirstOrDefault(a => a.PreviousId == -1)
+            : GetArtworksAsync(floorNumber).FirstOrDefault(a => a.Id == id);
 }

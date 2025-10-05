@@ -25,6 +25,7 @@ builder.Services.AddScoped<ISettings, LandscapeSettings>();
 builder.Services.AddScoped<ISettings, PortraitSettings>();
 
 builder.Services.AddScoped<BuilderFactory>();
+builder.Services.AddScoped<IArtworkBuilder, ArtworkBuilder>();
 builder.Services.AddScoped<IBuilder, AtelierBuilder>();
 builder.Services.AddScoped<IBuilder, Basement1Builder>();
 builder.Services.AddScoped<IBuilder, Basement2Builder>();

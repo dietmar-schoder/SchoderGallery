@@ -11,6 +11,7 @@ public abstract class BaseBuilder(
 {
     protected readonly SvgPainter _svg = svgPainter;
     protected readonly NavigationService _navigation = navigation;
+    protected readonly SettingsFactory _settingsFactory = settingsFactory;
     protected Random _random = new();
     protected ISettings _settings;
 
@@ -37,7 +38,7 @@ public abstract class BaseBuilder(
     public string GetSvgContent(int screenWidth, int screenHeight)
     {
         _navigation.SetVisitorFloor(Type);
-        _settings = settingsFactory.GetSettings(screenWidth, screenHeight);
+        _settings = _settingsFactory.GetSettings(screenWidth, screenHeight);
         SvgWidth = Math.Max(240, screenWidth - _settings.ScreenMargin * 2);
         SvgHeight = Math.Max(240, screenHeight - _settings.ScreenMargin * 2);
         _svg.Clear();
@@ -60,7 +61,7 @@ public abstract class BaseBuilder(
 
     protected void Svg(string svgCode) => _svg.Append(svgCode);
 
-    protected abstract void Draw();
+    protected virtual void Draw() { }
 
     private int WindowWidth(int totalGapSpace)
     {

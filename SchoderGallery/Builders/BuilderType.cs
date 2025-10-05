@@ -2,6 +2,7 @@
 
 public enum BuilderType
 {
+    Artwork = 15,
     Facade = 14,
     Cafe = 13,
     Shop = 12,

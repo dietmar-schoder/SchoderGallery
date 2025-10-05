@@ -76,8 +76,8 @@ public class FacadeBuilder(
             _svg.Sunlight(x, y, doorWidth, doorHeight, _settings);
             _svg.Area(x, y, doorWidth, doorHeight, _settings.Gray);
 
-            DrawDoorDeco(x, y, doorWidth / 2, doorHeight);
-            DrawDoorDeco(x + doorWidth / 2, y, doorWidth / 2, doorHeight);
+            DrawDoorDeco(x, y, doorWidth / 2, doorHeight, _settings.MixedColoursBW);
+            DrawDoorDeco(x + doorWidth / 2, y, doorWidth / 2, doorHeight, _settings.MixedColours);
 
             var xMiddle = x + doorWidth / 2;
             _svg.VerticalLine(xMiddle, y, doorHeight, _settings.DarkGray, 2);
@@ -88,7 +88,7 @@ public class FacadeBuilder(
             ClickableAreas.Add(new ClickableArea((int)x, (int)y - _gap, doorWidth, doorHeight + _gap, "/GroundFloor"));
         }
 
-        void DrawDoorDeco(double x, double y, int doorWidth, int doorHeight)
+        void DrawDoorDeco(double x, double y, int doorWidth, int doorHeight, string[] colours)
         {
             var decoColumns = MakeOdd(_settings.NbrOfDoorDecoColumns);
             var decoColumnWidth = (double)doorWidth / decoColumns;
@@ -98,7 +98,7 @@ public class FacadeBuilder(
 
             int matrixColumns = (decoColumns + 1) / 2;
             int matrixRows = (decoRows + 1) / 2;
-            var colourMatrix = colourGenerator.FillMatrixWithColours(_random, matrixColumns, matrixRows, _settings.MixedColoursBW.Length);
+            var colourMatrix = colourGenerator.FillMatrixWithColours(_random, matrixColumns, matrixRows, colours.Length);
 
             for (int column = 1, cx = 0; column < decoColumns; column += 2, cx++)
             {
@@ -106,7 +106,7 @@ public class FacadeBuilder(
                 {
                     double decoX = x + column * decoColumnWidth;
                     double decoY = y + row * decoRowHeight;
-                    _svg.Area(decoX, decoY, decoColumnWidth - 1, decoRowHeight - 1, _settings.MixedColoursBW[colourMatrix[cx, ry]]);
+                    _svg.Area(decoX, decoY, decoColumnWidth - 1, decoRowHeight - 1, colours[colourMatrix[cx, ry]]);
                 }
             }
         }
