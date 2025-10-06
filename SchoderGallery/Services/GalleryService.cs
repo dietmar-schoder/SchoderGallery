@@ -1,17 +1,21 @@
 ﻿using SchoderGallery.Algorithms;
 using SchoderGallery.DTOs;
+using SchoderGallery.Painters;
+using SchoderGallery.Settings;
 
 namespace SchoderGallery.Services;
 
 public interface IGalleryService
 {
     List<TodoDto> GetTodosAsync();
-    List<ArtworkDto> GetArtworksAsync(int floor);
-    ArtworkDto GetArtworkAsync(int floorNumber, int id);
+    List<ArtworkDto> GetArtworksAsync(ISettings settings, int floor);
+    ArtworkDto GetArtworkAsync(ISettings settings, int floorNumber, int id);
 }
 
 public class GalleryService(AlgorithmFactory algorithmFactory) : IGalleryService
 {
+    private const string Dietmar = "Dietmar Schoder";
+
     public List<TodoDto> GetTodosAsync()
     {
         List<TodoDto> todos = [
@@ -50,24 +54,33 @@ public class GalleryService(AlgorithmFactory algorithmFactory) : IGalleryService
     }
 
     // Read them from the server when the list is outdated, else from cache
-    public List<ArtworkDto> GetArtworksAsync(int floorNumber)
+    public List<ArtworkDto> GetArtworksAsync(ISettings settings, int floorNumber)
     {
         var turtleGraphics = algorithmFactory.GetAlgorithm(AlgorithmType.TurtleGraphics) as TurtleGraphics;
         var fourColours = algorithmFactory.GetAlgorithm(AlgorithmType.FourColours) as FourColours;
         var i = 0;
 
-        return [
-            new ArtworkDto(++i, "Adventure 1/4", -1, i + 1, (s, p, w, h) => turtleGraphics.Turtle1(s, p, w, h, 8, 4)),
-            new ArtworkDto(++i, "Adventure 2/4", i - 1, i + 1, (s, p, w, h) => turtleGraphics.Turtle1(s, p, w, h, 16, 9)),
-            new ArtworkDto(++i, "Adventure 3/4", i - 1, i + 1, (s, p, w, h) => turtleGraphics.Turtle2(s, p, w, h, 13, 7)),
-            new ArtworkDto(++i, "Adventure 4/4", i - 1, i + 1, (s, p, w, h) => turtleGraphics.Turtle2(s, p, w, h, 32, 18, 1)),
-            new ArtworkDto(++i, "The Entrance 1/2", i - 1, i + 1, (s, p, w, h) => fourColours.Pattern1(s, p, w, h, 10, 6)),
-            new ArtworkDto(++i, "The Entrance 2/2", i - 1, -1, (s, p, w, h) => fourColours.Pattern1(s, p, w, h, 21, 13)),
+        List<ArtworkDto> artworks =
+        [
+            NewArtwork("Adventure 1/4", 2025, (s, p, w, h) => turtleGraphics.Turtle1(s, p, w, h, 8, 4), Dietmar),
+            NewArtwork("Adventure 2/4", 2025, (s, p, w, h) => turtleGraphics.Turtle1(s, p, w, h, 16, 9), Dietmar),
+            NewArtwork("Adventure 3/4", 2025, (s, p, w, h) => turtleGraphics.Turtle2(s, p, w, h, 13, 7), Dietmar),
+            NewArtwork("Adventure 4/4", 2025, (s, p, w, h) => turtleGraphics.Turtle2(s, p, w, h, 32, 18, 1), Dietmar),
+            NewArtwork("The Entrance 1/2", 2025, (s, p, w, h) => fourColours.Pattern1(s, p, w, h, 10, 6, settings.BlueishColours), Dietmar),
+            NewArtwork("The Entrance 2/2", 2025, (s, p, w, h) => fourColours.Pattern1(s, p, w, h, 21, 13, settings.WarmAccentColours), Dietmar),
         ];
-}
 
-    public ArtworkDto GetArtworkAsync(int floorNumber, int id) =>
+        artworks.First().PreviousId = -1;
+        artworks.Last().NextId = -1;
+
+        return artworks;
+
+        ArtworkDto NewArtwork(string title, int year, Func<ISettings, SvgPainter, int, int, int> renderAlgorithm, string artist) =>
+            new(title, year, renderAlgorithm, artist, ++i, i - 1, i + 1);
+    }
+
+    public ArtworkDto GetArtworkAsync(ISettings settings, int floorNumber, int id) =>
         id < 1
-            ? GetArtworksAsync(floorNumber).FirstOrDefault(a => a.PreviousId == -1)
-            : GetArtworksAsync(floorNumber).FirstOrDefault(a => a.Id == id);
+            ? GetArtworksAsync(settings, floorNumber).FirstOrDefault(a => a.PreviousId == -1)
+            : GetArtworksAsync(settings, floorNumber).FirstOrDefault(a => a.Id == id);
 }

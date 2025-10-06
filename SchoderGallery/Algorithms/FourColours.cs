@@ -7,7 +7,7 @@ public class FourColours(ColourGenerator colourGenerator) : IAlgorithm
 {
     public AlgorithmType AlgorithmType => AlgorithmType.FourColours;
 
-    public int Pattern1(ISettings settings, SvgPainter svgPainter, int width, int height, int columns, int rows)
+    public int Pattern1(ISettings settings, SvgPainter svgPainter, int width, int height, int columns, int rows, string[] colours)
     {
         if (settings.ScreenMode == ScreenMode.Portrait)
         {
@@ -15,7 +15,6 @@ public class FourColours(ColourGenerator colourGenerator) : IAlgorithm
         }
 
         var random = new Random();
-        var colours = settings.BlueishColours;
         var colourMatrix = colourGenerator.FillMatrixWithColours(random, columns, rows, colours.Length);
 
         double cellWidth = (double)width / columns;

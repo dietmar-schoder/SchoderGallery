@@ -17,8 +17,8 @@
                     <rect x="@area.X" y="@area.Y" width="@area.Width" height="@area.Height"
                           fill="transparent" stroke="none"
                           style="cursor:pointer;"
-                          title="Repaint artwork"
                           @onclick="RefreshAsync">
+                        <title>Repaint artwork</title>
                     </rect>
                 }
                 else
@@ -26,8 +26,8 @@
                     <rect x="@area.X" y="@area.Y" width="@area.Width" height="@area.Height"
                           fill="transparent" stroke="none"
                           style="cursor:pointer;"
-                          title="@area.Tooltip"
                           @onclick="() => Nav.NavigateTo(area.Page)">
+                        <title>@area.Tooltip</title>
                     </rect>
                 }
             }

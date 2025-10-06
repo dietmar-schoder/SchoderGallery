@@ -38,7 +38,7 @@ public class ArtworkBuilder(
         var height3rd = SvgHeight / 3;
 
         var floor = _navigation.GetVisitorFloor();
-        var artwork = galleryService.GetArtworkAsync(floor.FloorNumber, artworkId);
+        var artwork = galleryService.GetArtworkAsync(_settings, floor.FloorNumber, artworkId);
 
         // Back to floor (left top)
         _svgPainter.IconLeftArrow(0, 0, margin, _settings);
@@ -71,8 +71,9 @@ public class ArtworkBuilder(
         var artworkHeight = SvgHeight - margin * 2;
         _svgPainter.Border(margin - 1, margin - 1, SvgWidth - margin * 2 + 2, SvgHeight - margin * 2 + 2, _settings.Gray);
 
-        // Title
-        _svgPainter.TextRight(SvgWidth - margin * 2, SvgHeight - margin / 2 + 2, artwork.Title, (int)(margin * 0.6), _settings.Gray, 0);
+        // Title, Year, Artist
+        var titleYearArtist = $"{artwork.Title} ({artwork.Year}) by {artwork.Artist}";
+        _svgPainter.TextRight(SvgWidth - margin * 2, SvgHeight - margin / 2 + 2, titleYearArtist, (int)(margin * 0.6), _settings.Gray, 0);
 
         _svgPainter.Append("<g transform='translate(" + margin + "," + margin + ")'>");
         artwork.RenderAlgorithm(_settings, _svgPainter, artworkWidth, artworkHeight);

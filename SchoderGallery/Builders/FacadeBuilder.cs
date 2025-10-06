@@ -76,7 +76,7 @@ public class FacadeBuilder(
             _svgPainter.Area(x, y, doorWidth, doorHeight, _settings.Gray);
 
             DrawDoorDeco(x, y, doorWidth / 2, doorHeight, _settings.MixedColoursBW);
-            DrawDoorDeco(x + doorWidth / 2, y, doorWidth / 2, doorHeight, _settings.BlueishColours);
+            DrawDoorDeco(x + doorWidth / 2, y, doorWidth / 2, doorHeight, GetRandomColours());
 
             var xMiddle = x + doorWidth / 2;
             _svgPainter.VerticalLine(xMiddle, y, doorHeight, _settings.DarkGray, 2);
@@ -86,6 +86,9 @@ public class FacadeBuilder(
 
             ClickableAreas.Add(new ClickableArea((int)x, (int)y - _gap, doorWidth, doorHeight + _gap, "/GroundFloor"));
         }
+
+        string[] GetRandomColours() =>
+            _random.Next(2) == 0 ? _settings.BlueishColours : _settings.WarmAccentColours;
 
         void DrawDoorDeco(double x, double y, int doorWidth, int doorHeight, string[] colours)
         {

@@ -38,6 +38,13 @@ public interface ISettings
 
     string[] BlueishColours => [DeepBlue, DeepPurple, BrightCyan, Magenta];
 
+    string WarmAccentRed => "#ED0400";
+    string WarmAccentOrange => "#FF8400";
+    string WarmAccentMagenta => "#FF007B";
+    string WarmAccentYellow => "#FFD800";
+
+    string[] WarmAccentColours => [WarmAccentRed, WarmAccentOrange, WarmAccentMagenta, WarmAccentYellow];
+
     double GapToRowColumnWidthRatio => .3;
     double WindowMarginToGapRatio => 1;
     int WallThickness => 8;

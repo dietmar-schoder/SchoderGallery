@@ -45,18 +45,6 @@ public class TurtleGraphics(ColourGenerator colourGenerator) : IAlgorithm
 
         svgPainter.Append($"<path d='{sb}' fill='none' stroke='{settings.Black}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' />");
 
-        //for (int row = 0; row < rows; row++)
-        //{
-        //    for (int col = 0; col < columns; col++)
-        //    {
-        //        int colourIndex = colourMatrix[col, row];
-        //        string colour = colours[colourIndex];
-        //        double x = col * cellWidth + cellWidth / 4.0;
-        //        double y = row * cellHeight + cellHeight / 4.0;
-        //        svgPainter.Area(x, y, cellWidth / 2.0, cellHeight / 2.0, colour);
-        //    }
-        //}
-
         return 0;
     }
 
