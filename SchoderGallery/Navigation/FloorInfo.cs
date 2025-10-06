@@ -7,6 +7,9 @@ public record FloorInfo(BuilderType FloorType, int LiftColumn, int LiftRow, stri
     public bool IsFloor =>
         LiftColumn > -1;
 
+    public int FloorNumber =>
+        (int)FloorType;
+
     // Replace with record field IsArtworksFloor
     public bool IsArtworksFloor =>
         IsFloor

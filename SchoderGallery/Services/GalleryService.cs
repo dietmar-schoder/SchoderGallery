@@ -1,4 +1,5 @@
-﻿using SchoderGallery.DTOs;
+﻿using SchoderGallery.Algorithms;
+using SchoderGallery.DTOs;
 
 namespace SchoderGallery.Services;
 
@@ -9,16 +10,15 @@ public interface IGalleryService
     ArtworkDto GetArtworkAsync(int floorNumber, int id);
 }
 
-public class GalleryService : IGalleryService
+public class GalleryService(AlgorithmFactory algorithmFactory) : IGalleryService
 {
     public List<TodoDto> GetTodosAsync()
     {
         List<TodoDto> todos = [
-            new("Display artworks in floors", TodoStatus.InProgress),
-            new("Floor: start viewing artworks", TodoStatus.InProgress),
-            new("Artwork: prev/next/back", TodoStatus.InProgress),
+            new("Exhibitions in floors + lift labels", TodoStatus.InProgress),
+            new("Explanation pages", TodoStatus.InProgress),
+            new("Hourglass", TodoStatus.InProgress),
 
-            new("Artwork: refresh", TodoStatus.Planned),
             new("Artwork: comments", TodoStatus.Planned),
             new("Artwork: buy", TodoStatus.Planned),
             new("Artwork: sell", TodoStatus.Planned),
@@ -29,6 +29,9 @@ public class GalleryService : IGalleryService
             new("Exhibition \"Hitler Eats Beigel\"", TodoStatus.Planned),
             new("Exhibition \"Who Am I?\"", TodoStatus.Planned),
 
+            new("Artwork: refresh", TodoStatus.Finished, 6, 10, 2025),
+            new("Artwork: prev/next/back", TodoStatus.Finished, 6, 10, 2025),
+            new("Floor: start viewing artworks", TodoStatus.Finished, 6, 10, 2025),
             new("Favicon Schoder Factory brick", TodoStatus.Finished, 5, 10, 2025),
             new("To do list", TodoStatus.Finished, 5, 10, 2025),
             new("Fix mobile margins", TodoStatus.Finished, 5, 10, 2025),
@@ -47,12 +50,21 @@ public class GalleryService : IGalleryService
     }
 
     // Read them from the server when the list is outdated, else from cache
-    public List<ArtworkDto> GetArtworksAsync(int floorNumber) =>
-        [
-            new ArtworkDto(1, "Mona Lisa", -1, 2),
-            new ArtworkDto(2, "Starry Night", 1, 3),
-            new ArtworkDto(3, "The Scream", 2, -1),
+    public List<ArtworkDto> GetArtworksAsync(int floorNumber)
+    {
+        var turtleGraphics = algorithmFactory.GetAlgorithm(AlgorithmType.TurtleGraphics) as TurtleGraphics;
+        var fourColours = algorithmFactory.GetAlgorithm(AlgorithmType.FourColours) as FourColours;
+        var i = 0;
+
+        return [
+            new ArtworkDto(++i, "Adventure 1/4", -1, i + 1, (s, p, w, h) => turtleGraphics.Turtle1(s, p, w, h, 8, 4)),
+            new ArtworkDto(++i, "Adventure 2/4", i - 1, i + 1, (s, p, w, h) => turtleGraphics.Turtle1(s, p, w, h, 16, 9)),
+            new ArtworkDto(++i, "Adventure 3/4", i - 1, i + 1, (s, p, w, h) => turtleGraphics.Turtle2(s, p, w, h, 13, 7)),
+            new ArtworkDto(++i, "Adventure 4/4", i - 1, i + 1, (s, p, w, h) => turtleGraphics.Turtle2(s, p, w, h, 32, 18, 1)),
+            new ArtworkDto(++i, "The Entrance 1/2", i - 1, i + 1, (s, p, w, h) => fourColours.Pattern1(s, p, w, h, 10, 6)),
+            new ArtworkDto(++i, "The Entrance 2/2", i - 1, -1, (s, p, w, h) => fourColours.Pattern1(s, p, w, h, 21, 13)),
         ];
+}
 
     public ArtworkDto GetArtworkAsync(int floorNumber, int id) =>
         id < 1

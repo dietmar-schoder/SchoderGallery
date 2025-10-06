@@ -1,4 +1,6 @@
-﻿namespace SchoderGallery.Builders;
+﻿using SchoderGallery.Navigation;
+
+namespace SchoderGallery.Builders;
 
 public interface IBuilder
 {

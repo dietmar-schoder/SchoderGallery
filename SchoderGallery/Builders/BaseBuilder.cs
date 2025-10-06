@@ -9,7 +9,7 @@ public abstract class BaseBuilder(
     SvgPainter svgPainter,
     NavigationService navigation)
 {
-    protected readonly SvgPainter _svg = svgPainter;
+    protected readonly SvgPainter _svgPainter = svgPainter;
     protected readonly NavigationService _navigation = navigation;
     protected readonly SettingsFactory _settingsFactory = settingsFactory;
     protected Random _random = new();
@@ -41,7 +41,7 @@ public abstract class BaseBuilder(
         _settings = _settingsFactory.GetSettings(screenWidth, screenHeight);
         SvgWidth = Math.Max(240, screenWidth - _settings.ScreenMargin * 2);
         SvgHeight = Math.Max(240, screenHeight - _settings.ScreenMargin * 2);
-        _svg.Clear();
+        _svgPainter.Clear();
         ClickableAreas.Clear();
         _rowsColumns = _settings.RowsColumns;
 
@@ -56,10 +56,10 @@ public abstract class BaseBuilder(
         _windowGlassColumnWidth = (_windowWidth - 1.0) / _windowGlassColumns;
         _windowGlassRowHeight = (_windowHeight - 1.0) / _windowGlassRows;
         Draw();
-        return _svg.SvgContent();
+        return _svgPainter.SvgContent();
     }
 
-    protected void Svg(string svgCode) => _svg.Append(svgCode);
+    protected void Svg(string svgCode) => _svgPainter.Append(svgCode);
 
     protected virtual void Draw() { }
 

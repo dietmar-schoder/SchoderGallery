@@ -1,4 +1,4 @@
-﻿namespace SchoderGallery.Algorithms;
+﻿namespace SchoderGallery.Painters;
 
 public class ColourGenerator
 {

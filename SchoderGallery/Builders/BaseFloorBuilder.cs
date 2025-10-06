@@ -41,8 +41,8 @@ public abstract class BaseFloorBuilder(
 
         void DrawOuterWalls()
         {
-            _svg.Area(0, 0, SvgWidth, SvgHeight, _settings.LightGray, _settings.Black);
-            _svg.Area(wall, wall, SvgWidth - 2 * wall, SvgHeight - 2 * wall, _settings.White, _settings.DarkGray);
+            _svgPainter.Area(0, 0, SvgWidth, SvgHeight, _settings.LightGray, _settings.Black);
+            _svgPainter.Area(wall, wall, SvgWidth - 2 * wall, SvgHeight - 2 * wall, _settings.White, _settings.DarkGray);
         }
 
         void DrawWindowsAndDoor()
@@ -76,17 +76,17 @@ public abstract class BaseFloorBuilder(
         {
             int doorWidth = 3 * _windowWidth + 2 * _gap;
 
-            _svg.Area(x, y - 1, doorWidth, wall + 1, _settings.Gray, _settings.Black);
+            _svgPainter.Area(x, y - 1, doorWidth, wall + 1, _settings.Gray, _settings.Black);
 
             var xMiddle = x + doorWidth / 2;
-            _svg.VerticalLine(xMiddle, y, wall, _settings.DarkGray, 2);
+            _svgPainter.VerticalLine(xMiddle, y, wall, _settings.DarkGray, 2);
         }
 
         void DrawWindow(int x, int y) =>
-            _svg.Area(x, y - 1, _windowWidth, wall + 1, _settings.White, _settings.Black);
+            _svgPainter.Area(x, y - 1, _windowWidth, wall + 1, _settings.White, _settings.Black);
 
         void DrawFloorCaption() =>
-            _svg.Text(SvgWidth / 2, SvgHeight / 2, floor.LiftLabel, _gap * 2, _settings.LightGray);
+            _svgPainter.Text(SvgWidth / 2, SvgHeight / 2, floor.LiftLabel, _gap * 2, _settings.LightGray);
 
         void DrawLiftLink()
         {
@@ -95,7 +95,7 @@ public abstract class BaseFloorBuilder(
             var xMiddle = x + doorWidth / 2;
 
             ClickableAreas.Add(new ClickableArea(x, 0, doorWidth, wall + _gap * 4, "/Lift"));
-            _svg.TextLink(xMiddle, wall + _gap * 2, "LIFT", (int)(_gap * _settings.LinkFontSizeToGapRatio), _settings);
+            _svgPainter.TextLink(xMiddle, wall + _gap * 2, "LIFT", (int)(_gap * _settings.LinkFontSizeToGapRatio), _settings);
         }
 
         void DrawArtworksLink()
@@ -104,7 +104,7 @@ public abstract class BaseFloorBuilder(
             var heightHalf = SvgHeight / 2;
 
             ClickableAreas.Add(new ClickableArea(0, heightHalf, SvgWidth, heightHalf, $"/Artwork/0"));
-            _svg.TextLink(widthHalf, SvgHeight * 2 / 3, "ARTWORKS", (int)(_gap * _settings.LinkFontSizeToGapRatio), _settings);
+            _svgPainter.TextLink(widthHalf, SvgHeight * 2 / 3, "ARTWORKS", (int)(_gap * _settings.LinkFontSizeToGapRatio), _settings);
         }
     }
 }

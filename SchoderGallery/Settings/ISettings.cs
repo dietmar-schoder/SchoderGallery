@@ -13,6 +13,7 @@ public interface ISettings
     int NbrOfVerticalWindowSections { get; }
     int NbrOfDoorDecoColumns { get; }
     int ShadowOffset => 1;
+    double LinkFontSizeToGapRatio => 0.75;
 
     string White => "#FFFFFF";
     string LightGray => "#C0C3C3";
@@ -20,8 +21,6 @@ public interface ISettings
     string DarkGray => "#404343";
     string Black => "#000303";
     string LinkBackground => "#C0C3C3";
-    double LinkFontSizeToGapRatio => 0.75;
-
     string[] MixedColoursBW => ["#111111", "#333333", "#555555", "#777777", "#AAAAAA", "#DDDDDD"];
 
     string Orange => "#FF6700";
@@ -30,8 +29,14 @@ public interface ISettings
     string Blue => "#1F51FF";
     string LimeGreen => "#39FF14";
     string Yellow => "#FFFF33";
-
     string[] MixedColours => [Orange, Red, Pink, Blue, LimeGreen, Yellow];
+
+    string DeepBlue => "#0303ED";
+    string DeepPurple => "#7403ED";
+    string BrightCyan => "#03E3DF";
+    string Magenta => "#ED03D1";
+
+    string[] BlueishColours => [DeepBlue, DeepPurple, BrightCyan, Magenta];
 
     double GapToRowColumnWidthRatio => .3;
     double WindowMarginToGapRatio => 1;

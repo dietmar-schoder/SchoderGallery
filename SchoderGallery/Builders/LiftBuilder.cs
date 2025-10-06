@@ -38,10 +38,10 @@ public class LiftBuilder(
             bool isCurrentFloor = floor.FloorType == _navigation.GetVisitorFloorType();
             var colour = isCurrentFloor ? _settings.LightGray: (isGroundFloor ? _settings.Pink : _settings.DarkGray);
 
-            _svg.Circle(x - 4, y - 6, buttonSize + 8, _settings.Black, 2);
-            _svg.Circle(x, y - 2, buttonSize, colour, isGroundFloor ? 2 : 1);
+            _svgPainter.Circle(x - 4, y - 6, buttonSize + 8, _settings.Black, 2);
+            _svgPainter.Circle(x, y - 2, buttonSize, colour, isGroundFloor ? 2 : 1);
 
-            _svg.Text(x + radius, y + radius, ((int)floor.FloorType).ToString(), (int)(_gap * LiftButtonCaptionSizeFactor), colour, 0);
+            _svgPainter.Text(x + radius, y + radius, ((int)floor.FloorType).ToString(), (int)(_gap * LiftButtonCaptionSizeFactor), colour, 0);
 
             if (floor.LiftColumn == 0)
             {

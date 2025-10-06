@@ -1,5 +1,4 @@
-﻿using SchoderGallery.Algorithms;
-using SchoderGallery.Navigation;
+﻿using SchoderGallery.Navigation;
 using SchoderGallery.Painters;
 using SchoderGallery.Settings;
 
@@ -20,7 +19,7 @@ public class FacadeBuilder(
         DrawFrontWall();
         DrawDoorAndWindows();
 
-        void DrawFrontWall() => _svg.Area(0, 0, SvgWidth, SvgHeight, _settings.LightGray);
+        void DrawFrontWall() => _svgPainter.Area(0, 0, SvgWidth, SvgHeight, _settings.LightGray);
 
         void DrawDoorAndWindows()
         {
@@ -46,7 +45,7 @@ public class FacadeBuilder(
                 }
             }
 
-            _settings.DrawFacadeLetters(_svg, _settings, SvgWidth, _rowsColumns, _margin, _gap, _windowWidth, _windowHeight, ShortWindowSize);
+            _settings.DrawFacadeLetters(_svgPainter, _settings, SvgWidth, _rowsColumns, _margin, _gap, _windowWidth, _windowHeight, ShortWindowSize);
         }
 
         void DrawWindowGlasses(int x, int y, int width, int height)
@@ -57,15 +56,15 @@ public class FacadeBuilder(
                 {
                     double glassX = x + col * _windowGlassColumnWidth - 0.5;
                     double glassY = y + row * _windowGlassRowHeight - 0.5;
-                    _svg.Area(glassX, glassY, _windowGlassColumnWidth - 1, _windowGlassRowHeight - 1, SkyColour());
+                    _svgPainter.Area(glassX, glassY, _windowGlassColumnWidth - 1, _windowGlassRowHeight - 1, SkyColour());
                 }
             }
         }
 
         void DrawWindowFrames(double x, double y, int width, int height)
         {
-            _svg.Sunlight(x, y, width, height, _settings);
-            _svg.Area(x, y, width, height, _settings.Gray);
+            _svgPainter.Sunlight(x, y, width, height, _settings);
+            _svgPainter.Area(x, y, width, height, _settings.Gray);
         }
 
         void DrawDoor(double x, double y)
@@ -73,14 +72,14 @@ public class FacadeBuilder(
             int doorWidth = 3 * _windowWidth + 2 * _gap;
             int doorHeight = _windowHeight + _margin - 3;
 
-            _svg.Sunlight(x, y, doorWidth, doorHeight, _settings);
-            _svg.Area(x, y, doorWidth, doorHeight, _settings.Gray);
+            _svgPainter.Sunlight(x, y, doorWidth, doorHeight, _settings);
+            _svgPainter.Area(x, y, doorWidth, doorHeight, _settings.Gray);
 
             DrawDoorDeco(x, y, doorWidth / 2, doorHeight, _settings.MixedColoursBW);
-            DrawDoorDeco(x + doorWidth / 2, y, doorWidth / 2, doorHeight, _settings.MixedColours);
+            DrawDoorDeco(x + doorWidth / 2, y, doorWidth / 2, doorHeight, _settings.BlueishColours);
 
             var xMiddle = x + doorWidth / 2;
-            _svg.VerticalLine(xMiddle, y, doorHeight, _settings.DarkGray, 2);
+            _svgPainter.VerticalLine(xMiddle, y, doorHeight, _settings.DarkGray, 2);
 
             DrawEntranceText((int)xMiddle + 1, (int)y + 1, _gap, _settings.Gray);
             DrawEntranceText((int)xMiddle - 1, (int)y - 1, _gap, _settings.DarkGray);
@@ -106,7 +105,7 @@ public class FacadeBuilder(
                 {
                     double decoX = x + column * decoColumnWidth;
                     double decoY = y + row * decoRowHeight;
-                    _svg.Area(decoX, decoY, decoColumnWidth - 1, decoRowHeight - 1, colours[colourMatrix[cx, ry]]);
+                    _svgPainter.Area(decoX, decoY, decoColumnWidth - 1, decoRowHeight - 1, colours[colourMatrix[cx, ry]]);
                 }
             }
         }

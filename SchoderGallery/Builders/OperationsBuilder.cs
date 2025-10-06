@@ -25,7 +25,7 @@ public class OperationsBuilder(
 
         foreach (var (todo, i) in todos.Select((value, i) => (value, i)))
         {
-            _svg.TextLeft(wall + _gap, wall + (i + 4) * _gap, TodoLine(todo, i + 1), (int)(_gap * 0.6), StatusColour(todo.Status));
+            _svgPainter.TextLeft(wall + _gap, wall + (i + 4) * _gap, TodoLine(todo, i + 1), (int)(_gap * 0.6), StatusColour(todo.Status));
         }
 
         string TodoLine(TodoDto todo, int number)

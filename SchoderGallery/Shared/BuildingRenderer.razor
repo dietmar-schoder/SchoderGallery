@@ -1,0 +1,22 @@
+﻿@inherits SvgComponentBase
+@inject NavigationManager Nav
+
+@if (_svgContent?.Length > 0)
+{
+    <PageTitle>@PageTitle</PageTitle>
+
+    <div style="width:100vw; height:@_screenHeightPx; display:flex; justify-content:center; align-items:center;">
+        <svg width="@_builder.SvgWidth" height="@_builder.SvgHeight">
+            @((MarkupString)_svgContent)
+
+            @foreach (var area in _builder.ClickableAreas)
+            {
+                <rect x="@area.X" y="@area.Y" width="@area.Width" height="@area.Height"
+                    fill="transparent" stroke="none"
+                    style="cursor:pointer;"
+                    @onclick="() => Nav.NavigateTo(area.Page)">
+                </rect>
+            }
+        </svg>
+    </div>
+}

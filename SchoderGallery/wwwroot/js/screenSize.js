@@ -23,7 +23,7 @@ window.initResizeHandler = (dotNetObject, interval) => {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
             dotNetObject.invokeMethodAsync('OnResize', createScreenSize());
-        }, 1);
+        }, 200);
     };
 
     window.addEventListener('resize', window._resizeHandler);
