@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using SchoderGallery.Settings;
+using SchoderGallery.DTOs;
 
 namespace SchoderGallery.Shared;
 
@@ -12,7 +12,7 @@ public abstract class SvgComponentBase : ComponentBase, IDisposable
     protected string _svgContent;
     private DotNetObjectReference<SvgComponentBase> _dotNetRef;
 
-    protected abstract Task<string> GetSvgContentAsync(ScreenSize size);
+    protected abstract Task<string> GetSvgContentAsync(SizeDto size);
     protected abstract string PageTitle { get; }
 
     protected override async Task OnInitializedAsync()
@@ -33,19 +33,19 @@ public abstract class SvgComponentBase : ComponentBase, IDisposable
         await OnParametersSetAsync();
 
     [JSInvokable]
-    public async Task OnResize(ScreenSize size)
+    public async Task OnResize(SizeDto size)
     {
         SetScreenHeightPx(size);
         await RenderPageAsync(size);
     }
 
-    private async Task<ScreenSize> GetScreenSize() =>
-        await JS.InvokeAsync<ScreenSize>("getScreenSize");
+    private async Task<SizeDto> GetScreenSize() =>
+        await JS.InvokeAsync<SizeDto>("getScreenSize");
 
-    protected void SetScreenHeightPx(ScreenSize size) =>
+    protected void SetScreenHeightPx(SizeDto size) =>
         _screenHeightPx = $"{size.Height}px";
 
-    private async Task RenderPageAsync(ScreenSize size)
+    private async Task RenderPageAsync(SizeDto size)
     {
         _svgContent = await GetSvgContentAsync(size);
         await InvokeAsync(StateHasChanged);

@@ -1,4 +1,5 @@
-﻿using SchoderGallery.Navigation;
+﻿using SchoderGallery.Helpers;
+using SchoderGallery.Navigation;
 using SchoderGallery.Painters;
 using SchoderGallery.Services;
 using SchoderGallery.Settings;
@@ -14,7 +15,8 @@ public class ArtworkBuilder(
     SettingsFactory settingsFactory,
     SvgPainter svgPainter,
     NavigationService navigation,
-    IGalleryService galleryService)
+    IGalleryService galleryService,
+    SizeHelperFactory sizeHelperFactory)
     : BaseBuilder(settingsFactory, svgPainter, navigation), IArtworkBuilder, IBuilder
 {
     public override BuilderType Type => BuilderType.Artwork;
@@ -23,22 +25,31 @@ public class ArtworkBuilder(
 
     public string GetArtworkHtml(int screenWidth, int screenHeight, int artworkId)
     {
-        _settings = _settingsFactory.GetSettings(screenWidth, screenHeight);
-        SvgWidth = Math.Max(240, screenWidth - _settings.ScreenMargin * 2);
-        SvgHeight = Math.Max(240, screenHeight - _settings.ScreenMargin * 2);
         _svgPainter.Clear();
+        _settings = _settingsFactory.GetSettings(screenWidth, screenHeight);
         ClickableAreas.Clear();
 
+        var floor = _navigation.GetVisitorFloor();
+        var artwork = galleryService.GetArtworkAsync(_settings, floor.FloorNumber, artworkId);
+
+        var sizeHelper = sizeHelperFactory.GetHelper(artwork.SizeType);
+        (int artworkWidth, int artworkHeight) = sizeHelper.GetArtworkSize(artwork, screenWidth, screenHeight);
+
+
+        //var artworkWidth = SvgWidth - margin * 2;
+        //var artworkHeight = SvgHeight - margin * 2;
+        SvgWidth = Math.Max(240, screenWidth - _settings.ScreenMargin * 2);
+        SvgHeight = Math.Max(240, screenHeight - _settings.ScreenMargin * 2);
         _rowsColumns = _settings.RowsColumns;
         _gap = (int)(ShortSize / _rowsColumns * _settings.GapToRowColumnWidthRatio);
         var margin = _gap / 2 + 4;
         var halfMargin = margin / 2;
-
         var widthHalf = SvgWidth / 2;
         var height3rd = SvgHeight / 3;
 
-        var floor = _navigation.GetVisitorFloor();
-        var artwork = galleryService.GetArtworkAsync(_settings, floor.FloorNumber, artworkId);
+
+
+
 
         // Back to floor (left top)
         _svgPainter.IconLeftArrow(0, 0, margin, _settings);
@@ -67,8 +78,6 @@ public class ArtworkBuilder(
         // Buy (right bottom)
 
         // Frame
-        var artworkWidth = SvgWidth - margin * 2;
-        var artworkHeight = SvgHeight - margin * 2;
         _svgPainter.Border(margin - 1, margin - 1, SvgWidth - margin * 2 + 2, SvgHeight - margin * 2 + 2, _settings.Gray);
 
         // Title, Year, Artist

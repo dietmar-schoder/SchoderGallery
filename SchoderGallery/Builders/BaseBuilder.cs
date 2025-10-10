@@ -32,7 +32,11 @@ public abstract class BaseBuilder(
     public abstract BuilderType Type { get; }
 
     public int SvgWidth { get; set; }
+
     public int SvgHeight { get; set; }
+
+    public bool IsMobile => SvgWidth <= 768;
+
     public List<ClickableArea> ClickableAreas { get; } = [];
 
     public string GetSvgContent(int screenWidth, int screenHeight)

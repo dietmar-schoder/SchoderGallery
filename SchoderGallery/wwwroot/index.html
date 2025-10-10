@@ -18,20 +18,21 @@
     <link rel="stylesheet" href="css/app.css" />
 </head>
 
-<body style="margin: 0; padding: 0; height: 100%;">
+<body style="margin:0; padding:0; height:100%;">
     <div id="app">
-        <svg class="loading-progress">
-            <circle r="40%" cx="50%" cy="50%" />
-            <circle r="40%" cx="50%" cy="50%" />
-        </svg>
-        <div class="loading-progress-text"></div>
+        <div class="loading-progress">
+            <div class="square" style="background-color:#e74c3c;"></div>
+            <div class="square" style="background-color:#e67e22;"></div>
+            <div class="square" style="background-color:#c0392b;"></div>
+            <div class="square" style="background-color:#f1c40f;"></div>
+        </div>
     </div>
-
     <div id="blazor-error-ui">
         An unhandled error has occurred.
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
+
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="js/screenSize.js"></script>
 </body>

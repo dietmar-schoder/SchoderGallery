@@ -76,7 +76,7 @@ public class GalleryService(AlgorithmFactory algorithmFactory) : IGalleryService
         return artworks;
 
         ArtworkDto NewArtwork(string title, int year, Func<ISettings, SvgPainter, int, int, int> renderAlgorithm, string artist) =>
-            new(title, year, renderAlgorithm, artist, ++i, i - 1, i + 1);
+            new(title, year, renderAlgorithm, SizeType.Dynamic, 0, 0, artist, ++i, i - 1, i + 1);
     }
 
     public ArtworkDto GetArtworkAsync(ISettings settings, int floorNumber, int id) =>

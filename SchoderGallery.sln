@@ -5,6 +5,8 @@ VisualStudioVersion = 17.14.36414.22
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchoderGallery", "SchoderGallery\SchoderGallery.csproj", "{C23D1E0D-9E1C-4DE1-B772-1AB456C9CF12}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchoderGallery.UnitTests", "SchoderGallery.UnitTests\SchoderGallery.UnitTests.csproj", "{89115DC9-ACEB-4FA2-8123-C4385C182A57}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{C23D1E0D-9E1C-4DE1-B772-1AB456C9CF12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C23D1E0D-9E1C-4DE1-B772-1AB456C9CF12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C23D1E0D-9E1C-4DE1-B772-1AB456C9CF12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89115DC9-ACEB-4FA2-8123-C4385C182A57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89115DC9-ACEB-4FA2-8123-C4385C182A57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89115DC9-ACEB-4FA2-8123-C4385C182A57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89115DC9-ACEB-4FA2-8123-C4385C182A57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

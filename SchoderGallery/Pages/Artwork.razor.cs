@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using SchoderGallery.Builders;
-using SchoderGallery.Settings;
+using SchoderGallery.DTOs;
 using SchoderGallery.Shared;
 
 namespace SchoderGallery.Pages;
@@ -12,7 +12,7 @@ public partial class Artwork : SvgComponentBase
 
     protected override string PageTitle => $"Schoder Gallery - Artwork {ArtworkId}";
 
-    protected override Task<string> GetSvgContentAsync(ScreenSize size) =>
+    protected override Task<string> GetSvgContentAsync(SizeDto size) =>
         Task.FromResult(ArtworkBuilder.GetArtworkHtml(size.Width, size.Height, ArtworkId));
 
     protected override int GetInterval() => ArtworkBuilder.Interval;

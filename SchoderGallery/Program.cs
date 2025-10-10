@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using SchoderGallery;
 using SchoderGallery.Algorithms;
 using SchoderGallery.Builders;
+using SchoderGallery.Helpers;
 using SchoderGallery.Navigation;
 using SchoderGallery.Painters;
 using SchoderGallery.Services;
@@ -27,6 +28,11 @@ builder.Services.AddScoped<ISettings, PortraitSettings>();
 builder.Services.AddSingleton<AlgorithmFactory>();
 builder.Services.AddSingleton<IAlgorithm, TurtleGraphics>();
 builder.Services.AddSingleton<IAlgorithm, FourColours>();
+
+builder.Services.AddSingleton<SizeHelperFactory>();
+builder.Services.AddSingleton<ISizeHelper, DynamicSizeHelper>();
+builder.Services.AddSingleton<ISizeHelper, FixedSizeHelper>();
+builder.Services.AddSingleton<ISizeHelper, RatioSizeHelper>();
 
 builder.Services.AddScoped<BuilderFactory>();
 builder.Services.AddScoped<IArtworkBuilder, ArtworkBuilder>();
