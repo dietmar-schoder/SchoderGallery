@@ -10,6 +10,7 @@ public abstract class SvgComponentBase : ComponentBase, IDisposable
 
     protected string _screenHeightPx = "100vh";
     protected string _svgContent;
+    protected bool _isLoading = true;
     private DotNetObjectReference<SvgComponentBase> _dotNetRef;
 
     protected abstract Task<string> GetSvgContentAsync(SizeDto size);
@@ -26,11 +27,13 @@ public abstract class SvgComponentBase : ComponentBase, IDisposable
         await JS.InvokeVoidAsync("initResizeHandler", _dotNetRef, GetInterval());
     }
 
-    protected override async Task OnParametersSetAsync() =>
+    protected override async Task OnParametersSetAsync()
+    {
+        _isLoading = true;
+        await InvokeAsync(StateHasChanged);
+        await Task.Yield();
         await RenderPageAsync(await GetScreenSize());
-
-    public async Task RefreshAsync() =>
-        await OnParametersSetAsync();
+    }
 
     [JSInvokable]
     public async Task OnResize(SizeDto size)
@@ -48,6 +51,7 @@ public abstract class SvgComponentBase : ComponentBase, IDisposable
     private async Task RenderPageAsync(SizeDto size)
     {
         _svgContent = await GetSvgContentAsync(size);
+        _isLoading = false;
         await InvokeAsync(StateHasChanged);
     }
 

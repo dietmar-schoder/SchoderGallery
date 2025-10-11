@@ -20,11 +20,13 @@
 
 <body style="margin:0; padding:0; height:100%;">
     <div id="app">
-        <div class="loading-progress">
-            <div class="square" style="background-color:#e74c3c;"></div>
-            <div class="square" style="background-color:#e67e22;"></div>
-            <div class="square" style="background-color:#c0392b;"></div>
-            <div class="square" style="background-color:#f1c40f;"></div>
+        <div id="spinner" style="position:absolute;">
+            <div class="loading-progress">
+                <div class="square" style="background-color:#e74c3c;"></div>
+                <div class="square" style="background-color:#e67e22;"></div>
+                <div class="square" style="background-color:#c0392b;"></div>
+                <div class="square" style="background-color:#f1c40f;"></div>
+            </div>
         </div>
     </div>
     <div id="blazor-error-ui">
@@ -35,6 +37,22 @@
 
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="js/screenSize.js"></script>
+    <script>
+        function centerSpinner() {
+            const spinner = document.getElementById('spinner');
+            const width = spinner.offsetWidth;
+            const height = spinner.offsetHeight;
+
+            const viewportWidth = document.documentElement.clientWidth;
+            const viewportHeight = document.documentElement.clientHeight;
+
+            spinner.style.left = `${(viewportWidth - width) / 2}px`;
+            spinner.style.top = `${(viewportHeight - height) / 2}px`;
+        }
+
+        window.addEventListener('load', centerSpinner);
+        window.addEventListener('resize', centerSpinner);
+    </script>
 </body>
 
 </html>
