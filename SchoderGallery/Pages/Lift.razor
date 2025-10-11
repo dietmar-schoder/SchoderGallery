@@ -1,3 +1,37 @@
 ﻿@page "/Lift"
+@inherits SvgComponentBase
+@inject NavigationManager Nav
 
-<BuildingRenderer BuilderType="BuilderType.Lift" />
+<div style="position:absolute; top:0; left:4px; width:@(_builder.SvgWidth)px; height:@(_builder.SvgHeight)px; overflow:hidden; display:flex; justify-content:center; align-items:flex-start;">
+    <div class="@( _isMovingUp ? "vertical-strip-up" : (_isMovingDown ? "vertical-strip-down" : "hidden") )">
+        <div class="liftsquare" style="background-color:#e74c3c;"></div>
+        <div class="liftsquare" style="background-color:#e67e22;"></div>
+        <div class="liftsquare" style="background-color:#c0392b;"></div>
+        <div class="liftsquare" style="background-color:#f1c40f;"></div>
+    </div>
+
+    <div style="position:absolute; top:0; left:4px; width:@(_builder.SvgWidth)px; height:2rem; background-color:white;"></div>
+    <div style="position:absolute; top:4rem; left:4px; width:@(_builder.SvgWidth)px; height:14rem; background-color:white;"></div>
+</div>
+
+@if (_svgContent?.Length > 0)
+{
+    <PageTitle>@PageTitle</PageTitle>
+    <div style="position:absolute; top:0; left:4px; width:@(_builder.SvgWidth)px; height:@(_screenHeightPx); display:flex; justify-content:center; align-items:center; pointer-events:auto;">
+        <svg width="@_builder.SvgWidth" height="@_builder.SvgHeight">
+            @((MarkupString)_svgContent)
+
+            @if(!_isMovingUp && !_isMovingDown)
+            {
+                @foreach (var area in _builder.ClickableAreas)
+                {
+                    <rect x="@area.X" y="@area.Y" width="@area.Width" height="@area.Height"
+                          fill="transparent" stroke="none"
+                          style="cursor:pointer;"
+                          @onclick="() => OnLiftClick(area.Page)">
+                    </rect>
+                }
+            }
+        </svg>
+    </div>
+}

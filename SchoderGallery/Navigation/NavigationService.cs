@@ -24,13 +24,20 @@ public class NavigationService
         { BuilderType.Lift, new FloorInfo(BuilderType.Lift, -1, -1, "Lift", "/Lift") }
     };
 
-    public IEnumerable<FloorInfo> GetFloors() => _floors.Values.Where(f => f.LiftColumn > -1);
+    public IEnumerable<FloorInfo> GetFloors() =>
+        _floors.Values.Where(f => f.LiftColumn > -1);
 
-    public FloorInfo GetFloor(BuilderType type) => _floors.TryGetValue(type, out var floor) ? floor : null;
+    public FloorInfo GetFloor(BuilderType type) =>
+        _floors.TryGetValue(type, out var floor) ? floor : _floors[BuilderType.GroundFloor];
 
-    public FloorInfo GetFloor(int floorNumber) => GetFloor((BuilderType)floorNumber);
+    public FloorInfo GetFloor(int floorNumber) =>
+        GetFloor(GetBuilderType(floorNumber));
 
-    public FloorInfo GetVisitorFloor() => GetFloor(GetVisitorFloorType());
+    public FloorInfo GetFloor(string floorNumberString) =>
+        GetFloor(GetBuilderType(int.TryParse(floorNumberString, out var floorNumber) ? floorNumber : 0));
+
+    public FloorInfo GetVisitorFloor() =>
+        GetFloor(GetVisitorFloorType());
 
     public BuilderType GetBuilderType(int floorNumber) =>
         Enum.TryParse<BuilderType>(floorNumber.ToString(), out var result) ? result : BuilderType.GroundFloor;

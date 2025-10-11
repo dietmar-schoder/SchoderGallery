@@ -60,8 +60,6 @@ public class GalleryService(AlgorithmFactory algorithmFactory) : IGalleryService
         var fourColours = algorithmFactory.GetAlgorithm(AlgorithmType.FourColours) as FourColours;
         var i = 0;
 
-        Thread.Sleep(550);
-
         List<ArtworkDto> artworks =
         [
             NewArtwork("Adventure 1/4", 2025, (s, p, w, h) => turtleGraphics.Turtle1(s, p, w, h, 8, 4), Dietmar),

@@ -45,7 +45,7 @@ public class LiftBuilder(
 
             if (floor.LiftColumn == 0)
             {
-                ClickableAreas.Add(new ClickableArea(0, y - 6, SvgWidth / 2 - 2, buttonSize + 8, floor.PageAndParam()));
+                ClickableAreas.Add(new ClickableArea(0, y - 6, SvgWidth / 2 - 2, buttonSize + 8, floor.FloorNumber.ToString()));
 
                 Svg($@"<text x='{x - _gap}' y='{y + buttonSize / 2}' 
                         text-anchor='end' dominant-baseline='middle' fill='{colour}' 
@@ -54,7 +54,7 @@ public class LiftBuilder(
             }
             else
             {
-                ClickableAreas.Add(new ClickableArea(SvgWidth / 2, y - 6, SvgWidth / 2 + 2, buttonSize + 8, floor.PageAndParam()));
+                ClickableAreas.Add(new ClickableArea(SvgWidth / 2 + 2, y - 6, SvgWidth / 2 - 2, buttonSize + 8, floor.FloorNumber.ToString()));
 
                 Svg($@"<text x='{x + buttonSize + _gap}' y='{y + buttonSize / 2}' 
                         text-anchor='start' dominant-baseline='middle' fill='{colour}' 
