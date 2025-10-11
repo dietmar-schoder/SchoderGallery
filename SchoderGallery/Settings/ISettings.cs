@@ -7,7 +7,12 @@ public interface ISettings
     string SchoderText => "Schoder";
     string GalleryText => "Gallery";
     ScreenMode ScreenMode { get; }
-    int ScreenMargin => 4;
+    int OuterMargin => 4;
+    int TinyMargin => 2;
+    int IconSizeMobile => 32;
+    int IconDesktop => 16;
+    int FontSizeMobile => 20;
+    int FontSizeDesktop => 12;
     int RowsColumns => 7;
     int NbrOfHorizontalWindowSections { get; }
     int NbrOfVerticalWindowSections { get; }

@@ -25,67 +25,67 @@ public class ArtworkBuilder(
 
     public string GetArtworkHtml(int screenWidth, int screenHeight, int artworkId)
     {
+        var floor = _navigation.GetVisitorFloor();
+        var artwork = galleryService.GetArtworkAsync(_settings, floor.FloorNumber, artworkId);
+        var sizeHelper = sizeHelperFactory.GetHelper(artwork.SizeType);
+
         _svgPainter.Clear();
         _settings = _settingsFactory.GetSettings(screenWidth, screenHeight);
         ClickableAreas.Clear();
 
-        var floor = _navigation.GetVisitorFloor();
-        var artwork = galleryService.GetArtworkAsync(_settings, floor.FloorNumber, artworkId);
+        SvgWidth = Math.Max(320, screenWidth - _settings.OuterMargin * 2);
+        SvgHeight = Math.Max(320, screenHeight - _settings.OuterMargin * 2);
 
-        var sizeHelper = sizeHelperFactory.GetHelper(artwork.SizeType);
-        (int artworkWidth, int artworkHeight) = sizeHelper.GetArtworkSize(artwork, screenWidth, screenHeight);
+        var tinyMargin = _settings.TinyMargin;
+        var iconSize = IsMobile ? _settings.IconSizeMobile : _settings.IconDesktop;
+        var fontSize = IsMobile ? _settings.FontSizeMobile : _settings.FontSizeDesktop;
+        var iconSizePlus = iconSize + tinyMargin;
+        var topMargin = iconSize + 2 * tinyMargin;
+        var availableArtworkWidth = SvgWidth - tinyMargin * 2;
+        var availableArtworkHeight = SvgHeight - topMargin * 2 - tinyMargin * 2;
+        var artworkSize = sizeHelper.GetArtworkSize(artwork, availableArtworkWidth, availableArtworkHeight);
+        var artworkLeftMargin = (SvgWidth - artworkSize.Width) / 2;
+        var artworkTopMargin = (SvgHeight - artworkSize.Height) / 2;
 
-
-        //var artworkWidth = SvgWidth - margin * 2;
-        //var artworkHeight = SvgHeight - margin * 2;
-        SvgWidth = Math.Max(240, screenWidth - _settings.ScreenMargin * 2);
-        SvgHeight = Math.Max(240, screenHeight - _settings.ScreenMargin * 2);
-        _rowsColumns = _settings.RowsColumns;
-        _gap = (int)(ShortSize / _rowsColumns * _settings.GapToRowColumnWidthRatio);
-        var margin = _gap / 2 + 4;
-        var halfMargin = margin / 2;
         var widthHalf = SvgWidth / 2;
-        var height3rd = SvgHeight / 3;
+        var width3rd = SvgWidth / 3;
+        var heightHalf = SvgHeight / 2;
 
+        // Back to floor (top left)
+        _svgPainter.IconLeftArrow(tinyMargin, tinyMargin, iconSize, _settings);
+        ClickableAreas.Add(new ClickableArea(0, 0, width3rd - 2, heightHalf - 2, floor.PageAndParam(), "Back"));
 
+        // Comments (top middle)
 
+        // Buy (top right)
 
-
-        // Back to floor (left top)
-        _svgPainter.IconLeftArrow(0, 0, margin, _settings);
-        ClickableAreas.Add(new ClickableArea(0, 0, widthHalf - 2, height3rd - 2, floor.PageAndParam(), "Back"));
-
-        // Comments (right top)
-
-        // Previous artwork
+        // Previous artwork (bottom left)
         if (artwork.PreviousId > -1)
         {
-            _svgPainter.IconLeft(-2, SvgHeight / 2 - margin / 2, margin, _settings);
-            ClickableAreas.Add(new ClickableArea(0, height3rd + 2, widthHalf - 2, height3rd - 2, $"/Artwork/{artwork.PreviousId}", "Previous artwork"));
+            _svgPainter.IconLeft(tinyMargin, SvgHeight - iconSizePlus, iconSize, _settings);
+            ClickableAreas.Add(new ClickableArea(0, heightHalf + 2, width3rd - 2, heightHalf - 2, $"/Artwork/{artwork.PreviousId}", "Previous artwork"));
         }
 
-        // Next artwork
+        // Refresh (bottom middle)
+        _svgPainter.IconRefresh(widthHalf - iconSize / 2 - tinyMargin, SvgHeight - iconSizePlus, iconSize, _settings);
+        ClickableAreas.Add(new ClickableArea(width3rd + 2, heightHalf + 2, width3rd - 4, heightHalf - 2, ReRender: true));
+
+        // Next artwork (bottom right)
         if (artwork.NextId > -1)
         {
-            _svgPainter.IconRight(2 + SvgWidth - margin, SvgHeight / 2 - margin / 2, margin, _settings);
-            ClickableAreas.Add(new ClickableArea(widthHalf + 2, height3rd + 2, widthHalf - 2, height3rd - 2, $"/Artwork/{artwork.NextId}", "Next artwork"));
+            _svgPainter.IconRight(SvgWidth - iconSizePlus, SvgHeight - iconSizePlus, iconSize, _settings);
+            ClickableAreas.Add(new ClickableArea(width3rd * 2 + 2, heightHalf + 2, width3rd - 2, heightHalf - 2, $"/Artwork/{artwork.NextId}", "Next artwork"));
         }
 
-        // Refresh (left bottom)
-        _svgPainter.IconRefresh(0, SvgHeight - margin, margin, _settings);
-        ClickableAreas.Add(new ClickableArea(0, height3rd * 2 + 2, widthHalf - 2, height3rd - 2, ReRender: true));
-
-        // Buy (right bottom)
-
         // Frame
-        _svgPainter.Border(margin - 1, margin - 1, SvgWidth - margin * 2 + 2, SvgHeight - margin * 2 + 2, _settings.Gray);
+        _svgPainter.Border(artworkLeftMargin - 1, artworkTopMargin - 1, artworkSize.Width + 2, artworkSize.Height + 2, _settings.Gray);
 
         // Title, Year, Artist
-        var titleYearArtist = $"{artwork.Title} ({artwork.Year}) by {artwork.Artist}";
-        _svgPainter.TextRight(SvgWidth - margin * 2, SvgHeight - margin / 2 + 2, titleYearArtist, (int)(margin * 0.6), _settings.Gray, 0);
+        var titleYearArtist = $"{artwork.Title} ({artwork.Year}) - {artwork.Artist}";
+        _svgPainter.TextRight(artworkLeftMargin + artworkSize.Width - iconSize, artworkTopMargin + artworkSize.Height + topMargin / 2, titleYearArtist, fontSize, _settings.LightGray, 0);
 
-        _svgPainter.Append("<g transform='translate(" + margin + "," + margin + ")'>");
-        artwork.RenderAlgorithm(_settings, _svgPainter, artworkWidth, artworkHeight);
+        _svgPainter.Append($"<g transform='translate({artworkLeftMargin},{artworkTopMargin})'>");
+        artwork.RenderAlgorithm(_settings, _svgPainter, artworkSize.Width, artworkSize.Height);
         _svgPainter.Append("</g>");
 
         return _svgPainter.SvgContent();

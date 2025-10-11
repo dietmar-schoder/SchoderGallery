@@ -43,8 +43,8 @@ public abstract class BaseBuilder(
     {
         _navigation.SetVisitorFloor(Type);
         _settings = _settingsFactory.GetSettings(screenWidth, screenHeight);
-        SvgWidth = Math.Max(240, screenWidth - _settings.ScreenMargin * 2);
-        SvgHeight = Math.Max(240, screenHeight - _settings.ScreenMargin * 2);
+        SvgWidth = Math.Max(240, screenWidth - _settings.OuterMargin * 2);
+        SvgHeight = Math.Max(240, screenHeight - _settings.OuterMargin * 2);
         _svgPainter.Clear();
         ClickableAreas.Clear();
         _rowsColumns = _settings.RowsColumns;
@@ -64,6 +64,8 @@ public abstract class BaseBuilder(
     }
 
     protected void Svg(string svgCode) => _svgPainter.Append(svgCode);
+
+    protected int IconSize => IsMobile ? _settings.IconSizeMobile : _settings.IconDesktop;
 
     protected virtual void Draw() { }
 
