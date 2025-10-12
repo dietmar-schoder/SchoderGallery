@@ -12,8 +12,8 @@ public interface ISettings
 
     int IconSizeMobile => 32;
     int SmallFontSizeMobile => 12;
-    int FontSizeMobile => 16;
-    int LargeFontSizeMobile => 20;
+    int FontSizeMobile => 14;
+    int LargeFontSizeMobile => 16;
 
     int IconSizeDesktop => 16;
     int SmallFontSizeDesktop => 12;

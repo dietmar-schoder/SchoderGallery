@@ -72,7 +72,7 @@ public class ArtworkBuilder(
 
         // Title, Year, Artist
         var titleYearArtist = $"{artwork.Title} ({artwork.Year}) - {artwork.Artist}";
-        _svgPainter.TextRight(artworkLeftMargin + artworkSize.Width - iconSize, artworkTopMargin + artworkSize.Height + topMargin / 2, titleYearArtist, _smallFontSize, Colours.LightGray, 0);
+        _svgPainter.TextRight(artworkLeftMargin + artworkSize.Width - iconSize, artworkTopMargin + artworkSize.Height + _smallFontSize * 2 / 3 + 2, titleYearArtist, _smallFontSize, Colours.LightGray, 0);
 
         _svgPainter.Append($"<g transform='translate({artworkLeftMargin},{artworkTopMargin})'>");
         artwork.RenderAlgorithm(_settings, _svgPainter, artworkSize.Width, artworkSize.Height);
