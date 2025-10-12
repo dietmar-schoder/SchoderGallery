@@ -58,6 +58,7 @@ public class GalleryService : IGalleryService
     {
         List<TodoDto> todos = [
             new("You are here", TodoStatus.InProgress),
+            new("OnMouseOver for links", TodoStatus.InProgress),
             new("Explanation pages", TodoStatus.InProgress),
 
             new("Artwork: comments", TodoStatus.Planned),
@@ -123,9 +124,11 @@ public class GalleryService : IGalleryService
     public ArtworkDto GetArtworkAsync(int floorNumber, int id)
     {
         var artworks = GetArtworksAsync(floorNumber);
-        return id < 1
-            ? artworks.FirstOrDefault(a => a.PreviousId == -1)
-            : artworks.FirstOrDefault(a => a.Id == id);
+        var artwork = id > 0
+            ? artworks.FirstOrDefault(a => a.Id == id)
+            : null;
+
+        return artwork ?? artworks.FirstOrDefault(a => a.PreviousId == -1);
     }
 
     private static ArtworkDto NewArtwork(string title, int year, int id,

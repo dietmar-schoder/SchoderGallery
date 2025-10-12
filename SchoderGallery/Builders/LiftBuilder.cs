@@ -20,7 +20,7 @@ public class LiftBuilder(
         var floors = _navigation.GetFloors();
 
         int buttonSize = _largeFontSize * 2;
-        int buttonGap = (int)(buttonSize * 0.5);
+        int buttonGap = (int)(buttonSize * 0.75);
 
         int totalWidth = 2 * buttonSize + buttonGap;
         int totalHeight = 6 * buttonSize + 5 * buttonGap;
@@ -65,7 +65,7 @@ public class LiftBuilder(
 
             Svg($@"<text x='{xPos}' y='{y + buttonSize / 2}' 
             text-anchor='{textAnchor}' dominant-baseline='middle' fill='{colour}' 
-            font-size='{_largeFontSize}' font-family='sans-serif'>
+            font-size='{(IsMobile ? _fontSize : _largeFontSize)}' font-family='sans-serif'>
             {label}</text>");
         }
     }

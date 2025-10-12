@@ -56,12 +56,12 @@ public abstract class BaseBuilder(
     {
         _settings = _settingsFactory.GetSettings(screenWidth, screenHeight);
 
+        SvgWidth = Math.Max(240, screenWidth - _settings.OuterMargin * 2);
+        SvgHeight = Math.Max(240, screenHeight - _settings.OuterMargin * 2);
+
         _smallFontSize = IsMobile ? _settings.SmallFontSizeMobile : _settings.SmallFontSizeDesktop;
         _fontSize = IsMobile ? _settings.FontSizeMobile : _settings.FontSizeDesktop;
         _largeFontSize = IsMobile ? _settings.LargeFontSizeMobile : _settings.LargeFontSizeDesktop;
-
-        SvgWidth = Math.Max(240, screenWidth - _settings.OuterMargin * 2);
-        SvgHeight = Math.Max(240, screenHeight - _settings.OuterMargin * 2);
 
         _width50 = SvgWidth / 2;
         _width33 = SvgWidth / 3;

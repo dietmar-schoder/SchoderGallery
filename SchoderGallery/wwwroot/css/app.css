@@ -43,6 +43,10 @@ code {
     color: #c02d76;
 }
 
+svg rect[style*="cursor:pointer"] {
+    -webkit-tap-highlight-color: transparent;
+}
+
 .loading-progress {
     display: grid;
     grid-template-columns: repeat(2, 1fr);

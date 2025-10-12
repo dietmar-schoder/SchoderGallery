@@ -42,6 +42,12 @@ public class NavigationService
     public BuilderType GetBuilderType(int floorNumber) =>
         Enum.TryParse<BuilderType>(floorNumber.ToString(), out var result) ? result : BuilderType.GroundFloor;
 
+    public BuilderType GetVisitorFloorType()
+    {
+        EnsureVisitor();
+        return _visitor.CurrentFloorType;
+    }
+
     public void SetVisitorFloor(BuilderType floor)
     {
         EnsureVisitor();
@@ -51,11 +57,11 @@ public class NavigationService
         }
     }
 
-    public BuilderType GetVisitorFloorType()
-    {
-        EnsureVisitor();
-        return _visitor.CurrentFloorType;
-    }
+    public int GetArtworkIdOrLatestArtworkId(int artworkId) =>
+        artworkId < 1 ? _visitor.LatestArtworkId : artworkId;
+
+    public void SetLatestArtworkId(int artworkId) =>
+        _visitor.ViewArtwork(artworkId);
 
     private void EnsureVisitor() => _visitor ??= new Visitor();
 }

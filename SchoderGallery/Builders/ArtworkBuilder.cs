@@ -28,9 +28,11 @@ public class ArtworkBuilder(
         Init(screenWidth, screenHeight);
 
         var floor = _navigation.GetVisitorFloor();
+        artworkId = _navigation.GetArtworkIdOrLatestArtworkId(artworkId);
         var artwork = _galleryService.GetArtworkAsync(floor.FloorNumber, artworkId);
-        var sizeHelper = sizeHelperFactory.GetHelper(artwork.SizeType);
+        _navigation.SetLatestArtworkId(artworkId);
 
+        var sizeHelper = sizeHelperFactory.GetHelper(artwork.SizeType);
         var tinyMargin = _settings.TinyMargin;
         var iconSize = IsMobile ? _settings.IconSizeMobile : _settings.IconSizeDesktop;
         var iconSizePlus = iconSize + tinyMargin;

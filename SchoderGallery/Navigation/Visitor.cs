@@ -8,9 +8,14 @@ public class Visitor
 
     public BuilderType CurrentFloorType { get; private set; }
 
+    public int LatestArtworkId { get; private set; }
+
     public Visitor() =>
         CurrentFloorType = BuilderType.GroundFloor;
 
     public void MoveToFloor(BuilderType newFloor) =>
         CurrentFloorType = newFloor;
+
+    public void ViewArtwork(int artworkId) =>
+        LatestArtworkId = artworkId;
 }
