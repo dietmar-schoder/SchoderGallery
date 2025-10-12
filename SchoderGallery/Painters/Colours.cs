@@ -11,7 +11,26 @@ public class Colours
 
     public readonly string[] MixedColoursBW =
     [
-        "#111111", "#333333", "#555555", "#777777", "#AAAAAA", "#DDDDDD"
+        "#111111",
+        "#1C1C1C",
+        "#262626",
+        "#303030",
+        "#3B3B3B",
+        "#454545",
+        "#505050",
+        "#5A5A5A",
+        "#656565",
+        "#6F6F6F",
+        "#7A7A7A",
+        "#858585",
+        "#8F8F8F",
+        "#9A9A9A",
+        "#A4A4A4",
+        "#AFAFAF",
+        "#B9B9B9",
+        "#C4C4C4",
+        "#CECECE",
+        "#D9D9D9"
     ];
 
     public const string Orange = "#FF6700";
@@ -36,6 +55,30 @@ public class Colours
         DeepBlue, DeepPurple, BrightCyan, Magenta
     ];
 
+    public readonly string[] Blueish20Colours =
+    [
+        "#0303ED",
+        "#1A03ED",
+        "#3203ED",
+        "#4A03ED",
+        "#6203ED",
+        "#7403ED",
+        "#8303ED",
+        "#9103ED",
+        "#A003ED",
+        "#B003ED",
+        "#C003ED",
+        "#D003ED",
+        "#ED03D1",
+        "#ED03B0",
+        "#ED0390",
+        "#03E3DF",
+        "#03C8DF",
+        "#03ADEF",
+        "#0392ED",
+        "#0377ED"
+    ];
+
     public const string WarmAccentRed = "#ED0400";
     public const string WarmAccentOrange = "#FF8400";
     public const string WarmAccentMagenta = "#FF007B";
@@ -44,6 +87,30 @@ public class Colours
     public readonly string[] WarmAccentColours =
     [
         WarmAccentRed, WarmAccentOrange, WarmAccentMagenta, WarmAccentYellow
+    ];
+
+    public readonly string[] Warm20AccentColours =
+    [
+        "#4B0000",
+        "#630000",
+        "#7A0000",
+        "#A30000",
+        "#ED0400",
+        "#FF3700",
+        "#FF6400",
+        "#FF8400",
+        "#FF9C00",
+        "#FFB400",
+        "#FFCC00",
+        "#FFD800",
+        "#FFE200",
+        "#FF007B",
+        "#FF3380",
+        "#FF6699",
+        "#FF99B3",
+        "#FFCC66",
+        "#FFE999",
+        "#FFFDEE"
     ];
 
     public int[,] FillMatrixWithColours(Random random, int columns, int rows, int nbrOfColours)

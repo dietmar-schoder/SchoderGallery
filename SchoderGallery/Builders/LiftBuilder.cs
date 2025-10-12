@@ -14,6 +14,7 @@ public class LiftBuilder(
 {
     public override BuilderType Type => BuilderType.Lift;
     public int Interval => 0;
+    public FloorInfo CurrentFloor { get; set; }
 
     protected override void Draw()
     {
@@ -28,16 +29,17 @@ public class LiftBuilder(
         int startX = _width50 - totalWidth / 2;
         int startY = _height50 - totalHeight / 2;
 
+        CurrentFloor = _navigation.GetVisitorFloor();
+
         foreach (var floor in floors)
         {
             int x = startX + floor.LiftColumn * (buttonSize + buttonGap);
             int y = startY + floor.LiftRow * (buttonSize + buttonGap);
             int radius = buttonSize / 2;
             bool isGroundFloor = floor.FloorType == BuilderType.GroundFloor;
-            bool isCurrentFloor = floor.FloorType == _navigation.GetVisitorFloorType();
             var exhibition = _galleryService.GetExhibition(floor.FloorNumber);
             var label = exhibition?.LiftLabel ?? floor.LiftLabel;
-            var colour = isCurrentFloor ? Colours.LightGray: (isGroundFloor ? Colours.WarmAccentRed : exhibition?.LabelColour ?? Colours.DarkGray);
+            var colour = isGroundFloor ? Colours.WarmAccentRed : exhibition?.LabelColour ?? Colours.DarkGray;
 
             _svgPainter.Circle(x - 4, y - 6, buttonSize + 8, Colours.Black, 2);
             _svgPainter.Circle(x, y - 2, buttonSize, colour, isGroundFloor ? 2 : 1);

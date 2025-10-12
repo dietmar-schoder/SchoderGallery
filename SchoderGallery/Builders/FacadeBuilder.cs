@@ -10,7 +10,7 @@ public class FacadeBuilder(
     SvgPainter svgPainter,
     NavigationService navigation,
     IGalleryService galleryService,
-    Colours colourGenerator)
+    Colours colours)
     : BaseBuilder(settingsFactory, svgPainter, navigation, galleryService), IBuilder
 {
     public override BuilderType Type => BuilderType.Facade;
@@ -77,7 +77,7 @@ public class FacadeBuilder(
             _svgPainter.Sunlight(x, y, doorWidth, doorHeight, _settings);
             _svgPainter.Area(x, y, doorWidth, doorHeight, Colours.Gray);
 
-            DrawDoorDeco(x, y, doorWidth / 2, doorHeight, colourGenerator.MixedColoursBW);
+            DrawDoorDeco(x, y, doorWidth / 2, doorHeight, colours.MixedColoursBW);
             DrawDoorDeco(x + doorWidth / 2, y, doorWidth / 2, doorHeight, GetRandomColours());
 
             var xMiddle = x + doorWidth / 2;
@@ -90,9 +90,9 @@ public class FacadeBuilder(
         }
 
         string[] GetRandomColours() =>
-            _random.Next(2) == 0 ? colourGenerator.BlueishColours : colourGenerator.WarmAccentColours;
+            _random.Next(2) == 0 ? colours.Blueish20Colours : colours.Warm20AccentColours;
 
-        void DrawDoorDeco(double x, double y, int doorWidth, int doorHeight, string[] colours)
+        void DrawDoorDeco(double x, double y, int doorWidth, int doorHeight, string[] colourPalette)
         {
             var decoColumns = MakeOdd(_settings.NbrOfDoorDecoColumns);
             var decoColumnWidth = (double)doorWidth / decoColumns;
@@ -102,7 +102,7 @@ public class FacadeBuilder(
 
             int matrixColumns = (decoColumns + 1) / 2;
             int matrixRows = (decoRows + 1) / 2;
-            var colourMatrix = colourGenerator.FillMatrixWithColours(_random, matrixColumns, matrixRows, colours.Length);
+            var colourMatrix = colours.FillMatrixWithColours(_random, matrixColumns, matrixRows, colourPalette.Length);
 
             for (int column = 1, cx = 0; column < decoColumns; column += 2, cx++)
             {
@@ -110,7 +110,7 @@ public class FacadeBuilder(
                 {
                     double decoX = x + column * decoColumnWidth;
                     double decoY = y + row * decoRowHeight;
-                    _svgPainter.Area(decoX, decoY, decoColumnWidth - 1, decoRowHeight - 1, colours[colourMatrix[cx, ry]]);
+                    _svgPainter.Area(decoX, decoY, decoColumnWidth - 1, decoRowHeight - 1, colourPalette[colourMatrix[cx, ry]]);
                 }
             }
         }

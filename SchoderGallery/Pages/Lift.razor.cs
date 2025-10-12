@@ -11,14 +11,18 @@ public partial class Lift : SvgComponentBase
     [Inject] private BuilderFactory BuilderFactory { get; set; }
     [Inject] private NavigationService Navigation { get; set; }
 
-    private IBuilder _builder;
+    private LiftBuilder _builder;
     private bool _isMovingUp = false;
     private bool _isMovingDown = false;
+    private int _currentFloorNumber;
+
+    private bool IsMoving => _isMovingUp || _isMovingDown;
 
     protected override async Task OnInitializedAsync()
     {
-        _builder = BuilderFactory.GetBuilder(BuilderType.Lift);
+        _builder = BuilderFactory.GetBuilder(BuilderType.Lift) as LiftBuilder;
         await base.OnInitializedAsync();
+        _currentFloorNumber = _builder.CurrentFloor.FloorNumber;
     }
     private async Task OnLiftClick(string floorNumber)
     {
@@ -27,12 +31,16 @@ public partial class Lift : SvgComponentBase
 
         _isMovingUp = newFloor.FloorNumber > currentFloor.FloorNumber;
         _isMovingDown = newFloor.FloorNumber < currentFloor.FloorNumber;
-        StateHasChanged();
-        await Task.Yield();
 
-        //var artworks = await ArtworkService.GetArtworksAsync(floorId);
-        //ArtworkState.CurrentArtworks = artworks;
-        await Task.Delay(1000);
+        if (IsMoving)
+        {
+            StateHasChanged();
+            await Task.Yield();
+
+            //var artworks = await ArtworkService.GetArtworksAsync(floorId);
+            //ArtworkState.CurrentArtworks = artworks;
+            await Task.Delay(1000);
+        }
 
         _isMovingUp = _isMovingDown = false;
         Nav.NavigateTo(newFloor.PageAndParam());

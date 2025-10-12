@@ -8,7 +8,7 @@ public class TurtleGraphics(Colours colourGenerator) : IAlgorithm
 {
     public AlgorithmType AlgorithmType => AlgorithmType.TurtleGraphics;
 
-    public int Turtle1(ISettings settings, SvgPainter svgPainter, int width, int height, int columns, int rows)
+    public int Turtle1(ISettings settings, SvgPainter svgPainter, int width, int height, int columns, int rows, bool closePath = false)
     {
         if (settings.ScreenMode == ScreenMode.Portrait)
         {
@@ -27,9 +27,10 @@ public class TurtleGraphics(Colours colourGenerator) : IAlgorithm
         {
             for (int col = 0; col < columns; col++)
             {
-                double centerX = col * cellWidth + cellWidth / 2.0;
-                double centerY = row * cellHeight + cellHeight / 2.0;
-                sectionCenters.Add((centerX, centerY));
+                double x = col * cellWidth + cellWidth / 2.0;
+                double y = row * cellHeight + cellHeight / 2.0;
+                (x, y) = RandomPointInSection(x, y, cellWidth, cellHeight, random);
+                sectionCenters.Add((x, y));
             }
         }
 
@@ -41,6 +42,11 @@ public class TurtleGraphics(Colours colourGenerator) : IAlgorithm
         {
             sb.Append(first ? $"M{X},{Y}" : $" L{X},{Y}");
             first = false;
+        }
+
+        if (closePath && sectionCenters.Count > 0)
+        {
+            sb.Append(" Z"); // Close the path
         }
 
         svgPainter.Append($"<path d='{sb}' fill='none' stroke='{Colours.Black}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' />");
@@ -106,6 +112,7 @@ public class TurtleGraphics(Colours colourGenerator) : IAlgorithm
             visited[currentRow, currentCol] = true;
 
             var (x, y) = sectionCenters[currentRow, currentCol];
+            (x, y) = RandomPointInSection(x, y, cellWidth, cellHeight, random);
             sb.Append($" L{x},{y}");
 
             steps++;
@@ -114,5 +121,85 @@ public class TurtleGraphics(Colours colourGenerator) : IAlgorithm
         svgPainter.Append($"<path d='{sb}' fill='none' stroke='{Colours.Black}' stroke-width='{strokeThickness}' stroke-linecap='round' stroke-linejoin='round' />");
 
         return 0;
+    }
+
+    public int Turtle1Smooth(ISettings settings, SvgPainter svgPainter, int width, int height, int columns, int rows, bool closePath = false)
+    {
+        if (settings.ScreenMode == ScreenMode.Portrait)
+            (rows, columns) = (columns, rows);
+
+        var random = new Random();
+        var colours = colourGenerator.BlueishColours;
+
+        double cellWidth = (double)width / columns;
+        double cellHeight = (double)height / rows;
+
+        var sectionCenters = new List<(double X, double Y)>();
+        for (int row = 0; row < rows; row++)
+        {
+            for (int col = 0; col < columns; col++)
+            {
+                double x = col * cellWidth + cellWidth / 2.0;
+                double y = row * cellHeight + cellHeight / 2.0;
+                (x, y) = RandomPointInSection(x, y, cellWidth, cellHeight, random);
+                sectionCenters.Add((x, y));
+            }
+        }
+
+        sectionCenters = [.. sectionCenters.OrderBy(_ => random.Next())];
+        sectionCenters = [.. sectionCenters.Take(sectionCenters.Count / 2)];
+
+        if (sectionCenters.Count < 2)
+            return 0;
+
+        var sb = new StringBuilder();
+        sb.Append($"M{sectionCenters[0].X},{sectionCenters[0].Y}");
+
+        for (int i = 0; i < sectionCenters.Count - 1; i++)
+        {
+            var p0 = i > 0 ? sectionCenters[i - 1] : sectionCenters[i];
+            var p1 = sectionCenters[i];
+            var p2 = sectionCenters[i + 1];
+            var p3 = i < sectionCenters.Count - 2 ? sectionCenters[i + 2] : p2;
+
+            // Catmull-Rom to cubic Bézier
+            double cp1x = p1.X + (p2.X - p0.X) / 6.0;
+            double cp1y = p1.Y + (p2.Y - p0.Y) / 6.0;
+            double cp2x = p2.X - (p3.X - p1.X) / 6.0;
+            double cp2y = p2.Y - (p3.Y - p1.Y) / 6.0;
+
+            sb.Append($" C{cp1x},{cp1y} {cp2x},{cp2y} {p2.X},{p2.Y}");
+        }
+
+        if (closePath)
+        {
+            // Connect last point to first smoothly
+            var p0 = sectionCenters[^2];
+            var p1 = sectionCenters[^1];
+            var p2 = sectionCenters[0];
+            var p3 = sectionCenters.Count > 2 ? sectionCenters[1] : p2;
+
+            double cp1x = p1.X + (p2.X - p0.X) / 6.0;
+            double cp1y = p1.Y + (p2.Y - p0.Y) / 6.0;
+            double cp2x = p2.X - (p3.X - p1.X) / 6.0;
+            double cp2y = p2.Y - (p3.Y - p1.Y) / 6.0;
+
+            sb.Append($" C{cp1x},{cp1y} {cp2x},{cp2y} {p2.X},{p2.Y} Z");
+        }
+
+        svgPainter.Append($"<path d='{sb}' fill='none' stroke='{Colours.Black}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' />");
+
+        return 0;
+    }
+
+    private static (double X, double Y) RandomPointInSection(double centerX, double centerY, double cellWidth, double cellHeight, Random random)
+    {
+        double halfWidth = cellWidth / 2.0;
+        double halfHeight = cellHeight / 2.0;
+
+        double offsetX = (random.NextDouble() - 0.5) * cellWidth;
+        double offsetY = (random.NextDouble() - 0.5) * cellHeight;
+
+        return (centerX + offsetX, centerY + offsetY);
     }
 }

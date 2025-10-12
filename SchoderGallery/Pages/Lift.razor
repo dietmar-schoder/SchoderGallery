@@ -9,7 +9,14 @@
         <div class="liftsquare" style="background-color:#c0392b;"></div>
         <div class="liftsquare" style="background-color:#f1c40f;"></div>
     </div>
-
+    @if (!IsMoving)
+    {
+        <div style="position:absolute; top:2rem; left:4px; width:@(_builder.SvgWidth)px; height:2rem; display:flex; justify-content:center; align-items:center;">
+            <span style="font-size:2rem; font-weight:bold; font-family:sans-serif; color:black;">
+                @_currentFloorNumber
+            </span>
+        </div>
+    }
     <div style="position:absolute; top:0; left:4px; width:@(_builder.SvgWidth)px; height:2rem; background-color:white;"></div>
     <div style="position:absolute; top:4rem; left:4px; width:@(_builder.SvgWidth)px; height:14rem; background-color:white;"></div>
 </div>
