@@ -3,7 +3,7 @@ using SchoderGallery.Settings;
 
 namespace SchoderGallery.Algorithms;
 
-public class FourColours(ColourGenerator colourGenerator) : IAlgorithm
+public class FourColours(Colours colourGenerator) : IAlgorithm
 {
     public AlgorithmType AlgorithmType => AlgorithmType.FourColours;
 

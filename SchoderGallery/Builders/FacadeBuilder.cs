@@ -1,5 +1,6 @@
 ﻿using SchoderGallery.Navigation;
 using SchoderGallery.Painters;
+using SchoderGallery.Services;
 using SchoderGallery.Settings;
 
 namespace SchoderGallery.Builders;
@@ -8,8 +9,9 @@ public class FacadeBuilder(
     SettingsFactory settingsFactory,
     SvgPainter svgPainter,
     NavigationService navigation,
-    ColourGenerator colourGenerator)
-    : BaseBuilder(settingsFactory, svgPainter, navigation), IBuilder
+    IGalleryService galleryService,
+    Colours colourGenerator)
+    : BaseBuilder(settingsFactory, svgPainter, navigation, galleryService), IBuilder
 {
     public override BuilderType Type => BuilderType.Facade;
     public int Interval => 5000;
@@ -19,7 +21,7 @@ public class FacadeBuilder(
         DrawFrontWall();
         DrawDoorAndWindows();
 
-        void DrawFrontWall() => _svgPainter.Area(0, 0, SvgWidth, SvgHeight, _settings.LightGray);
+        void DrawFrontWall() => _svgPainter.Area(0, 0, SvgWidth, SvgHeight, Colours.LightGray);
 
         void DrawDoorAndWindows()
         {
@@ -64,7 +66,7 @@ public class FacadeBuilder(
         void DrawWindowFrames(double x, double y, int width, int height)
         {
             _svgPainter.Sunlight(x, y, width, height, _settings);
-            _svgPainter.Area(x, y, width, height, _settings.Gray);
+            _svgPainter.Area(x, y, width, height, Colours.Gray);
         }
 
         void DrawDoor(double x, double y)
@@ -73,22 +75,22 @@ public class FacadeBuilder(
             int doorHeight = _windowHeight + _margin - 3;
 
             _svgPainter.Sunlight(x, y, doorWidth, doorHeight, _settings);
-            _svgPainter.Area(x, y, doorWidth, doorHeight, _settings.Gray);
+            _svgPainter.Area(x, y, doorWidth, doorHeight, Colours.Gray);
 
-            DrawDoorDeco(x, y, doorWidth / 2, doorHeight, _settings.MixedColoursBW);
+            DrawDoorDeco(x, y, doorWidth / 2, doorHeight, colourGenerator.MixedColoursBW);
             DrawDoorDeco(x + doorWidth / 2, y, doorWidth / 2, doorHeight, GetRandomColours());
 
             var xMiddle = x + doorWidth / 2;
-            _svgPainter.VerticalLine(xMiddle, y, doorHeight, _settings.DarkGray, 2);
+            _svgPainter.VerticalLine(xMiddle, y, doorHeight, Colours.DarkGray, 2);
 
-            DrawEntranceText((int)xMiddle + 1, (int)y + 1, _gap, _settings.Gray);
-            DrawEntranceText((int)xMiddle - 1, (int)y - 1, _gap, _settings.DarkGray);
+            DrawEntranceText((int)xMiddle + 1, (int)y + 1, _gap, Colours.Gray);
+            DrawEntranceText((int)xMiddle - 1, (int)y - 1, _gap, Colours.DarkGray);
 
             ClickableAreas.Add(new ClickableArea((int)x, (int)y - _gap, doorWidth, doorHeight + _gap, "/GroundFloor"));
         }
 
         string[] GetRandomColours() =>
-            _random.Next(2) == 0 ? _settings.BlueishColours : _settings.WarmAccentColours;
+            _random.Next(2) == 0 ? colourGenerator.BlueishColours : colourGenerator.WarmAccentColours;
 
         void DrawDoorDeco(double x, double y, int doorWidth, int doorHeight, string[] colours)
         {
@@ -119,7 +121,7 @@ public class FacadeBuilder(
                     y='{y - gap / 2 + 2}' 
                     text-anchor='middle' 
                     dominant-baseline='middle' 
-                    font-size='{gap * _settings.LinkFontSizeToGapRatio}' 
+                    font-size='{gap * 0.75}' 
                     font-family='sans-serif' 
                     fill='{colour}' 
                     letter-spacing='6'>ENTRANCE</text>");

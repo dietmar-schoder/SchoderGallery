@@ -10,8 +10,12 @@ public record FloorInfo(BuilderType FloorType, int LiftColumn, int LiftRow, stri
     public int FloorNumber =>
         (int)FloorType;
 
-    // Replace with record field IsArtworksFloor
     public bool IsArtworksFloor =>
+        IsFloor
+        && FloorType != BuilderType.GroundFloor
+        && FloorType != BuilderType.Operations;
+
+    public bool HasFloorParam =>
         IsFloor
         && FloorType != BuilderType.Atelier
         && FloorType != BuilderType.GroundFloor
@@ -19,5 +23,5 @@ public record FloorInfo(BuilderType FloorType, int LiftColumn, int LiftRow, stri
         && FloorType != BuilderType.Operations;
 
     public string PageAndParam() =>
-        IsArtworksFloor ? $"{Page}/{(int)FloorType}" : Page;
+        HasFloorParam ? $"{Page}/{(int)FloorType}" : Page;
 }

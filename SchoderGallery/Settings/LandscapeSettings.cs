@@ -26,11 +26,11 @@ public class LandscapeSettings : ISettings
         {
             int x = leftMargin + column * (windowWidth + gap);
             var y = margin + windowHeight / 5;
-            svgPainter.Append(Letter(settings.SchoderText[column], x + 1, y + 1, windowWidth, settings.Gray));
-            svgPainter.Append(Letter(settings.SchoderText[column], x - 1, y - 1, windowWidth, settings.DarkGray));
+            svgPainter.Append(Letter(settings.SchoderText[column], x + 1, y + 1, windowWidth, Colours.Gray));
+            svgPainter.Append(Letter(settings.SchoderText[column], x - 1, y - 1, windowWidth, Colours.DarkGray));
             y = margin + windowHeight * 9 / 10;
-            svgPainter.Append(Letter(settings.GalleryText[column], x + 1, y + 1, windowWidth, settings.Gray));
-            svgPainter.Append(Letter(settings.GalleryText[column], x - 1, y - 1, windowWidth, settings.DarkGray));
+            svgPainter.Append(Letter(settings.GalleryText[column], x + 1, y + 1, windowWidth, Colours.Gray));
+            svgPainter.Append(Letter(settings.GalleryText[column], x - 1, y - 1, windowWidth, Colours.DarkGray));
 
             string Letter(char letter, int x, int y, int w, string colour) =>
                 $"<text x='{x + w / 2.0}' y='{y}' " +

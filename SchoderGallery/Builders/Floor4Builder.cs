@@ -1,5 +1,6 @@
 ﻿using SchoderGallery.Navigation;
 using SchoderGallery.Painters;
+using SchoderGallery.Services;
 using SchoderGallery.Settings;
 
 namespace SchoderGallery.Builders;
@@ -7,8 +8,9 @@ namespace SchoderGallery.Builders;
 public class Floor4Builder(
     SettingsFactory settingsFactory,
     SvgPainter svgPainter,
-    NavigationService navigation)
-    : BaseFloorBuilder(settingsFactory, svgPainter, navigation), IBuilder
+    NavigationService navigation,
+    IGalleryService galleryService)
+    : BaseFloorBuilder(settingsFactory, svgPainter, navigation, galleryService), IBuilder
 {
     public override BuilderType Type => BuilderType.Floor4;
     public int Interval => 0;

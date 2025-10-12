@@ -1,5 +1,6 @@
 ﻿using SchoderGallery.Navigation;
 using SchoderGallery.Painters;
+using SchoderGallery.Services;
 using SchoderGallery.Settings;
 
 namespace SchoderGallery.Builders;
@@ -7,8 +8,9 @@ namespace SchoderGallery.Builders;
 public class GroundFloorBuilder(
     SettingsFactory settingsFactory,
     SvgPainter svgPainter,
-    NavigationService navigation)
-    : BaseFloorBuilder(settingsFactory, svgPainter, navigation), IBuilder
+    NavigationService navigation,
+    IGalleryService galleryService)
+    : BaseFloorBuilder(settingsFactory, svgPainter, navigation, galleryService), IBuilder
 {
     public override BuilderType Type => BuilderType.GroundFloor;
     public int Interval => 0;
@@ -22,8 +24,8 @@ public class GroundFloorBuilder(
         var x = (SvgWidth - (3 * _windowWidth + 2 * _gap)) / 2;
         var xMiddle = x + doorWidth / 2;
 
-        ClickableAreas.Add(new ClickableArea(x, SvgHeight - wall - _gap * 4, doorWidth, wall + _gap * 4, "/"));
+        ClickableAreas.Add(new ClickableArea(x, SvgHeight - wall - _largeFontSize * 4, doorWidth, wall + _largeFontSize * 4, "/"));
 
-        _svgPainter.TextLink(xMiddle, SvgHeight - wall - _gap * 2, "EXIT", (int)(_gap * _settings.LinkFontSizeToGapRatio), _settings);
+        _svgPainter.TextLink(xMiddle, SvgHeight - wall - _largeFontSize * 2, "EXIT", _fontSize);
     }
 }

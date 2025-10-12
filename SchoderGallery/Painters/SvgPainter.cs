@@ -33,8 +33,8 @@ public class SvgPainter
     public void Sunlight(double x, double y, int width, int height, ISettings settings)
     {
         var offset = settings.ShadowOffset;
-        Area(x - offset, y - offset, width + offset * 2, height + offset * 2, settings.Black, settings.Black);
-        Area(x, y, width + offset, height + offset, settings.White, settings.White);
+        Area(x - offset, y - offset, width + offset * 2, height + offset * 2, Colours.Black, Colours.Black);
+        Area(x, y, width + offset, height + offset, Colours.White, Colours.White);
     }
 
     public void VerticalLine(double x, double y, int length, string colour, int thickness = 1) =>
@@ -52,34 +52,34 @@ public class SvgPainter
     public void TextRight(int x, int y, string content, int fontSize, string colour, double letterSpacing = 1.6) =>
         Append($"<text x='{x}' y='{y}' text-anchor='end' dominant-baseline='middle' font-size='{fontSize}' font-family='sans-serif' fill='{colour}' letter-spacing='{letterSpacing}'>{content}</text>");
 
-    public void TextLink(int x, int y, string content, int fontSize, ISettings settings)
+    public void TextLink(int x, int y, string content, int fontSize)
     {
-        Text(x + 1, y + 1, content, fontSize, settings.LightGray);
-        Text(x - 1, y - 1, content, fontSize, settings.Black);
+        Text(x + 1, y + 1, content, fontSize, Colours.LightGray);
+        Text(x - 1, y - 1, content, fontSize, Colours.Black);
     }
 
-    public void IconLeftArrow(int x, int y, int size, ISettings settings, int thickness = 1)
+    public void IconLeftArrow(int x, int y, int size, int thickness = 1)
     {
         var (xMid, yMid) = IconMiddle(x, y, size);
-        Append($"<path d='M{xMid},{y}L{x},{yMid}L{xMid},{y + size}M{x},{yMid}L{x + size},{yMid}' fill='none' stroke='{settings.Gray}' stroke-width='{thickness}' />");
+        Append($"<path d='M{xMid},{y}L{x},{yMid}L{xMid},{y + size}M{x},{yMid}L{x + size},{yMid}' fill='none' stroke='{Colours.Gray}' stroke-width='{thickness}' />");
     }
 
-    public void IconRefresh(int x, int y, int size, ISettings settings, int thickness = 1)
+    public void IconRefresh(int x, int y, int size, int thickness = 1)
     {
         var (xMid, yMid) = IconMiddle(x, y, size);
-        Append($"<path d='M{xMid},{y} A{size / 2},{size / 2} 0 1,0 {x + size},{yMid} L{x + size * 0.7},{y + size * 0.8} M{x + size},{yMid} L{x + size},{y + size}' fill='none' stroke='{settings.Gray}' stroke-width='{thickness}' />");
+        Append($"<path d='M{xMid},{y} A{size / 2},{size / 2} 0 1,0 {x + size},{yMid} L{x + size * 0.7},{y + size * 0.8} M{x + size},{yMid} L{x + size},{y + size}' fill='none' stroke='{Colours.Gray}' stroke-width='{thickness}' />");
     }
 
-    public void IconLeft(int x, int y, int size, ISettings settings, int thickness = 1)
+    public void IconLeft(int x, int y, int size, int thickness = 1)
     {
         var (xMid, yMid) = IconMiddle(x, y, size);
-        Append($"<path d='M{xMid},{y}L{x},{yMid}L{xMid},{y + size}' fill='none' stroke='{settings.Gray}' stroke-width='{thickness}' />");
+        Append($"<path d='M{xMid},{y}L{x},{yMid}L{xMid},{y + size}' fill='none' stroke='{Colours.Gray}' stroke-width='{thickness}' />");
     }
 
-    public void IconRight(int x, int y, int size, ISettings settings, int thickness = 1)
+    public void IconRight(int x, int y, int size, int thickness = 1)
     {
         var (xMid, yMid) = IconMiddle(x, y, size);
-        Append($"<path d='M{xMid},{y}L{x + size},{yMid}L{xMid},{y + size}' fill='none' stroke='{settings.Gray}' stroke-width='{thickness}' />");
+        Append($"<path d='M{xMid},{y}L{x + size},{yMid}L{xMid},{y + size}' fill='none' stroke='{Colours.Gray}' stroke-width='{thickness}' />");
     }
 
     private static (int xMid, int yMid) IconMiddle(int x, int y, int size) =>

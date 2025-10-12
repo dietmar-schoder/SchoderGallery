@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SchoderGallery.Algorithms;
 
-public class TurtleGraphics(ColourGenerator colourGenerator) : IAlgorithm
+public class TurtleGraphics(Colours colourGenerator) : IAlgorithm
 {
     public AlgorithmType AlgorithmType => AlgorithmType.TurtleGraphics;
 
@@ -16,7 +16,7 @@ public class TurtleGraphics(ColourGenerator colourGenerator) : IAlgorithm
         }
 
         var random = new Random();
-        var colours = settings.BlueishColours;
+        var colours = colourGenerator.BlueishColours;
         var colourMatrix = colourGenerator.FillMatrixWithColours(random, columns, rows, colours.Length);
 
         double cellWidth = (double)width / columns;
@@ -43,7 +43,7 @@ public class TurtleGraphics(ColourGenerator colourGenerator) : IAlgorithm
             first = false;
         }
 
-        svgPainter.Append($"<path d='{sb}' fill='none' stroke='{settings.Black}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' />");
+        svgPainter.Append($"<path d='{sb}' fill='none' stroke='{Colours.Black}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' />");
 
         return 0;
     }
@@ -111,7 +111,7 @@ public class TurtleGraphics(ColourGenerator colourGenerator) : IAlgorithm
             steps++;
         }
 
-        svgPainter.Append($"<path d='{sb}' fill='none' stroke='{settings.Black}' stroke-width='{strokeThickness}' stroke-linecap='round' stroke-linejoin='round' />");
+        svgPainter.Append($"<path d='{sb}' fill='none' stroke='{Colours.Black}' stroke-width='{strokeThickness}' stroke-linecap='round' stroke-linejoin='round' />");
 
         return 0;
     }

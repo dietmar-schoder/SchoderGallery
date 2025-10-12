@@ -11,7 +11,7 @@ public class OperationsBuilder(
     SvgPainter svgPainter,
     NavigationService navigation,
     IGalleryService galleryService)
-    : BaseFloorBuilder(settingsFactory, svgPainter, navigation), IBuilder
+    : BaseFloorBuilder(settingsFactory, svgPainter, navigation, galleryService), IBuilder
 {
     public override BuilderType Type => BuilderType.Operations;
     public int Interval => 0;
@@ -21,11 +21,11 @@ public class OperationsBuilder(
 
         var wall = _settings.WallThickness;
 
-        var todos =  galleryService.GetTodosAsync();
+        var todos =  _galleryService.GetTodosAsync();
 
         foreach (var (todo, i) in todos.Select((value, i) => (value, i)))
         {
-            _svgPainter.TextLeft(wall + _gap, wall + (i + 4) * _gap, TodoLine(todo, i + 1), (int)(_gap * 0.6), StatusColour(todo.Status));
+            _svgPainter.TextLeft(wall + _largeFontSize, wall + (i + 4) * _largeFontSize, TodoLine(todo, i + 1), _fontSize, StatusColour(todo.Status));
         }
 
         string TodoLine(TodoDto todo, int number)
@@ -41,9 +41,9 @@ public class OperationsBuilder(
         string StatusColour(TodoStatus status) =>
             status switch
             {
-                TodoStatus.InProgress => _settings.Pink,
-                TodoStatus.Planned => _settings.Blue,
-                _ => _settings.DarkGray
+                TodoStatus.InProgress => Colours.Pink,
+                TodoStatus.Planned => Colours.Blue,
+                _ => Colours.DarkGray
             };
     }
 }

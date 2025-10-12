@@ -40,6 +40,8 @@
     <script>
         function centerSpinner() {
             const spinner = document.getElementById('spinner');
+            if (!spinner) return;
+
             const width = spinner.offsetWidth;
             const height = spinner.offsetHeight;
 
