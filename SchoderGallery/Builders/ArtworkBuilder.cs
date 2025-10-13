@@ -30,7 +30,7 @@ public class ArtworkBuilder(
         var floor = _navigation.GetVisitorFloor();
         artworkId = _navigation.GetArtworkIdOrLatestArtworkId(artworkId);
         var artwork = _galleryService.GetArtworkAsync(floor.FloorNumber, artworkId);
-        _navigation.SetLatestArtworkId(artworkId);
+        _navigation.SetLatestArtworkId(artwork.Id);
 
         var sizeHelper = sizeHelperFactory.GetHelper(artwork.SizeType);
         var tinyMargin = _settings.TinyMargin;

@@ -24,7 +24,7 @@ public class GroundFloorBuilder(
         var x = (SvgWidth - (3 * _windowWidth + 2 * _gap)) / 2;
         var xMiddle = x + doorWidth / 2;
 
-        ClickableAreas.Add(new ClickableArea(x, SvgHeight - wall - _largeFontSize * 4, doorWidth, wall + _largeFontSize * 4, "/"));
+        ClickableAreas.Add(new ClickableArea(x, SvgHeight - wall - _largeFontSize * 4, doorWidth, wall + _largeFontSize * 4, "/", "Good buy"));
 
         _svgPainter.TextLink(xMiddle, SvgHeight - wall - _largeFontSize * 2, "EXIT", _fontSize);
     }

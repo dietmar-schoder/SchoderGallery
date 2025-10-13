@@ -42,7 +42,7 @@ public class FacadeBuilder(
                     if (row != _rowsColumns - 1 || column < _rowsColumns / 2 - 1 || column > _rowsColumns / 2 + 1)
                     {
                         DrawWindowFrames(lineX - 1, lineY - 1, _windowWidth - 2, _windowHeight - 2);
-                        DrawWindowGlasses(x, y, _windowWidth - 1, _windowHeight - 1);
+                        DrawWindowGlasses(x, y);
                     }
                 }
             }
@@ -50,7 +50,7 @@ public class FacadeBuilder(
             _settings.DrawFacadeLetters(_svgPainter, _settings, SvgWidth, _rowsColumns, _margin, _gap, _windowWidth, _windowHeight, ShortWindowSize);
         }
 
-        void DrawWindowGlasses(int x, int y, int width, int height)
+        void DrawWindowGlasses(int x, int y)
         {
             for (int col = 0; col < _windowGlassColumns; col++)
             {
@@ -86,7 +86,7 @@ public class FacadeBuilder(
             DrawEntranceText((int)xMiddle + 1, (int)y + 1, _gap, Colours.Gray);
             DrawEntranceText((int)xMiddle - 1, (int)y - 1, _gap, Colours.DarkGray);
 
-            ClickableAreas.Add(new ClickableArea((int)x, (int)y - _gap, doorWidth, doorHeight + _gap, "/GroundFloor"));
+            ClickableAreas.Add(new ClickableArea(0, _height66, SvgWidth, _height33, "/GroundFloor", "Welcome"));
         }
 
         string[] GetRandomColours() =>

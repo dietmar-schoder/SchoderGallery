@@ -11,9 +11,7 @@ public class ArtworkDto(
     int width,
     int height,
     string artist,
-    int id,
-    int previousId,
-    int nextId)
+    int id)
 {
     public string Title { get; } = title;
     public int Year { get; } = year;
@@ -23,6 +21,11 @@ public class ArtworkDto(
     public int Height { get; } = height;
     public string Artist { get; } = artist;
     public int Id { get; } = id;
-    public int PreviousId { get; set; } = previousId;
-    public int NextId { get; set; } = nextId;
+    public int PreviousId { get; set; }
+    public int NextId { get; set; }
+    public bool IsRightWall { get; set; }
+    public bool IsLeftWall => !IsRightWall;
+    public int WallX { get; set; }
+    public int WallY { get; set; }
+    public int WallWidth { get; set; }
 }

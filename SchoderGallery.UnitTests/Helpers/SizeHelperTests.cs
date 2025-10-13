@@ -45,9 +45,7 @@ public sealed class SizeHelperTests
             width: artworkWidth,
             height: artworkHeight,
             artist: string.Empty,
-            id: 0,
-            previousId: 0,
-            nextId: 0
+            id: 0
         );
 
         // Act

@@ -24,6 +24,12 @@ public class SvgPainter
         Append($"<circle cx='{x + radius + 0.5}' cy='{y + radius + 0.5}' r='{radius}' fill='{fillColour}' stroke='{strokeColour}' stroke-width='{strokeWidth}' />");
     }
 
+    public void Circle2(int cx, int cy, int diameter, string strokeColour, int strokeWidth = 1, string fillColour = "none")
+    {
+        var radius = diameter / 2;
+        Append($"<circle cx='{cx + 0.5}' cy='{cy + 0.5}' r='{radius}' fill='{fillColour}' stroke='{strokeColour}' stroke-width='{strokeWidth}' />");
+    }
+
     public void Area(double x, double y, double width, double height, string colour, string cssClass = default) =>
         Append($"<rect x='{x}' y='{y}' width='{width}' height='{height}' fill='{colour}' stroke='none' {cssClass} />");
 

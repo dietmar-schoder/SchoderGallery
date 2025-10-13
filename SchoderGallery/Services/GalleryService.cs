@@ -60,7 +60,7 @@ public class GalleryService : IGalleryService
     public List<TodoDto> GetTodosAsync()
     {
         List<TodoDto> todos = [
-            new("You are here", TodoStatus.InProgress),
+            new("Jpg/Png images as artworks", TodoStatus.InProgress),
             new("OnMouseOver for links", TodoStatus.InProgress),
             new("Explanation pages", TodoStatus.InProgress),
 
@@ -74,6 +74,7 @@ public class GalleryService : IGalleryService
             new("Exhibition \"Hitler Eats Beigel\"", TodoStatus.Planned),
             new("Exhibition \"Who Am I?\"", TodoStatus.Planned),
 
+            new("You are here", TodoStatus.Finished, 13, 10, 2025),
             new("Mobile and desktop font sizes", TodoStatus.Finished, 12, 10, 2025),
             new("Exhibitions in floors + lift labels", TodoStatus.Finished, 12, 10, 2025),
             new("Hourglass", TodoStatus.Finished, 11, 10, 2025),
@@ -136,7 +137,7 @@ public class GalleryService : IGalleryService
 
     private static ArtworkDto NewArtwork(string title, int year, int id,
         Func<ISettings, SvgPainter, int, int, int> renderAlgorithm, string artist)
-        => new(title, year, renderAlgorithm, SizeType.Dynamic, 0, 0, artist, id, 0, 0);
+        => new(title, year, renderAlgorithm, SizeType.Dynamic, 0, 0, artist, id);
 
     private static List<ArtworkDto> LinkArtworks(List<ArtworkDto> artworks)
     {

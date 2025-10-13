@@ -18,8 +18,10 @@ public abstract class BaseBuilder(
     protected Random _random = new();
     protected ISettings _settings;
 
+    protected int _width20;
     protected int _width33;
     protected int _width50;
+    protected int _width80;
     protected int _height25;
     protected int _height33;
     protected int _height50;
@@ -63,8 +65,10 @@ public abstract class BaseBuilder(
         _fontSize = IsMobile ? _settings.FontSizeMobile : _settings.FontSizeDesktop;
         _largeFontSize = IsMobile ? _settings.LargeFontSizeMobile : _settings.LargeFontSizeDesktop;
 
+        _width20 = SvgWidth / 5;
         _width50 = SvgWidth / 2;
         _width33 = SvgWidth / 3;
+        _width80 = SvgWidth * 4 / 5;
         _height25 = SvgHeight / 4;
         _height33 = SvgHeight / 3;
         _height50 = SvgHeight / 2;

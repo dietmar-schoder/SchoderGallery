@@ -1,4 +1,5 @@
 ﻿using SchoderGallery.Builders;
+using SchoderGallery.DTOs;
 
 namespace SchoderGallery.Navigation;
 
@@ -59,6 +60,11 @@ public class NavigationService
 
     public int GetArtworkIdOrLatestArtworkId(int artworkId) =>
         artworkId < 1 ? _visitor.LatestArtworkId : artworkId;
+
+    public ArtworkDto GetLatestFloorArtwork(ExhibitionDto exhibition) =>
+        _visitor.LatestArtworkId > 0
+            ? exhibition.Artworks.FirstOrDefault(a => a.Id == _visitor.LatestArtworkId)
+            : null;
 
     public void SetLatestArtworkId(int artworkId) =>
         _visitor.ViewArtwork(artworkId);
