@@ -142,7 +142,7 @@ public class GalleryService : IGalleryService
         string title,
         int year,
         int id,
-        Func<ISettings, int, int, int> renderAlgorithm,
+        Func<ISettings, int, int, ArtworkType> renderAlgorithm,
         string artist,
         SizeType sizeType = SizeType.Dynamic,
         int fixedWidth = 0, int fixedHeight = 0)

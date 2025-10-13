@@ -1,4 +1,5 @@
-﻿using SchoderGallery.Painters;
+﻿using SchoderGallery.DTOs;
+using SchoderGallery.Painters;
 using SchoderGallery.Settings;
 
 namespace SchoderGallery.Algorithms;
@@ -7,7 +8,7 @@ public class FourColours(Colours colours, SvgPainter svgPainter) : IAlgorithm
 {
     public AlgorithmType AlgorithmType => AlgorithmType.FourColours;
 
-    public int Pattern1(ISettings settings, int width, int height, int columns, int rows, string[] palette)
+    public ArtworkType Pattern1(ISettings settings, int width, int height, int columns, int rows, string[] palette)
     {
         if (settings.ScreenMode == ScreenMode.Portrait)
         {
@@ -16,10 +17,10 @@ public class FourColours(Colours colours, SvgPainter svgPainter) : IAlgorithm
 
         Rectangles(width, height, columns, rows, palette);
 
-        return 0;
+        return ArtworkType.Generative;
     }
 
-    public int Pattern2(ISettings settings, int width, int height, int columns, int rows, string[] palette)
+    public ArtworkType Pattern2(ISettings settings, int width, int height, int columns, int rows, string[] palette)
     {
         if (settings.ScreenMode == ScreenMode.Portrait)
         {
@@ -47,10 +48,10 @@ public class FourColours(Colours colours, SvgPainter svgPainter) : IAlgorithm
             Rectangles(currentWidth, currentHeight, columns, rows, palette, xOffset, yOffset);
         }
 
-        return 0;
+        return ArtworkType.Generative;
     }
 
-    private int Rectangles(int width, int height, int columns, int rows, string[] palette,
+    private void Rectangles(int width, int height, int columns, int rows, string[] palette,
         int xOffset = 0, int yOffset = 0)
     {
         var random = new Random();
@@ -70,7 +71,5 @@ public class FourColours(Colours colours, SvgPainter svgPainter) : IAlgorithm
                 svgPainter.Area(x + xOffset, y + yOffset, cellWidth / 2.0, cellHeight / 2.0, colour);
             }
         }
-
-        return 0;
     }
 }

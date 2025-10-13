@@ -1,4 +1,5 @@
-﻿using SchoderGallery.Helpers;
+﻿using SchoderGallery.DTOs;
+using SchoderGallery.Helpers;
 using SchoderGallery.Navigation;
 using SchoderGallery.Painters;
 using SchoderGallery.Services;
@@ -46,6 +47,10 @@ public class ArtworkBuilder(
         var artworkLeftMargin = (SvgWidth - artworkSize.Width) / 2;
         var artworkTopMargin = (SvgHeight - artworkSize.Height) / 2;
 
+        _svgPainter.Append($"<g transform='translate({artworkLeftMargin},{artworkTopMargin})'>");
+        var artworkType = artwork.RenderAlgorithm(_settings, artworkSize.Width, artworkSize.Height);
+        _svgPainter.Append("</g>");
+
         // Back to floor (top left)
         _svgPainter.IconLeftArrow(tinyMargin, tinyMargin, iconSize);
         ClickableAreas.Add(new ClickableArea(0, 0, _width33 - 2, _height50 - 2, floor.PageAndParam(), "Back"));
@@ -62,8 +67,11 @@ public class ArtworkBuilder(
         }
 
         // Refresh (bottom middle)
-        _svgPainter.IconRefresh(_width50 - iconSize / 2 - tinyMargin, SvgHeight - iconSizePlus, iconSize);
-        ClickableAreas.Add(new ClickableArea(_width33 + 2, _height50 + 2, _width33 - 4, _height50 - 2, ReRender: true));
+        if (artworkType == ArtworkType.Generative)
+        {
+            _svgPainter.IconRefresh(_width50 - iconSize / 2 - tinyMargin, SvgHeight - iconSizePlus, iconSize);
+            ClickableAreas.Add(new ClickableArea(_width33 + 2, _height50 + 2, _width33 - 4, _height50 - 2, ReRender: true));
+        }
 
         // Next artwork (bottom right)
         if (artwork.NextId > -1)
@@ -78,10 +86,6 @@ public class ArtworkBuilder(
         // Title, Year, Artist
         var titleYearArtist = $"{artwork.Title} ({artwork.Year}) - {artwork.Artist}";
         _svgPainter.TextRight(artworkLeftMargin + artworkSize.Width - iconSize, artworkTopMargin + artworkSize.Height + _smallFontSize * 2 / 3 + 2, titleYearArtist, _smallFontSize, Colours.LightGray, 0);
-
-        _svgPainter.Append($"<g transform='translate({artworkLeftMargin},{artworkTopMargin})'>");
-        artwork.RenderAlgorithm(_settings, artworkSize.Width, artworkSize.Height);
-        _svgPainter.Append("</g>");
 
         return _svgPainter.SvgContent();
     }

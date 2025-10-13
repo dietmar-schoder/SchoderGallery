@@ -1,4 +1,5 @@
-﻿using SchoderGallery.Painters;
+﻿using SchoderGallery.DTOs;
+using SchoderGallery.Painters;
 using SchoderGallery.Settings;
 using System.Text;
 
@@ -8,7 +9,7 @@ public class TurtleGraphics(Colours colours, SvgPainter svgPainter) : IAlgorithm
 {
     public AlgorithmType AlgorithmType => AlgorithmType.TurtleGraphics;
 
-    public int Turtle1(ISettings settings, int width, int height, int columns, int rows, bool closePath = false)
+    public ArtworkType Turtle1(ISettings settings, int width, int height, int columns, int rows, bool closePath = false)
     {
         if (settings.ScreenMode == ScreenMode.Portrait)
         {
@@ -51,10 +52,10 @@ public class TurtleGraphics(Colours colours, SvgPainter svgPainter) : IAlgorithm
 
         svgPainter.Append($"<path d='{sb}' fill='none' stroke='{Colours.Black}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' />");
 
-        return 0;
+        return ArtworkType.Generative;
     }
 
-    public int Turtle2(ISettings settings, int width, int height, int columns, int rows, int strokeThickness = 2)
+    public ArtworkType Turtle2(ISettings settings, int width, int height, int columns, int rows, int strokeThickness = 2)
     {
         if (settings.ScreenMode == ScreenMode.Portrait)
         {
@@ -120,10 +121,10 @@ public class TurtleGraphics(Colours colours, SvgPainter svgPainter) : IAlgorithm
 
         svgPainter.Append($"<path d='{sb}' fill='none' stroke='{Colours.Black}' stroke-width='{strokeThickness}' stroke-linecap='round' stroke-linejoin='round' />");
 
-        return 0;
+        return ArtworkType.Generative;
     }
 
-    public int Turtle1Smooth(ISettings settings, int width, int height, int columns, int rows, bool closePath = false)
+    public ArtworkType Turtle1Smooth(ISettings settings, int width, int height, int columns, int rows, bool closePath = false)
     {
         if (settings.ScreenMode == ScreenMode.Portrait)
             (rows, columns) = (columns, rows);
@@ -187,7 +188,7 @@ public class TurtleGraphics(Colours colours, SvgPainter svgPainter) : IAlgorithm
 
         svgPainter.Append($"<path d='{sb}' fill='none' stroke='{Colours.Black}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' />");
 
-        return 0;
+        return ArtworkType.Generative;
     }
 
     private static (double X, double Y) RandomPointInSection(double centerX, double centerY, double cellWidth, double cellHeight, Random random)
