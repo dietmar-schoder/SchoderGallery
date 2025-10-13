@@ -17,37 +17,40 @@ public class GalleryService : IGalleryService
 {
     private const string Dietmar = "Dietmar Schoder";
     private readonly Colours _colours;
-    private readonly TurtleGraphics _turtleGraphics;
     private readonly FourColours _fourColours;
+    private readonly Image _image;
+    private readonly TurtleGraphics _turtleGraphics;
     private readonly Dictionary<int, ExhibitionDto> _exhibitionCache;
 
     private List<ArtworkDto> CreateFloor1Artworks() => LinkArtworks(
     [
-        NewArtwork("Adventure 1/5", 2025, 1, (s, p, w, h) => _turtleGraphics.Turtle1(s, p, w, h, 8, 4, closePath: true), Dietmar),
-        NewArtwork("Adventure 2/5", 2025, 9, (s, p, w, h) => _turtleGraphics.Turtle1Smooth(s, p, w, h, 8, 4, closePath: true), Dietmar),
-        NewArtwork("Adventure 3/5", 2025, 2, (s, p, w, h) => _turtleGraphics.Turtle1(s, p, w, h, 16, 9), Dietmar),
-        NewArtwork("Adventure 4/5", 2025, 3, (s, p, w, h) => _turtleGraphics.Turtle2(s, p, w, h, 13, 7), Dietmar),
-        NewArtwork("Adventure 5/5", 2025, 4, (s, p, w, h) => _turtleGraphics.Turtle2(s, p, w, h, 32, 18, 1), Dietmar),
+        NewArtwork("Adventure 1/5", 2025, 1, (s, w, h) => _turtleGraphics.Turtle1(s, w, h, 8, 4, closePath: true), Dietmar),
+        NewArtwork("Adventure 2/5", 2025, 9, (s, w, h) => _turtleGraphics.Turtle1Smooth(s, w, h, 8, 4, closePath : true), Dietmar),
+        NewArtwork("Adventure 3/5", 2025, 2, (s, w, h) => _turtleGraphics.Turtle1(s, w, h, 16, 9), Dietmar),
+        NewArtwork("Adventure 4/5", 2025, 3, (s, w, h) => _turtleGraphics.Turtle2(s, w, h, 13, 7), Dietmar),
+        NewArtwork("Adventure 5/5", 2025, 4, (s, w, h) => _turtleGraphics.Turtle2(s, w, h, 32, 18, 1), Dietmar),
     ]);
 
     private List<ArtworkDto> CreateFloor2Artworks() => LinkArtworks(
     [
-        NewArtwork("Door No.1", 2025, 5, (s, p, w, h) => _fourColours.Pattern1(s, p, w, h, 10, 6, _colours.Blueish20Colours), Dietmar),
-        NewArtwork("Door No.2", 2025, 6, (s, p, w, h) => _fourColours.Pattern1(s, p, w, h, 21, 13, _colours.Warm20AccentColours), Dietmar),
-        NewArtwork("Door No.3", 2025, 10, (s, p, w, h) => _fourColours.Pattern1(s, p, w, h, 49, 37, _colours.MixedColoursBW), Dietmar),
+        NewArtwork("Door No.1", 2025, 5, (s, w, h) => _fourColours.Pattern1(s, w, h, 10, 6, _colours.Blueish20Colours), Dietmar),
+        NewArtwork("Door No.2", 2025, 6, (s, w, h) => _fourColours.Pattern1(s, w, h, 21, 13, _colours.Warm20AccentColours), Dietmar),
+        NewArtwork("Door No.3", 2025, 10, (s, w, h) => _fourColours.Pattern1(s, w, h, 49, 37, _colours.MixedColoursBW), Dietmar),
     ]);
 
     private List<ArtworkDto> CreateAtelierArtworks() => LinkArtworks(
     [
-        NewArtwork("Experiment #1", 2025, 7, (s, p, w, h) => _fourColours.Pattern2(s, p, w, h, 4, 4, _colours.Warm20AccentColours), Dietmar),
-        NewArtwork("Experiment #2", 2025, 8, (s, p, w, h) => _fourColours.Pattern2(s, p, w, h, 8, 6, _colours.Blueish20Colours), Dietmar),
+        NewArtwork("Experiment #1", 2025, 7, (s, w, h) => _fourColours.Pattern2(s, w, h, 4, 4, _colours.Warm20AccentColours), Dietmar),
+        NewArtwork("Experiment #2", 2025, 8, (s, w, h) => _fourColours.Pattern2(s, w, h, 8, 6, _colours.Blueish20Colours), Dietmar),
+        NewArtwork("Experiment #3", 2025, 11, (s, w, h) => _image.Jpg(s, w, h, "000011.jpg"), Dietmar, SizeType.Fixed, 2160, 3820),
     ]);
 
     public GalleryService(AlgorithmFactory algorithmFactory, Colours colours)
     {
         _colours = colours;
-        _turtleGraphics = algorithmFactory.GetAlgorithm(AlgorithmType.TurtleGraphics) as TurtleGraphics;
         _fourColours = algorithmFactory.GetAlgorithm(AlgorithmType.FourColours) as FourColours;
+        _image = algorithmFactory.GetAlgorithm(AlgorithmType.Image) as Image;
+        _turtleGraphics = algorithmFactory.GetAlgorithm(AlgorithmType.TurtleGraphics) as TurtleGraphics;
 
         _exhibitionCache = new Dictionary<int, ExhibitionDto>
         {
@@ -135,9 +138,15 @@ public class GalleryService : IGalleryService
         return artwork ?? artworks.FirstOrDefault(a => a.PreviousId == -1);
     }
 
-    private static ArtworkDto NewArtwork(string title, int year, int id,
-        Func<ISettings, SvgPainter, int, int, int> renderAlgorithm, string artist)
-        => new(title, year, renderAlgorithm, SizeType.Dynamic, 0, 0, artist, id);
+    private static ArtworkDto NewArtwork(
+        string title,
+        int year,
+        int id,
+        Func<ISettings, int, int, int> renderAlgorithm,
+        string artist,
+        SizeType sizeType = SizeType.Dynamic,
+        int fixedWidth = 0, int fixedHeight = 0)
+        => new(title, year, renderAlgorithm, sizeType, fixedWidth, fixedHeight, artist, id);
 
     private static List<ArtworkDto> LinkArtworks(List<ArtworkDto> artworks)
     {

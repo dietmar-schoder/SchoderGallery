@@ -3,23 +3,23 @@ using SchoderGallery.Settings;
 
 namespace SchoderGallery.Algorithms;
 
-public class FourColours(Colours colourGenerator) : IAlgorithm
+public class FourColours(Colours colours, SvgPainter svgPainter) : IAlgorithm
 {
     public AlgorithmType AlgorithmType => AlgorithmType.FourColours;
 
-    public int Pattern1(ISettings settings, SvgPainter svgPainter, int width, int height, int columns, int rows, string[] colours)
+    public int Pattern1(ISettings settings, int width, int height, int columns, int rows, string[] palette)
     {
         if (settings.ScreenMode == ScreenMode.Portrait)
         {
             (rows, columns) = (columns, rows);
         }
 
-        Rectangles(settings, svgPainter, width, height, columns, rows, colours);
+        Rectangles(width, height, columns, rows, palette);
 
         return 0;
     }
 
-    public int Pattern2(ISettings settings, SvgPainter svgPainter, int width, int height, int columns, int rows, string[] colours)
+    public int Pattern2(ISettings settings, int width, int height, int columns, int rows, string[] palette)
     {
         if (settings.ScreenMode == ScreenMode.Portrait)
         {
@@ -44,18 +44,17 @@ public class FourColours(Colours colourGenerator) : IAlgorithm
             int xOffset = (width - currentWidth) / 2;
             int yOffset = (height - currentHeight) / 2;
 
-            Rectangles(settings, svgPainter, currentWidth, currentHeight, columns, rows, colours, xOffset, yOffset);
+            Rectangles(currentWidth, currentHeight, columns, rows, palette, xOffset, yOffset);
         }
 
         return 0;
     }
 
-    private int Rectangles(ISettings settings, SvgPainter svgPainter,
-        int width, int height, int columns, int rows, string[] colours,
+    private int Rectangles(int width, int height, int columns, int rows, string[] palette,
         int xOffset = 0, int yOffset = 0)
     {
         var random = new Random();
-        var colourMatrix = colourGenerator.FillMatrixWithColours(random, columns, rows, colours.Length);
+        var colourMatrix = colours.FillMatrixWithColours(random, columns, rows, palette.Length);
 
         double cellWidth = (double)width / columns;
         double cellHeight = (double)height / rows;
@@ -65,7 +64,7 @@ public class FourColours(Colours colourGenerator) : IAlgorithm
             for (int col = 0; col < columns; col++)
             {
                 int colourIndex = colourMatrix[col, row];
-                string colour = colours[colourIndex];
+                string colour = palette[colourIndex];
                 double x = col * cellWidth + cellWidth / 4.0;
                 double y = row * cellHeight + cellHeight / 4.0;
                 svgPainter.Area(x + xOffset, y + yOffset, cellWidth / 2.0, cellHeight / 2.0, colour);

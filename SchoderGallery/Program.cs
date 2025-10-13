@@ -26,8 +26,9 @@ builder.Services.AddScoped<ISettings, LandscapeSettings>();
 builder.Services.AddScoped<ISettings, PortraitSettings>();
 
 builder.Services.AddSingleton<AlgorithmFactory>();
-builder.Services.AddSingleton<IAlgorithm, TurtleGraphics>();
 builder.Services.AddSingleton<IAlgorithm, FourColours>();
+builder.Services.AddSingleton<IAlgorithm, Image>();
+builder.Services.AddSingleton<IAlgorithm, TurtleGraphics>();
 
 builder.Services.AddSingleton<SizeHelperFactory>();
 builder.Services.AddSingleton<ISizeHelper, DynamicSizeHelper>();

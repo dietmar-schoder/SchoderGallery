@@ -30,6 +30,9 @@ public class ArtworkBuilder(
         var floor = _navigation.GetVisitorFloor();
         artworkId = _navigation.GetArtworkIdOrLatestArtworkId(artworkId);
         var artwork = _galleryService.GetArtworkAsync(floor.FloorNumber, artworkId);
+
+        // If no artwork found, clear latest artwork id and go back to the floor
+
         _navigation.SetLatestArtworkId(artwork.Id);
 
         var sizeHelper = sizeHelperFactory.GetHelper(artwork.SizeType);
@@ -77,7 +80,7 @@ public class ArtworkBuilder(
         _svgPainter.TextRight(artworkLeftMargin + artworkSize.Width - iconSize, artworkTopMargin + artworkSize.Height + _smallFontSize * 2 / 3 + 2, titleYearArtist, _smallFontSize, Colours.LightGray, 0);
 
         _svgPainter.Append($"<g transform='translate({artworkLeftMargin},{artworkTopMargin})'>");
-        artwork.RenderAlgorithm(_settings, _svgPainter, artworkSize.Width, artworkSize.Height);
+        artwork.RenderAlgorithm(_settings, artworkSize.Width, artworkSize.Height);
         _svgPainter.Append("</g>");
 
         return _svgPainter.SvgContent();

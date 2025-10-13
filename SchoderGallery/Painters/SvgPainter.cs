@@ -90,4 +90,7 @@ public class SvgPainter
 
     private static (int xMid, int yMid) IconMiddle(int x, int y, int size) =>
         (x + size / 2, y + size / 2);
+
+    public void Image(int width, int height, string filename) =>
+        Append($"<image x='0' y='0' width='{width}' height='{height}' href='{filename}' preserveAspectRatio='none' />");
 }

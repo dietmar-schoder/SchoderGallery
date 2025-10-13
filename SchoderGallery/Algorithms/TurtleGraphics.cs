@@ -4,11 +4,11 @@ using System.Text;
 
 namespace SchoderGallery.Algorithms;
 
-public class TurtleGraphics(Colours colourGenerator) : IAlgorithm
+public class TurtleGraphics(Colours colours, SvgPainter svgPainter) : IAlgorithm
 {
     public AlgorithmType AlgorithmType => AlgorithmType.TurtleGraphics;
 
-    public int Turtle1(ISettings settings, SvgPainter svgPainter, int width, int height, int columns, int rows, bool closePath = false)
+    public int Turtle1(ISettings settings, int width, int height, int columns, int rows, bool closePath = false)
     {
         if (settings.ScreenMode == ScreenMode.Portrait)
         {
@@ -16,8 +16,8 @@ public class TurtleGraphics(Colours colourGenerator) : IAlgorithm
         }
 
         var random = new Random();
-        var colours = colourGenerator.BlueishColours;
-        var colourMatrix = colourGenerator.FillMatrixWithColours(random, columns, rows, colours.Length);
+        var palette = colours.BlueishColours;
+        var colourMatrix = colours.FillMatrixWithColours(random, columns, rows, palette.Length);
 
         double cellWidth = (double)width / columns;
         double cellHeight = (double)height / rows;
@@ -46,7 +46,7 @@ public class TurtleGraphics(Colours colourGenerator) : IAlgorithm
 
         if (closePath && sectionCenters.Count > 0)
         {
-            sb.Append(" Z"); // Close the path
+            sb.Append(" Z");
         }
 
         svgPainter.Append($"<path d='{sb}' fill='none' stroke='{Colours.Black}' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' />");
@@ -54,7 +54,7 @@ public class TurtleGraphics(Colours colourGenerator) : IAlgorithm
         return 0;
     }
 
-    public int Turtle2(ISettings settings, SvgPainter svgPainter, int width, int height, int columns, int rows, int strokeThickness = 2)
+    public int Turtle2(ISettings settings, int width, int height, int columns, int rows, int strokeThickness = 2)
     {
         if (settings.ScreenMode == ScreenMode.Portrait)
         {
@@ -123,13 +123,13 @@ public class TurtleGraphics(Colours colourGenerator) : IAlgorithm
         return 0;
     }
 
-    public int Turtle1Smooth(ISettings settings, SvgPainter svgPainter, int width, int height, int columns, int rows, bool closePath = false)
+    public int Turtle1Smooth(ISettings settings, int width, int height, int columns, int rows, bool closePath = false)
     {
         if (settings.ScreenMode == ScreenMode.Portrait)
             (rows, columns) = (columns, rows);
 
         var random = new Random();
-        var colours = colourGenerator.BlueishColours;
+        var palette = colours.BlueishColours;
 
         double cellWidth = (double)width / columns;
         double cellHeight = (double)height / rows;
@@ -157,14 +157,13 @@ public class TurtleGraphics(Colours colourGenerator) : IAlgorithm
 
         for (int i = 0; i < sectionCenters.Count - 1; i++)
         {
-            var p0 = i > 0 ? sectionCenters[i - 1] : sectionCenters[i];
+            var (X, Y) = i > 0 ? sectionCenters[i - 1] : sectionCenters[i];
             var p1 = sectionCenters[i];
             var p2 = sectionCenters[i + 1];
             var p3 = i < sectionCenters.Count - 2 ? sectionCenters[i + 2] : p2;
 
-            // Catmull-Rom to cubic Bézier
-            double cp1x = p1.X + (p2.X - p0.X) / 6.0;
-            double cp1y = p1.Y + (p2.Y - p0.Y) / 6.0;
+            double cp1x = p1.X + (p2.X - X) / 6.0;
+            double cp1y = p1.Y + (p2.Y - Y) / 6.0;
             double cp2x = p2.X - (p3.X - p1.X) / 6.0;
             double cp2y = p2.Y - (p3.Y - p1.Y) / 6.0;
 
@@ -173,14 +172,13 @@ public class TurtleGraphics(Colours colourGenerator) : IAlgorithm
 
         if (closePath)
         {
-            // Connect last point to first smoothly
-            var p0 = sectionCenters[^2];
+            var (X, Y) = sectionCenters[^2];
             var p1 = sectionCenters[^1];
             var p2 = sectionCenters[0];
             var p3 = sectionCenters.Count > 2 ? sectionCenters[1] : p2;
 
-            double cp1x = p1.X + (p2.X - p0.X) / 6.0;
-            double cp1y = p1.Y + (p2.Y - p0.Y) / 6.0;
+            double cp1x = p1.X + (p2.X - X) / 6.0;
+            double cp1y = p1.Y + (p2.Y - Y) / 6.0;
             double cp2x = p2.X - (p3.X - p1.X) / 6.0;
             double cp2y = p2.Y - (p3.Y - p1.Y) / 6.0;
 
@@ -194,9 +192,6 @@ public class TurtleGraphics(Colours colourGenerator) : IAlgorithm
 
     private static (double X, double Y) RandomPointInSection(double centerX, double centerY, double cellWidth, double cellHeight, Random random)
     {
-        double halfWidth = cellWidth / 2.0;
-        double halfHeight = cellHeight / 2.0;
-
         double offsetX = (random.NextDouble() - 0.5) * cellWidth;
         double offsetY = (random.NextDouble() - 0.5) * cellHeight;
 

@@ -1,12 +1,11 @@
-﻿using SchoderGallery.Painters;
-using SchoderGallery.Settings;
+﻿using SchoderGallery.Settings;
 
 namespace SchoderGallery.DTOs;
 
 public class ArtworkDto(
     string title,
     int year,
-    Func<ISettings, SvgPainter, int, int, int> renderAlgorithm,
+    Func<ISettings, int, int, int> renderAlgorithm,
     SizeType sizeType,
     int width,
     int height,
@@ -15,7 +14,7 @@ public class ArtworkDto(
 {
     public string Title { get; } = title;
     public int Year { get; } = year;
-    public Func<ISettings, SvgPainter, int, int, int> RenderAlgorithm { get; } = renderAlgorithm;
+    public Func<ISettings, int, int, int> RenderAlgorithm { get; } = renderAlgorithm;
     public SizeType SizeType { get; } = sizeType;
     public int Width { get; } = width;
     public int Height { get; } = height;
