@@ -18,7 +18,7 @@ public abstract class SvgComponentBase : ComponentBase, IDisposable
 
     protected override async Task OnInitializedAsync()
     {
-        var size = await GetScreenSize();
+        var size = await GetScreenSizeAsync();
         SetScreenHeightPx(size);
 
         _svgContent = await GetSvgContentAsync(size);
@@ -32,17 +32,17 @@ public abstract class SvgComponentBase : ComponentBase, IDisposable
         _isLoading = true;
         await InvokeAsync(StateHasChanged);
         await Task.Yield();
-        await RenderPageAsync(await GetScreenSize());
+        await RenderPageAsync(await GetScreenSizeAsync());
     }
 
     [JSInvokable]
-    public async Task OnResize(SizeDto size)
+    public async Task OnResizeAsync(SizeDto size)
     {
         SetScreenHeightPx(size);
         await RenderPageAsync(size);
     }
 
-    private async Task<SizeDto> GetScreenSize() =>
+    private async Task<SizeDto> GetScreenSizeAsync() =>
         await JS.InvokeAsync<SizeDto>("getScreenSize");
 
     protected void SetScreenHeightPx(SizeDto size) =>

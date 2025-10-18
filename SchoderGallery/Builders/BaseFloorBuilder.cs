@@ -13,8 +13,9 @@ public abstract class BaseFloorBuilder(
     IGalleryService galleryService)
     : BaseBuilder(settingsFactory, svgPainter, navigation, galleryService)
 {
-    protected override void Draw()
+    protected override async Task DrawAsync()
     {
+        var locale = await _navigation.GetVisitorLocaleAsync();
         var wall = _settings.WallThickness;
         var floor = _navigation.GetFloor(Type);
         var exhibition = floor.IsArtworksFloor ? _galleryService.GetExhibition(floor.FloorNumber) : null;
@@ -136,7 +137,7 @@ public abstract class BaseFloorBuilder(
 
             if (exhibition is not null && exhibition.Artworks.Count > 0)
             {
-                if (navigation.GetLatestFloorArtwork(exhibition) is { } artwork)
+                if (_navigation.GetLatestFloorArtwork(exhibition) is { } artwork)
                 {
                     visitorX = artwork.IsLeftWall ? _width20 : _width80;
                     visitorY = artwork.WallY + artwork.WallWidth / 2;

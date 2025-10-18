@@ -16,8 +16,9 @@ public class FacadeBuilder(
     public override BuilderType Type => BuilderType.Facade;
     public int Interval => 5000;
 
-    protected override void Draw()
+    protected override async Task DrawAsync()
     {
+        var locale = await _navigation.GetVisitorLocaleAsync();
         DrawFrontWall();
         DrawDoorAndWindows();
 

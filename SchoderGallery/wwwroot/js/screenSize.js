@@ -22,7 +22,7 @@ window.initResizeHandler = (dotNetObject, interval) => {
     window._resizeHandler = () => {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
-            dotNetObject.invokeMethodAsync('OnResize', createScreenSize());
+            dotNetObject.invokeMethodAsync('OnResizeAsync', createScreenSize());
         }, 200);
     };
 
@@ -30,7 +30,7 @@ window.initResizeHandler = (dotNetObject, interval) => {
 
     if (interval > 0) {
         window._resizeIntervalId = setInterval(() => {
-            dotNetObject.invokeMethodAsync('OnResize', createScreenSize());
+            dotNetObject.invokeMethodAsync('OnResizeAsync', createScreenSize());
         }, interval);
     }
 };

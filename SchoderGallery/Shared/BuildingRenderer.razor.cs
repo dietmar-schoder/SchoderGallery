@@ -23,8 +23,8 @@ public partial class BuildingRenderer : SvgComponentBase
     protected override string PageTitle =>
         $"Schoder Gallery{(BuilderType == BuilderType.Facade ? string.Empty : $" - {Navigation.GetFloor(BuilderType).LiftLabel}")}";
 
-    protected override Task<string> GetSvgContentAsync(SizeDto size) =>
-        Task.FromResult(_builder.GetSvgContent(size.Width, size.Height));
+    protected override async Task<string> GetSvgContentAsync(SizeDto size) =>
+        await _builder.GetSvgContentAsync(size.Width, size.Height);
 
     protected override int GetInterval() => _builder.Interval;
 }

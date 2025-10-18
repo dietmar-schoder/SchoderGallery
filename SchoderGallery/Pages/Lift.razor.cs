@@ -26,7 +26,7 @@ public partial class Lift : SvgComponentBase
     }
     private async Task OnLiftClick(string floorNumber)
     {
-        var currentFloor = Navigation.GetVisitorFloor();
+        var currentFloor = await Navigation.GetVisitorFloorAsync();
         var newFloor = Navigation.GetFloor(floorNumber);
 
         _isMovingUp = newFloor.FloorNumber > currentFloor.FloorNumber;
@@ -49,8 +49,8 @@ public partial class Lift : SvgComponentBase
     protected override string PageTitle =>
         "Schoder Gallery - Lift";
 
-    protected override Task<string> GetSvgContentAsync(SizeDto size) =>
-        Task.FromResult(_builder.GetSvgContent(size.Width, size.Height));
+    protected override async Task<string> GetSvgContentAsync(SizeDto size) =>
+        await _builder.GetSvgContentAsync(size.Width, size.Height);
 
     protected override int GetInterval() => _builder.Interval;
 }

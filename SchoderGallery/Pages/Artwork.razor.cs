@@ -12,8 +12,8 @@ public partial class Artwork : SvgComponentBase
 
     protected override string PageTitle => $"Schoder Gallery - Artwork {ArtworkId}";
 
-    protected override Task<string> GetSvgContentAsync(SizeDto size) =>
-        Task.FromResult(ArtworkBuilder.GetArtworkHtml(size.Width, size.Height, ArtworkId));
+    protected override async Task<string> GetSvgContentAsync(SizeDto size) =>
+        await ArtworkBuilder.GetArtworkHtmlAsync(size.Width, size.Height, ArtworkId);
 
     protected override int GetInterval() => ArtworkBuilder.Interval;
 }

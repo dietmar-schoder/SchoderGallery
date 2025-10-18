@@ -1,12 +1,28 @@
 ﻿using SchoderGallery.Builders;
 using SchoderGallery.DTOs;
+using System.Net.Http.Json;
 
 namespace SchoderGallery.Navigation;
 
-public class NavigationService
+public class NavigationService(HttpClient httpClient)
 {
     private Visitor _visitor;
-    
+
+    public async Task<Visitor> GetInitVisitorAsync()
+    {
+        _visitor ??= new Visitor
+        {
+            Locale = await httpClient.GetFromJsonAsync<LocaleDto>("/api/countries")
+        };
+
+        if (_visitor.Locale is null)
+        {
+            // Alert (and later disallow use of the app)
+        }
+
+        return _visitor;
+    }
+
     private readonly IReadOnlyDictionary<BuilderType, FloorInfo> _floors = new Dictionary<BuilderType, FloorInfo>
     {
         { BuilderType.Atelier, new FloorInfo(BuilderType.Atelier, 1, 0, "Atelier", "/Atelier") },
@@ -37,21 +53,21 @@ public class NavigationService
     public FloorInfo GetFloor(string floorNumberString) =>
         GetFloor(GetBuilderType(int.TryParse(floorNumberString, out var floorNumber) ? floorNumber : 0));
 
-    public FloorInfo GetVisitorFloor() =>
-        GetFloor(GetVisitorFloorType());
+    public async Task<LocaleDto> GetVisitorLocaleAsync() =>
+        (await GetInitVisitorAsync()).Locale;
+
+    public async Task<FloorInfo> GetVisitorFloorAsync() =>
+        GetFloor(await GetVisitorFloorTypeAsync());
 
     public BuilderType GetBuilderType(int floorNumber) =>
         Enum.TryParse<BuilderType>(floorNumber.ToString(), out var result) ? result : BuilderType.GroundFloor;
 
-    public BuilderType GetVisitorFloorType()
-    {
-        EnsureVisitor();
-        return _visitor.CurrentFloorType;
-    }
+    public async Task<BuilderType> GetVisitorFloorTypeAsync() =>
+        (await GetInitVisitorAsync()).CurrentFloorType;
 
-    public void SetVisitorFloor(BuilderType floor)
+    public async Task SetVisitorFloorAsync(BuilderType floor)
     {
-        EnsureVisitor();
+        await GetInitVisitorAsync();
         if (GetFloor(floor)?.IsFloor ?? false)
         {
             _visitor.MoveToFloor(floor);
@@ -68,6 +84,4 @@ public class NavigationService
 
     public void SetLatestArtworkId(int artworkId) =>
         _visitor.ViewArtwork(artworkId);
-
-    private void EnsureVisitor() => _visitor ??= new Visitor();
 }

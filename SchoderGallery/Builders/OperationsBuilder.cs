@@ -15,9 +15,9 @@ public class OperationsBuilder(
 {
     public override BuilderType Type => BuilderType.Operations;
     public int Interval => 0;
-    protected override void Draw()
+    protected override async Task DrawAsync()
     {
-        base.Draw();
+        await base.DrawAsync();
 
         var wall = _settings.WallThickness;
 

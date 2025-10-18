@@ -15,9 +15,9 @@ public class GroundFloorBuilder(
     public override BuilderType Type => BuilderType.GroundFloor;
     public int Interval => 0;
 
-    protected override void Draw()
+    protected override async Task DrawAsync()
     {
-        base.Draw();
+        await base.DrawAsync();
 
         var wall = _settings.WallThickness;
         int doorWidth = 3 * _windowWidth + 2 * _gap;

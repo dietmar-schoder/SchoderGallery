@@ -16,7 +16,7 @@ public class LiftBuilder(
     public int Interval => 0;
     public FloorInfo CurrentFloor { get; set; }
 
-    protected override void Draw()
+    protected override async Task DrawAsync()
     {
         var floors = _navigation.GetFloors();
 
@@ -29,7 +29,7 @@ public class LiftBuilder(
         int startX = _width50 - totalWidth / 2;
         int startY = _height50 - totalHeight / 2;
 
-        CurrentFloor = _navigation.GetVisitorFloor();
+        CurrentFloor = await _navigation.GetVisitorFloorAsync();
 
         foreach (var floor in floors)
         {

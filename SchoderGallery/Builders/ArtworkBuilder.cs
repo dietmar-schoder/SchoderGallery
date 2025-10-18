@@ -9,7 +9,7 @@ namespace SchoderGallery.Builders;
 
 public interface IArtworkBuilder : IBuilder
 {
-    string GetArtworkHtml(int screenWidth, int screenHeight, int artworkId);
+    Task<string> GetArtworkHtmlAsync(int screenWidth, int screenHeight, int artworkId);
 }
 
 public class ArtworkBuilder(
@@ -24,11 +24,11 @@ public class ArtworkBuilder(
 
     public int Interval => 0;
 
-    public string GetArtworkHtml(int screenWidth, int screenHeight, int artworkId)
+    public async Task<string> GetArtworkHtmlAsync(int screenWidth, int screenHeight, int artworkId)
     {
         Init(screenWidth, screenHeight);
 
-        var floor = _navigation.GetVisitorFloor();
+        var floor = await _navigation.GetVisitorFloorAsync();
         artworkId = _navigation.GetArtworkIdOrLatestArtworkId(artworkId);
         var artwork = _galleryService.GetArtworkAsync(floor.FloorNumber, artworkId);
 

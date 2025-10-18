@@ -78,11 +78,11 @@ public abstract class BaseBuilder(
         ClickableAreas.Clear();
     }
 
-    public string GetSvgContent(int screenWidth, int screenHeight)
+    public async Task<string> GetSvgContentAsync(int screenWidth, int screenHeight)
     {
         Init(screenWidth, screenHeight);
 
-        _navigation.SetVisitorFloor(Type);
+        await _navigation.SetVisitorFloorAsync(Type);
 
         _rowsColumns = _settings.RowsColumns;
         _gap = (int)(ShortSize / _rowsColumns * _settings.GapToRowColumnWidthRatio);
@@ -95,7 +95,7 @@ public abstract class BaseBuilder(
         _windowGlassRows = _settings.NbrOfVerticalWindowSections;
         _windowGlassColumnWidth = (_windowWidth - 1.0) / _windowGlassColumns;
         _windowGlassRowHeight = (_windowHeight - 1.0) / _windowGlassRows;
-        Draw();
+        await DrawAsync();
         return _svgPainter.SvgContent();
     }
 
@@ -103,7 +103,7 @@ public abstract class BaseBuilder(
 
     protected int IconSize => IsMobile ? _settings.IconSizeMobile : _settings.IconSizeDesktop;
 
-    protected virtual void Draw() { }
+    protected virtual async Task DrawAsync() { await Task.CompletedTask; }
 
     private int WindowWidth(int totalGapSpace)
     {
