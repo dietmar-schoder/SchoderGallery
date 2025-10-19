@@ -37,7 +37,7 @@ public class LiftBuilder(
             int y = startY + floor.LiftRow * (buttonSize + buttonGap);
             int radius = buttonSize / 2;
             bool isGroundFloor = floor.FloorType == BuilderType.GroundFloor;
-            var exhibition = _galleryService.GetExhibition(floor.FloorNumber);
+            var exhibition = await _galleryService.GetExhibitionAsync(floor.FloorNumber);
             var label = exhibition?.LiftLabel ?? floor.LiftLabel;
             var colour = isGroundFloor ? Colours.WarmAccentRed : exhibition?.LabelColour ?? Colours.DarkGray;
 

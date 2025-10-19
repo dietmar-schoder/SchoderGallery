@@ -1,4 +1,5 @@
-﻿using SchoderGallery.DTOs;
+﻿using SchoderGallery.Algorithms;
+using SchoderGallery.DTOs;
 using SchoderGallery.Helpers;
 using SchoderGallery.Navigation;
 using SchoderGallery.Painters;
@@ -17,7 +18,8 @@ public class ArtworkBuilder(
     SvgPainter svgPainter,
     NavigationService navigation,
     IGalleryService galleryService,
-    SizeHelperFactory sizeHelperFactory)
+    SizeHelperFactory sizeHelperFactory,
+    Image image)
     : BaseBuilder(settingsFactory, svgPainter, navigation, galleryService), IArtworkBuilder, IBuilder
 {
     public override BuilderType Type => BuilderType.Artwork;
@@ -30,7 +32,7 @@ public class ArtworkBuilder(
 
         var floor = await _navigation.GetVisitorFloorAsync();
         artworkId = _navigation.GetArtworkIdOrLatestArtworkId(artworkId);
-        var artwork = _galleryService.GetArtworkAsync(floor.FloorNumber, artworkId);
+        var artwork = await _galleryService.GetArtworkAsync(floor.FloorNumber, artworkId);
 
         // If no artwork found, clear latest artwork id and go back to the floor
 
@@ -46,9 +48,22 @@ public class ArtworkBuilder(
         var artworkSize = sizeHelper.GetArtworkSize(artwork, availableArtworkWidth, availableArtworkHeight);
         var artworkLeftMargin = (SvgWidth - artworkSize.Width) / 2;
         var artworkTopMargin = (SvgHeight - artworkSize.Height) / 2;
+        var artworkType = ArtworkType.Static;
 
         _svgPainter.Append($"<g transform='translate({artworkLeftMargin},{artworkTopMargin})'>");
-        var artworkType = artwork.RenderAlgorithm(_settings, artworkSize.Width, artworkSize.Height);
+        if (artwork.RenderAlgorithm == default)
+        {
+            var fileName = $"images/floor{floor.FloorNumber}/{artwork.FileName}";
+            if (ScreenMode == ScreenMode.Portrait)
+            {
+                fileName = fileName.Replace("1920-1080", "1080-1920");
+            }
+            artworkType = image.JpgPng(_settings, artworkSize.Width, artworkSize.Height, fileName);
+        }
+        else
+        {
+            artworkType = artwork.RenderAlgorithm(_settings, artworkSize.Width, artworkSize.Height);
+        }
         _svgPainter.Append("</g>");
 
         // Back to floor (top left)

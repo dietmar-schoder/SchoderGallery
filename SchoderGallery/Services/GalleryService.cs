@@ -2,27 +2,28 @@
 using SchoderGallery.DTOs;
 using SchoderGallery.Painters;
 using SchoderGallery.Settings;
+using System.Net.Http.Json;
 
 namespace SchoderGallery.Services;
 
 public interface IGalleryService
 {
     List<TodoDto> GetTodosAsync();
-    ExhibitionDto GetExhibition(int floorNumber);
-    List<ArtworkDto> GetArtworksAsync(int floorNumber);
-    ArtworkDto GetArtworkAsync(int floorNumber, int id);
+    Task<ExhibitionDto> GetExhibitionAsync(int floorNumber);
+    Task<ArtworkDto> GetArtworkAsync(int floorNumber, int id);
 }
 
 public class GalleryService : IGalleryService
 {
     private const string Dietmar = "Dietmar Schoder";
+    private readonly ClientFactory _http;
     private readonly Colours _colours;
     private readonly FourColours _fourColours;
     private readonly Image _image;
     private readonly TurtleGraphics _turtleGraphics;
     private readonly Dictionary<int, ExhibitionDto> _exhibitionCache;
 
-    private List<ArtworkDto> CreateFloor1Artworks() => LinkArtworks(
+    private List<ArtworkDto> CreateFloor1Artworks(int floorNumber) => LinkArtworks(
     [
         NewArtwork("Adventure 1/5", 2025, 1, (s, w, h) => _turtleGraphics.Turtle1(s, w, h, 8, 4, closePath: true), Dietmar),
         NewArtwork("Adventure 2/5", 2025, 9, (s, w, h) => _turtleGraphics.Turtle1Smooth(s, w, h, 8, 4, closePath : true), Dietmar),
@@ -31,22 +32,23 @@ public class GalleryService : IGalleryService
         NewArtwork("Adventure 5/5", 2025, 4, (s, w, h) => _turtleGraphics.Turtle2(s, w, h, 32, 18, 1), Dietmar),
     ]);
 
-    private List<ArtworkDto> CreateFloor2Artworks() => LinkArtworks(
+    private List<ArtworkDto> CreateFloor2Artworks(int floorNumber) => LinkArtworks(
     [
         NewArtwork("Door No.1", 2025, 5, (s, w, h) => _fourColours.Pattern1(s, w, h, 10, 6, _colours.Blueish20Colours), Dietmar),
         NewArtwork("Door No.2", 2025, 6, (s, w, h) => _fourColours.Pattern1(s, w, h, 21, 13, _colours.Warm20AccentColours), Dietmar),
         NewArtwork("Door No.3", 2025, 10, (s, w, h) => _fourColours.Pattern1(s, w, h, 49, 37, _colours.MixedColoursBW), Dietmar),
     ]);
 
-    private List<ArtworkDto> CreateAtelierArtworks() => LinkArtworks(
+    private List<ArtworkDto> CreateAtelierArtworks(int floorNumber) => LinkArtworks(
     [
         NewArtwork("Experiment #1", 2025, 7, (s, w, h) => _fourColours.Pattern2(s, w, h, 4, 4, _colours.Warm20AccentColours), Dietmar),
         NewArtwork("Experiment #2", 2025, 8, (s, w, h) => _fourColours.Pattern2(s, w, h, 8, 6, _colours.Blueish20Colours), Dietmar),
-        NewArtwork("Experiment #3", 2025, 11, (s, w, h) => _image.Jpg(s, w, h, "000011.jpg"), Dietmar, SizeType.Fixed, 2160, 3820),
+        NewArtwork("Experiment #3", 2025, 11, (s, w, h) => _image.JpgPng(s, w, h, "000011.jpg"), Dietmar, SizeType.Fixed, 2160, 3820),
     ]);
 
-    public GalleryService(AlgorithmFactory algorithmFactory, Colours colours)
+    public GalleryService(ClientFactory http, AlgorithmFactory algorithmFactory, Colours colours)
     {
+        _http = http;
         _colours = colours;
         _fourColours = algorithmFactory.GetAlgorithm(AlgorithmType.FourColours) as FourColours;
         _image = algorithmFactory.GetAlgorithm(AlgorithmType.Image) as Image;
@@ -56,6 +58,7 @@ public class GalleryService : IGalleryService
         {
             [1] = new ExhibitionDto("Erasures", Colours.WarmAccentOrange, CreateFloor1Artworks),
             [2] = new ExhibitionDto("Four Horsemen", Colours.WarmAccentMagenta, CreateFloor2Artworks),
+            [3] = new ExhibitionDto("New Home", Colours.BrightCyan, default),
             [7] = new ExhibitionDto("Atelier", Colours.WarmAccentYellow, CreateAtelierArtworks)
         };
     }
@@ -100,42 +103,54 @@ public class GalleryService : IGalleryService
 
         return [.. todos.OrderBy(t => t.Status).ThenBy(t => t.Date)];
     }
-    public ExhibitionDto GetExhibition(int floorNumber)
+
+    public async Task<ExhibitionDto> GetExhibitionAsync(int floorNumber)
     {
         if (!_exhibitionCache.TryGetValue(floorNumber, out var exhibition))
             return null;
 
-        if (exhibition.Artworks.Count == 0 && exhibition.ArtworkFactory is not null)
+        if (exhibition.Artworks.Count == 0)
         {
-            var artworks = exhibition.ArtworkFactory();
-            exhibition.Artworks.AddRange(artworks);
+            await GetArtworksAsync(floorNumber);
         }
 
         return exhibition;
     }
 
-    public List<ArtworkDto> GetArtworksAsync(int floorNumber)
+    public async Task<ArtworkDto> GetArtworkAsync(int floorNumber, int id)
+    {
+        var artworks = await GetArtworksAsync(floorNumber);
+        var artwork = id > 0
+            ? artworks.FirstOrDefault(a => a.Id == id)
+            : null;
+
+        return artwork ?? artworks.FirstOrDefault(a => a.PreviousId == -1);
+    }
+
+    private async Task<List<ArtworkDto>> GetArtworksAsync(int floorNumber)
     {
         if (!_exhibitionCache.TryGetValue(floorNumber, out var exhibition))
             return [];
 
-        if (exhibition.Artworks.Count == 0 && exhibition.ArtworkFactory is not null)
+        // Later: Get artworks for ALL floors from their JSON file
+        if (floorNumber == 3 && exhibition.Artworks.Count == 0)
         {
-            var artworks = exhibition.ArtworkFactory();
+            var artworks = await GetFloorArtworks(floorNumber);
+            exhibition.Artworks.AddRange(artworks);
+        }
+        else if (exhibition.ArtworkFactory is not null && exhibition.Artworks.Count == 0)
+        {
+            var artworks = exhibition.ArtworkFactory(floorNumber);
             exhibition.Artworks.AddRange(artworks);
         }
 
         return exhibition.Artworks;
     }
 
-    public ArtworkDto GetArtworkAsync(int floorNumber, int id)
+    private async Task<List<ArtworkDto>> GetFloorArtworks(int floorNumber)
     {
-        var artworks = GetArtworksAsync(floorNumber);
-        var artwork = id > 0
-            ? artworks.FirstOrDefault(a => a.Id == id)
-            : null;
-
-        return artwork ?? artworks.FirstOrDefault(a => a.PreviousId == -1);
+        var artworks = await _http.Frontend.GetFromJsonAsync<List<ArtworkDto>>($"images/floor{floorNumber}/_artworks.json");
+        return LinkArtworks(artworks);
     }
 
     private static ArtworkDto NewArtwork(

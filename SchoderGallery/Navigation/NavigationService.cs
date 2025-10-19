@@ -1,10 +1,11 @@
 ﻿using SchoderGallery.Builders;
 using SchoderGallery.DTOs;
+using SchoderGallery.Services;
 using System.Net.Http.Json;
 
 namespace SchoderGallery.Navigation;
 
-public class NavigationService(HttpClient httpClient)
+public class NavigationService(ClientFactory http)
 {
     private Visitor _visitor;
 
@@ -12,7 +13,7 @@ public class NavigationService(HttpClient httpClient)
     {
         _visitor ??= new Visitor
         {
-            Locale = await httpClient.GetFromJsonAsync<LocaleDto>("/api/countries")
+            Locale = await http.Backend.GetFromJsonAsync<LocaleDto>("/api/countries")
         };
 
         if (_visitor.Locale is null)

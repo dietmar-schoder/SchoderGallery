@@ -18,7 +18,7 @@ public abstract class BaseFloorBuilder(
         var locale = await _navigation.GetVisitorLocaleAsync();
         var wall = _settings.WallThickness;
         var floor = _navigation.GetFloor(Type);
-        var exhibition = floor.IsArtworksFloor ? _galleryService.GetExhibition(floor.FloorNumber) : null;
+        var exhibition = floor.IsArtworksFloor ? await _galleryService.GetExhibitionAsync(floor.FloorNumber) : null;
 
         DrawOuterWalls();
 

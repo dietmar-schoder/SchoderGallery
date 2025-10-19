@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Components;
 using SchoderGallery.DTOs;
+using SchoderGallery.Navigation;
+using SchoderGallery.Services;
 using System.Net.Http.Json;
 
 namespace SchoderGallery.Pages;
 
 public partial class Home
 {
-    [Inject] private HttpClient HttpClient { get; set; }
-
-    private LocaleDto locale;
+    [Inject] private NavigationService Navigation{ get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        locale = await HttpClient.GetFromJsonAsync<LocaleDto>($"/api/countries");
+        await Navigation.GetInitVisitorAsync();
     }
 }

@@ -10,15 +10,19 @@ public class FixedSizeHelper : ISizeHelper
     {
         double scale = 1.0;
 
-        if (artwork.Width > screenWidth || artwork.Height > screenHeight)
+        // if artwork dimension = both (instead of landscape/portrait only)
+        var artworkWidth = screenWidth > screenHeight ? artwork.Width : artwork.Height;
+        var artworkHeight = screenWidth > screenHeight ? artwork.Height : artwork.Width;
+
+        if (artworkWidth > screenWidth || artworkHeight > screenHeight)
         {
-            double scaleW = (double)screenWidth / artwork.Width;
-            double scaleH = (double)screenHeight / artwork.Height;
+            double scaleW = (double)screenWidth / artworkWidth;
+            double scaleH = (double)screenHeight / artworkHeight;
             scale = Math.Min(scaleW, scaleH);
         }
 
-        int finalW = (int)Math.Round(artwork.Width * scale);
-        int finalH = (int)Math.Round(artwork.Height * scale);
+        int finalW = (int)Math.Round(artworkWidth * scale);
+        int finalH = (int)Math.Round(artworkHeight * scale);
         return new SizeDto(finalW, finalH);
     }
 }

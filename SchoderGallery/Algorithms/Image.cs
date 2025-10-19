@@ -8,9 +8,9 @@ public class Image(SvgPainter svgPainter) : IAlgorithm
 {
     public AlgorithmType AlgorithmType => AlgorithmType.Image;
 
-    public ArtworkType Jpg(ISettings settings, int width, int height, string filename)
+    public ArtworkType JpgPng(ISettings settings, int width, int height, string filename)
     {
-        svgPainter.Image(width, height, $"/images/{filename}");
+        svgPainter.Image(width, height, filename);
         return ArtworkType.Static;
     }
 }

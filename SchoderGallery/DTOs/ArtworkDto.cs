@@ -10,8 +10,11 @@ public class ArtworkDto(
     int width,
     int height,
     string artist,
-    int id)
+    int id,
+    string fileName = default)
 {
+    // "000051-Weather Forecast Bright-2025-Dietmar Schoder-0-1920-1080.png"
+    // "Id-Title-Year-Artist-SizeType-Width-Height.FileExtension"
     public string Title { get; } = title;
     public int Year { get; } = year;
     public Func<ISettings, int, int, ArtworkType> RenderAlgorithm { get; } = renderAlgorithm;
@@ -20,6 +23,7 @@ public class ArtworkDto(
     public int Height { get; } = height;
     public string Artist { get; } = artist;
     public int Id { get; } = id;
+    public string FileName { get; } = fileName;
     public int PreviousId { get; set; }
     public int NextId { get; set; }
     public bool IsRightWall { get; set; }
