@@ -11,6 +11,10 @@ namespace SchoderGallery.Builders;
 public interface IArtworkBuilder : IBuilder
 {
     Task<string> GetArtworkHtmlAsync(int screenWidth, int screenHeight, int artworkId);
+    public string Html { get; set; }
+    public int HtmlWidth { get; set; }
+    public int HtmlFontSize { get; set; }
+    public string HtmlColor { get; set; }
 }
 
 public class ArtworkBuilder(
@@ -26,9 +30,15 @@ public class ArtworkBuilder(
 
     public int Interval => 0;
 
+    public string Html { get; set; }
+    public int HtmlWidth { get; set; }
+    public int HtmlFontSize { get; set; }
+    public string HtmlColor { get; set; }
+
     public async Task<string> GetArtworkHtmlAsync(int screenWidth, int screenHeight, int artworkId)
     {
         Init(screenWidth, screenHeight);
+        Html = string.Empty;
 
         var floor = await _navigation.GetVisitorFloorAsync();
         artworkId = _navigation.GetArtworkIdOrLatestArtworkId(artworkId);
@@ -50,21 +60,28 @@ public class ArtworkBuilder(
         var artworkTopMargin = (SvgHeight - artworkSize.Height) / 2;
         var artworkType = ArtworkType.Static;
 
-        _svgPainter.Append($"<g transform='translate({artworkLeftMargin},{artworkTopMargin})'>");
-        if (artwork.RenderAlgorithm == default)
+        // Images
+        if (artwork.SizeType != SizeType.Text)
         {
-            var fileName = $"images/floor{floor.FloorNumber}/{artwork.FileName}";
-            if (ScreenMode == ScreenMode.Portrait)
+            _svgPainter.Append($"<g transform='translate({artworkLeftMargin},{artworkTopMargin})'>");
+
+            // Jpg, png
+            if (artwork.SizeType == SizeType.Fixed)
             {
-                fileName = fileName.Replace("1920-1080", "1080-1920");
+                var fileName = $"images/floor{floor.FloorNumber}/{artwork.FileName}";
+                if (ScreenMode == ScreenMode.Portrait)
+                {
+                    fileName = fileName.Replace("1920-1080", "1080-1920");
+                }
+                artworkType = image.JpgPng(_settings, artworkSize.Width, artworkSize.Height, fileName);
             }
-            artworkType = image.JpgPng(_settings, artworkSize.Width, artworkSize.Height, fileName);
+            // Generative
+            else if (artwork.RenderAlgorithm != default)
+            {
+                artworkType = artwork.RenderAlgorithm(_settings, artworkSize.Width, artworkSize.Height);
+            }
+            _svgPainter.Append("</g>");
         }
-        else
-        {
-            artworkType = artwork.RenderAlgorithm(_settings, artworkSize.Width, artworkSize.Height);
-        }
-        _svgPainter.Append("</g>");
 
         // Back to floor (top left)
         _svgPainter.IconLeftArrow(tinyMargin, tinyMargin, iconSize);
@@ -95,13 +112,33 @@ public class ArtworkBuilder(
             ClickableAreas.Add(new ClickableArea(_width33 * 2 + 2, _height50 + 2, _width33 - 2, _height50 - 2, $"/Artwork/{artwork.NextId}", "Next artwork"));
         }
 
-        // Frame
-        _svgPainter.Border(artworkLeftMargin - 1, artworkTopMargin - 1, artworkSize.Width + 2, artworkSize.Height + 2, Colours.Gray);
+        // HtmlText
+        if (artwork.SizeType == SizeType.Text)
+        {
+            Html = ConvertToParagraphs(artwork.Title);
+            HtmlWidth = artworkSize.Width;
+            HtmlFontSize = _fontSize;
+            HtmlColor = Colours.DarkGray;
+        }
+        else
+        {
+            // Frame
+            _svgPainter.Border(artworkLeftMargin - 1, artworkTopMargin - 1, artworkSize.Width + 2, artworkSize.Height + 2, Colours.Gray);
 
-        // Title, Year, Artist
-        var titleYearArtist = $"{artwork.Title} ({artwork.Year}) - {artwork.Artist}";
-        _svgPainter.TextRight(artworkLeftMargin + artworkSize.Width - iconSize, artworkTopMargin + artworkSize.Height + _smallFontSize * 2 / 3 + 2, titleYearArtist, _smallFontSize, Colours.LightGray, 0);
+            // Title, Year, Artist
+            var titleYearArtist = $"{artwork.Title} ({artwork.Year}) - {artwork.Artist}";
+            _svgPainter.TextRight(artworkLeftMargin + artworkSize.Width - iconSize, artworkTopMargin + artworkSize.Height + _smallFontSize * 2 / 3 + 2, titleYearArtist, _smallFontSize, Colours.Gray, 0);
+        }
 
         return _svgPainter.SvgContent();
+    }
+    private static string ConvertToParagraphs(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            return string.Empty;
+
+        var paragraphs = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+        var paragraphTags = paragraphs.Select(p => $"<p>{p.Trim()}</p>");
+        return string.Join("", paragraphTags);
     }
 }

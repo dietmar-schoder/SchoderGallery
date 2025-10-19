@@ -37,6 +37,7 @@ builder.Services.AddSingleton<SizeHelperFactory>();
 builder.Services.AddSingleton<ISizeHelper, DynamicSizeHelper>();
 builder.Services.AddSingleton<ISizeHelper, FixedSizeHelper>();
 builder.Services.AddSingleton<ISizeHelper, RatioSizeHelper>();
+builder.Services.AddSingleton<ISizeHelper, TextSizeHelper>();
 
 builder.Services.AddScoped<BuilderFactory>();
 builder.Services.AddScoped<IArtworkBuilder, ArtworkBuilder>();

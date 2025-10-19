@@ -167,6 +167,7 @@ public class GalleryService : IGalleryService
     {
         if (artworks.Count == 0) { return artworks; }
 
+        artworks = [.. artworks.OrderBy(a => a.Id)];
         artworks.First().PreviousId = -1;
         artworks.Last().NextId = -1;
 

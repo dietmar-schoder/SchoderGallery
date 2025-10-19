@@ -43,6 +43,15 @@ code {
     color: #c02d76;
 }
 
+p {
+    margin: 0 0 1em 0;
+    line-height: 1.5;
+}
+
+    p:last-child {
+        margin-bottom: 0;
+    }
+
 svg rect[style*="cursor:pointer"] {
     -webkit-tap-highlight-color: transparent;
 }
