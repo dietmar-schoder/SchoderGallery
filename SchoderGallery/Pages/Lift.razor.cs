@@ -37,9 +37,7 @@ public partial class Lift : SvgComponentBase
             StateHasChanged();
             await Task.Yield();
 
-            //var artworks = await ArtworkService.GetArtworksAsync(floorId);
-            //ArtworkState.CurrentArtworks = artworks;
-            await Task.Delay(1000);
+            // await Task.Delay(1000);
         }
 
         _isMovingUp = _isMovingDown = false;
