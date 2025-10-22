@@ -19,6 +19,11 @@ public class FacadeBuilder(
     protected override async Task DrawAsync()
     {
         var locale = await _navigation.GetVisitorLocaleAsync();
+        var schoderText = "Schoder";
+        var galleryText = "Gallery";
+        var entrance = "Entrance";
+        var welcome = "Welcome";
+
         DrawFrontWall();
         DrawDoorAndWindows();
 
@@ -48,7 +53,7 @@ public class FacadeBuilder(
                 }
             }
 
-            _settings.DrawFacadeLetters(_svgPainter, _settings, SvgWidth, _rowsColumns, _margin, _gap, _windowWidth, _windowHeight, ShortWindowSize);
+            _settings.DrawFacadeLetters(_svgPainter, _settings, schoderText, galleryText, SvgWidth, _rowsColumns, _margin, _gap, _windowWidth, _windowHeight, ShortWindowSize);
         }
 
         void DrawWindowGlasses(int x, int y)
@@ -84,10 +89,10 @@ public class FacadeBuilder(
             var xMiddle = x + doorWidth / 2;
             _svgPainter.VerticalLine(xMiddle, y, doorHeight, Colours.DarkGray, 2);
 
-            DrawEntranceText((int)xMiddle + 1, (int)y + 1, _gap, Colours.Gray);
-            DrawEntranceText((int)xMiddle - 1, (int)y - 1, _gap, Colours.DarkGray);
+            DrawEntranceText((int)xMiddle + 1, (int)y + 1, _gap, Colours.White); // Shadow
+            DrawEntranceText((int)xMiddle, (int)y, _gap, Colours.Black);
 
-            ClickableAreas.Add(new ClickableArea(0, _height66, SvgWidth, _height33, "/GroundFloor", "Welcome"));
+            ClickableAreas.Add(new ClickableArea(0, _height66, SvgWidth, _height33, "/GroundFloor", welcome));
         }
 
         string[] GetRandomColours() =>
@@ -125,7 +130,7 @@ public class FacadeBuilder(
                     font-size='{gap * 0.75}' 
                     font-family='sans-serif' 
                     fill='{colour}' 
-                    letter-spacing='6'>ENTRANCE</text>");
+                    letter-spacing='6'>{entrance.ToUpper()}</text>");
 
         int MakeOdd(int value) =>
             (value % 2 == 0) ? value + 1 : value;

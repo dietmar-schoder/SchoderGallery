@@ -4,8 +4,6 @@ namespace SchoderGallery.Settings;
 
 public interface ISettings
 {
-    string SchoderText => "Schoder";
-    string GalleryText => "Gallery";
     ScreenMode ScreenMode { get; }
     int OuterMargin => 4;
     int TinyMargin => 2;
@@ -34,6 +32,8 @@ public interface ISettings
     void DrawFacadeLetters(
         SvgPainter svgPainter,
         ISettings settings,
+        string schoderText,
+        string galleryText,
         int totalWidth,
         int rowsColumns,
         int margin,

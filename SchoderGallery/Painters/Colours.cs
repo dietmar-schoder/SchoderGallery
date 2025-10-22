@@ -4,6 +4,7 @@ public class Colours
 {
     public const string White = "#FFFFFF";
     public const string LightGray = "#C0C3C3";
+    public const string LightestGray = "#E0E3E3";
     public const string Gray = "#808484";
     public const string DarkGray = "#404343";
     public const string Black = "#000303";

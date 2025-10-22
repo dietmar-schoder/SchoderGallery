@@ -11,6 +11,8 @@ public class LandscapeSettings : ISettings
     public void DrawFacadeLetters(
         SvgPainter svgPainter,
         ISettings settings,
+        string schoderText,
+        string galleryText,
         int totalWidth,
         int rowsColumns,
         int margin,
@@ -26,11 +28,11 @@ public class LandscapeSettings : ISettings
         {
             int x = leftMargin + column * (windowWidth + gap);
             var y = margin + windowHeight / 5;
-            svgPainter.Append(Letter(settings.SchoderText[column], x + 1, y + 1, windowWidth, Colours.Gray));
-            svgPainter.Append(Letter(settings.SchoderText[column], x - 1, y - 1, windowWidth, Colours.DarkGray));
+            svgPainter.Append(Letter(schoderText[column], x + 1, y + 1, windowWidth, Colours.White)); // Shadow
+            svgPainter.Append(Letter(schoderText[column], x, y, windowWidth, Colours.Black));
             y = margin + windowHeight * 9 / 10;
-            svgPainter.Append(Letter(settings.GalleryText[column], x + 1, y + 1, windowWidth, Colours.Gray));
-            svgPainter.Append(Letter(settings.GalleryText[column], x - 1, y - 1, windowWidth, Colours.DarkGray));
+            svgPainter.Append(Letter(galleryText[column], x + 1, y + 1, windowWidth, Colours.White)); // Shadow
+            svgPainter.Append(Letter(galleryText[column], x, y, windowWidth, Colours.Black));
 
             string Letter(char letter, int x, int y, int w, string colour) =>
                 $"<text x='{x + w / 2.0}' y='{y}' " +

@@ -42,9 +42,9 @@ public class LiftBuilder(
             var colour = isGroundFloor ? Colours.WarmAccentRed : exhibition?.LabelColour ?? Colours.DarkGray;
 
             _svgPainter.Circle(x - 4, y - 6, buttonSize + 8, Colours.Black, 2);
-            _svgPainter.Circle(x, y - 2, buttonSize, colour, isGroundFloor ? 2 : 1);
+            _svgPainter.Circle(x, y - 2, buttonSize, Colours.DarkGray, isGroundFloor ? 2 : 1);
 
-            _svgPainter.Text(x + radius, y + radius, ((int)floor.FloorType).ToString(), _largeFontSize, colour, 0);
+            _svgPainter.Text(x + radius, y + radius, ((int)floor.FloorType).ToString(), _largeFontSize, Colours.DarkGray, 0);
             
             if (floor.LiftColumn == 0)
             {
