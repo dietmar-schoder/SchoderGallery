@@ -66,10 +66,11 @@ public class ArtworkBuilder(
             _svgPainter.Append($"<g transform='translate({artworkLeftMargin},{artworkTopMargin})'>");
 
             // Jpg, png
-            if (artwork.SizeType == SizeType.Fixed)
+            if (artwork.SizeType == SizeType.Fixed
+                || artwork.SizeType == SizeType.PortraitLandscape)
             {
                 var fileName = $"images/floor{floor.FloorNumber}/{artwork.FileName}";
-                if (ScreenMode == ScreenMode.Portrait)
+                if (artwork.SizeType == SizeType.PortraitLandscape && ScreenMode == ScreenMode.Portrait)
                 {
                     fileName = fileName.Replace("1920-1080", "1080-1920");
                 }
@@ -105,11 +106,15 @@ public class ArtworkBuilder(
             ClickableAreas.Add(new ClickableArea(_width33 + 2, _height50 + 2, _width33 - 4, _height50 - 2, ReRender: true));
         }
 
-        // Next artwork (bottom right)
+        // Next artwork or back to floor (bottom right)
+        _svgPainter.IconRight(SvgWidth - iconSizePlus, SvgHeight - iconSizePlus, iconSize);
         if (artwork.NextId > -1)
         {
-            _svgPainter.IconRight(SvgWidth - iconSizePlus, SvgHeight - iconSizePlus, iconSize);
             ClickableAreas.Add(new ClickableArea(_width33 * 2 + 2, _height50 + 2, _width33 - 2, _height50 - 2, $"/Artwork/{artwork.NextId}", "Next artwork"));
+        }
+        else
+        {
+            ClickableAreas.Add(new ClickableArea(_width33 * 2 + 2, _height50 + 2, _width33 - 2, _height50 - 2, floor.PageAndParam(), "Back"));
         }
 
         // HtmlText

@@ -60,7 +60,7 @@ public class SvgPainter
 
     public void TextLink(int x, int y, string content, int fontSize)
     {
-        Text(x + 1, y + 1, content, fontSize, Colours.LightestGray);
+        Text(x + 1, y + 1, content, fontSize, Colours.White);
         Text(x, y, content, fontSize, Colours.Black);
     }
 
@@ -93,4 +93,36 @@ public class SvgPainter
 
     public void Image(int width, int height, string filename) =>
         Append($"<image x='0' y='0' width='{width}' height='{height}' href='{filename}' preserveAspectRatio='none' />");
+
+    public void FloorPattern1(double x, double y, int width, int height, int spacing, string lineColour = Colours.FloorPattern)
+    {
+        int cols = width / spacing;
+        int rows = height / spacing;
+        double remainderX = width - cols * spacing;
+        double remainderY = height - rows * spacing;
+
+        for (int row = 0; row < rows; row++)
+        {
+            for (int col = 0; col < cols; col++)
+            {
+                double sx = x + col * spacing + remainderX / 2;
+                double sy = y + row * spacing + remainderY / 2;
+                double s = spacing;
+                double offset = spacing / 4.0;
+
+                Append($@"<path d='M {sx + s / 2},{sy + offset} L {sx + s - offset},{sy + s / 2} L {sx + s / 2},{sy + s - offset} L {sx + offset},{sy + s / 2} Z' fill='none' stroke='{lineColour}' stroke-width='1' />");
+            }
+        }
+
+        for (int row = 1; row < rows; row++)
+        {
+            for (int col = 1; col < cols; col++)
+            {
+                double sx = x + col * spacing + remainderX / 2;
+                double sy = y + row * spacing + remainderY / 2;
+                double radius = spacing;
+                Append($@"<circle cx='{sx}' cy='{sy}' r='{radius}' fill='none' stroke='{lineColour}' stroke-width='1' />");
+            }
+        }
+    }
 }

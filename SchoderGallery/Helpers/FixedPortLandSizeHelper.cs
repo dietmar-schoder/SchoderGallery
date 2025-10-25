@@ -2,16 +2,16 @@
 
 namespace SchoderGallery.Helpers;
 
-public class FixedSizeHelper : ISizeHelper
+public class FixedPortLandSizeHelper : ISizeHelper
 {
-    public SizeType SizeType => SizeType.Fixed;
+    public SizeType SizeType => SizeType.PortraitLandscape;
 
     public SizeDto GetArtworkSize(ArtworkDto artwork, int screenWidth, int screenHeight)
     {
         double scale = 1.0;
 
-        var artworkWidth = artwork.Width;
-        var artworkHeight = artwork.Height;
+        var artworkWidth = screenWidth > screenHeight ? artwork.Width : artwork.Height;
+        var artworkHeight = screenWidth > screenHeight ? artwork.Height : artwork.Width;
 
         if (artworkWidth > screenWidth || artworkHeight > screenHeight)
         {

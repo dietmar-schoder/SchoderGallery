@@ -8,10 +8,12 @@ public abstract class SvgComponentBase : ComponentBase, IDisposable
 {
     [Inject] protected IJSRuntime JS { get; set; } = default!;
 
+    private DotNetObjectReference<SvgComponentBase> _dotNetRef;
+    private bool _isFirstRender = true;
+
     protected string _screenHeightPx = "100vh";
     protected string _svgContent;
-    protected bool _isLoading = true;
-    private DotNetObjectReference<SvgComponentBase> _dotNetRef;
+    protected bool _isLoading = false;
 
     protected abstract Task<string> GetSvgContentAsync(SizeDto size);
     protected abstract string PageTitle { get; }
@@ -22,6 +24,7 @@ public abstract class SvgComponentBase : ComponentBase, IDisposable
         SetScreenHeightPx(size);
 
         _svgContent = await GetSvgContentAsync(size);
+        _isLoading = false;
 
         _dotNetRef = DotNetObjectReference.Create(this);
         await JS.InvokeVoidAsync("initResizeHandler", _dotNetRef, GetInterval());
@@ -29,6 +32,12 @@ public abstract class SvgComponentBase : ComponentBase, IDisposable
 
     protected override async Task OnParametersSetAsync()
     {
+        if (_isFirstRender)
+        {
+            _isFirstRender = false;
+            return;
+        }
+
         _isLoading = true;
         await InvokeAsync(StateHasChanged);
         await Task.Yield();

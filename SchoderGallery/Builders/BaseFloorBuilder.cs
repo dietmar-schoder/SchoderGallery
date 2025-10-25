@@ -21,6 +21,7 @@ public abstract class BaseFloorBuilder(
         var exhibition = floor.IsArtworksFloor ? await _galleryService.GetExhibitionAsync(floor.FloorNumber) : null;
 
         DrawOuterWalls();
+        DrawFloorPattern();
 
         if (Type == BuilderType.Atelier)
         {
@@ -60,8 +61,11 @@ public abstract class BaseFloorBuilder(
         void DrawOuterWalls()
         {
             _svgPainter.Area(0, 0, SvgWidth, SvgHeight, Colours.LightGray, Colours.Black);
-            _svgPainter.Area(wall, wall, SvgWidth - 2 * wall, SvgHeight - 2 * wall, Colours.White, Colours.DarkGray);
+            _svgPainter.Area(wall, wall, SvgWidth - 2 * wall, SvgHeight - 2 * wall, Colours.Background, Colours.DarkGray);
         }
+
+        void DrawFloorPattern() =>
+            _svgPainter.FloorPattern1(wall + 4, wall + 4, SvgWidth - 2 * wall - 8, SvgHeight - 2 * wall - 8, _gap * 2);
 
         void DrawWindowsAndDoor()
         {

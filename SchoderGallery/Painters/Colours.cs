@@ -3,12 +3,13 @@
 public class Colours
 {
     public const string White = "#FFFFFF";
+    public const string LighterGray = "#DADCDC";
     public const string LightGray = "#C0C3C3";
-    public const string LightestGray = "#E0E3E3";
     public const string Gray = "#808484";
     public const string DarkGray = "#404343";
     public const string Black = "#000303";
-    public const string LinkBackground = "#C0C3C3";
+    public const string Background = "#F0F2F2";
+    public const string FloorPattern = "#E4E6E6";
 
     public readonly string[] MixedColoursBW =
     [

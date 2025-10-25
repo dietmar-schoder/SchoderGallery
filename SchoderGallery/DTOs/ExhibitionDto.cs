@@ -6,6 +6,7 @@ public record ExhibitionDto
     public string LabelColour { get; init; }
     public Func<int, List<ArtworkDto>> ArtworkFactory { get; init; }
     public List<ArtworkDto> Artworks { get; init; }
+    public bool ReadFromArtworksJson => ArtworkFactory is null;
 
     public ExhibitionDto(string liftLabel, string labelColour, Func<int, List<ArtworkDto>> artworkFactory)
     {
