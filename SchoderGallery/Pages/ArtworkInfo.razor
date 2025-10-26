@@ -1,0 +1,52 @@
+﻿@page "/ArtworkInfo/{artworkId:int}"
+@inherits SvgComponentBase
+@inject NavigationManager Nav
+
+@if (_svgContent?.Length > 0)
+{
+    <PageTitle>@PageTitle</PageTitle>
+
+    <div style="width:100vw; height:@_screenHeightPx; display:flex; justify-content:center; align-items:center;">
+        <svg width="@ArtworkInfoBuilder.SvgWidth" height="@ArtworkInfoBuilder.SvgHeight">
+            @((MarkupString)_svgContent)
+
+            @foreach (var area in ArtworkInfoBuilder.ClickableAreas)
+            {
+                <rect x="@area.X" y="@area.Y" width="@area.Width" height="@area.Height"
+                        fill="transparent" stroke="none"
+                        style="cursor:pointer;"
+                        @onclick="() => Nav.NavigateTo(area.Page)">
+                    <title>@area.Tooltip</title>
+                </rect>
+            }
+        </svg>
+        @if (!string.IsNullOrEmpty(ArtworkInfoBuilder.Html))
+        {
+            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); z-index:2; pointer-events:none; width:@(ArtworkInfoBuilder.HtmlWidth)px; font-size:@(ArtworkInfoBuilder.HtmlFontSize)px;; color:@(ArtworkInfoBuilder.HtmlColor); font-family:sans-serif; letter-spacing:1.2px; text-align:justify;">
+                @((MarkupString)ArtworkInfoBuilder.Html)
+            </div>
+        }
+    </div>
+}
+
+@if (_isLoading)
+{
+    <div style="
+            position:absolute;
+            top:0;
+            left:0;
+            width:@(ArtworkInfoBuilder.SvgWidth)px;
+            height:@(ArtworkInfoBuilder.SvgHeight)px;
+            background-color:rgba(255,255,255,0.75);
+            display:flex;
+            justify-content:center;
+            align-items:center;
+        ">
+        <div class="loading-progress">
+            <div class="square" style="background-color:#e74c3c;"></div>
+            <div class="square" style="background-color:#e67e22;"></div>
+            <div class="square" style="background-color:#c0392b;"></div>
+            <div class="square" style="background-color:#f1c40f;"></div>
+        </div>
+    </div>
+}

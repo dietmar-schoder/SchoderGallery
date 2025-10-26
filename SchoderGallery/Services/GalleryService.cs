@@ -26,7 +26,7 @@ public class GalleryService : IGalleryService
     private Dictionary<int, ExhibitionDto> CreateExhibitions => new()
     {
         [1] = new ExhibitionDto("New Home", Colours.WarmAccentOrange, default),
-        [7] = new ExhibitionDto("Atelier", Colours.DarkGray, CreateAtelierArtworks)
+        [7] = new ExhibitionDto("Atelier", Colours.DeepBlue, CreateAtelierArtworks)
     };
 
     private List<ArtworkDto> CreateAtelierArtworks(int floorNumber) => LinkArtworks(
@@ -36,7 +36,7 @@ public class GalleryService : IGalleryService
         NewArtwork("Attempt #3", 2025, 104, (s, w, h) => _turtleGraphics.Turtle1(s, w, h, 16, 9), Dietmar),
         NewArtwork("Attempt #4", 2025, 105, (s, w, h) => _turtleGraphics.Turtle2(s, w, h, 13, 7), Dietmar),
         NewArtwork("Attempt #5", 2025, 106, (s, w, h) => _turtleGraphics.Turtle2(s, w, h, 32, 18, 1), Dietmar),
-        NewArtwork("Attempt #6", 2025, 107, (s, w, h) => _turtleGraphics.Turtle1Smooth(s, w, h, 40, 30, closePath : true), Dietmar),
+        NewArtwork("Attempt #6", 2025, 107, (s, w, h) => _turtleGraphics.Turtle1Smooth(s, w, h, 12, 6, closePath : true), Dietmar),
         NewArtwork("Attempt #7", 2025, 108, (s, w, h) => _fourColours.Pattern1(s, w, h, 10, 6, _colours.Blueish20Colours), Dietmar),
         NewArtwork("Attempt #8", 2025, 109, (s, w, h) => _fourColours.Pattern1(s, w, h, 21, 13, _colours.Warm20AccentColours), Dietmar),
         NewArtwork("Attempt #9", 2025, 110, (s, w, h) => _fourColours.Pattern1(s, w, h, 49, 37, _colours.MixedColoursBW), Dietmar),
@@ -57,7 +57,10 @@ public class GalleryService : IGalleryService
     public List<TodoDto> GetTodosAsync()
     {
         List<TodoDto> todos = [
-            new("Explanation pages", TodoStatus.InProgress),
+            new("Buy membership", TodoStatus.InProgress),
+            new("Subscribe to invitations", TodoStatus.InProgress),
+            new("Center vistior point", TodoStatus.InProgress),
+            new("Make artworks clickable", TodoStatus.InProgress),
 
             new("Artwork: comments", TodoStatus.Planned),
             new("Artwork: buy", TodoStatus.Planned),
@@ -65,12 +68,16 @@ public class GalleryService : IGalleryService
             new("Cafe with payment and coffee as artworks", TodoStatus.Planned),
             new("Launch the SCHODER GALLERY", TodoStatus.Planned),
 
+            new("Exhibition \"Morning Walk\"", TodoStatus.Planned),
             new("Exhibition \"Find Me!\"", TodoStatus.Planned),
             new("Exhibition \"Hitler Eats Beigel\"", TodoStatus.Planned),
             new("Exhibition \"Who Am I?\"", TodoStatus.Planned),
+            new("Exhibition \"Boris Bike\"", TodoStatus.Planned),
 
+            new("Remember artwork id per floor", TodoStatus.Finished, 26, 10, 2025),
+            new("Explanation pages", TodoStatus.Finished, 26, 10, 2025),
             new("Jpg/Png images as artworks", TodoStatus.Finished, 20, 10, 2025),
-            new("OnMouseOver for links", TodoStatus.Finished, 13, 18, 2025),
+            new("OnMouseOver for links", TodoStatus.Finished, 18, 10, 2025),
             new("You are here", TodoStatus.Finished, 13, 10, 2025),
             new("Mobile and desktop font sizes", TodoStatus.Finished, 12, 10, 2025),
             new("Exhibitions in floors + lift labels", TodoStatus.Finished, 12, 10, 2025),

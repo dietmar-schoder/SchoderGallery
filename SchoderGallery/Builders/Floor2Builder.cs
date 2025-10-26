@@ -12,6 +12,6 @@ public class Floor2Builder(
     IGalleryService galleryService)
     : BaseFloorBuilder(settingsFactory, svgPainter, navigation, galleryService), IBuilder
 {
-    public override BuilderType Type => BuilderType.Floor2;
+    public override FloorType FloorType => FloorType.Floor2;
     public int Interval => 0;
 }

@@ -4,7 +4,7 @@ namespace SchoderGallery.Builders;
 
 public interface IBuilder
 {
-    BuilderType Type { get; }
+    FloorType FloorType { get; }
     int Interval { get; }
     Task<string> GetSvgContentAsync(int screenWidth, int screenHeight);
     int SvgWidth { get; set; }

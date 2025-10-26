@@ -12,7 +12,7 @@ public class LiftBuilder(
     IGalleryService galleryService)
     : BaseBuilder(settingsFactory, svgPainter, navigation, galleryService), IBuilder
 {
-    public override BuilderType Type => BuilderType.Lift;
+    public override FloorType FloorType => FloorType.Lift;
     public int Interval => 0;
     public FloorInfo CurrentFloor { get; set; }
 
@@ -36,7 +36,7 @@ public class LiftBuilder(
             int x = startX + floor.LiftColumn * (buttonSize + buttonGap);
             int y = startY + floor.LiftRow * (buttonSize + buttonGap);
             int radius = buttonSize / 2;
-            bool isGroundFloor = floor.FloorType == BuilderType.GroundFloor;
+            bool isGroundFloor = floor.FloorType == FloorType.GroundFloor;
             var exhibition = await _galleryService.GetExhibitionAsync(floor.FloorNumber);
             var label = exhibition?.LiftLabel ?? floor.LiftLabel;
             var colour = isGroundFloor ? Colours.WarmAccentRed : exhibition?.LabelColour ?? Colours.DarkGray;

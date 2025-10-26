@@ -17,20 +17,20 @@ public abstract class BaseFloorBuilder(
     {
         var locale = await _navigation.GetVisitorLocaleAsync();
         var wall = _settings.WallThickness;
-        var floor = _navigation.GetFloor(Type);
+        var floor = _navigation.GetFloor(FloorType);
         var exhibition = floor.IsArtworksFloor ? await _galleryService.GetExhibitionAsync(floor.FloorNumber) : null;
 
         DrawOuterWalls();
         DrawFloorPattern();
 
-        if (Type == BuilderType.Atelier)
+        if (FloorType == FloorType.Atelier)
         {
         }
-        else if (Type == BuilderType.GroundFloor)
+        else if (FloorType == FloorType.GroundFloor)
         {
             DrawWindowsAndDoor();
         }
-        else if (Type > 0) // Only for floors above ground floor
+        else if (FloorType > 0) // Only for floors above ground floor
         {
             DrawWindows();
         }
@@ -64,8 +64,17 @@ public abstract class BaseFloorBuilder(
             _svgPainter.Area(wall, wall, SvgWidth - 2 * wall, SvgHeight - 2 * wall, Colours.Background, Colours.DarkGray);
         }
 
-        void DrawFloorPattern() =>
-            _svgPainter.FloorPattern1(wall + 4, wall + 4, SvgWidth - 2 * wall - 8, SvgHeight - 2 * wall - 8, _gap * 2);
+        void DrawFloorPattern()
+        {
+            if (FloorType == FloorType.Atelier || FloorType < 0)
+            {
+                _svgPainter.FloorPattern2(wall + 4, wall + 4, SvgWidth - 2 * wall - 8, SvgHeight - 2 * wall - 8, _gap * 2);
+            }
+            else
+            {
+                _svgPainter.FloorPattern1(wall + 4, wall + 4, SvgWidth - 2 * wall - 8, SvgHeight - 2 * wall - 8, _gap * 2);
+            }
+        }
 
         void DrawWindowsAndDoor()
         {
@@ -141,9 +150,9 @@ public abstract class BaseFloorBuilder(
 
             if (exhibition is not null && exhibition.Artworks.Count > 0)
             {
-                if (_navigation.GetLatestFloorArtwork(exhibition) is { } artwork)
+                if (_navigation.GetLatestFloorArtwork(FloorType, exhibition) is { } artwork)
                 {
-                    visitorX = artwork.IsLeftWall ? _width20 : _width80;
+                    visitorX = artwork.IsLeftWall ? _gap * 2 : SvgWidth - _gap * 2;
                     visitorY = artwork.WallY + artwork.WallWidth / 2;
                 }
             }

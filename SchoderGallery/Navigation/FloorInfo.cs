@@ -1,8 +1,6 @@
-﻿using SchoderGallery.Builders;
+﻿namespace SchoderGallery.Navigation;
 
-namespace SchoderGallery.Navigation;
-
-public record FloorInfo(BuilderType FloorType, int LiftColumn, int LiftRow, string LiftLabel, string Page)
+public record FloorInfo(FloorType FloorType, int LiftColumn, int LiftRow, string LiftLabel, string Page)
 {
     public bool IsFloor =>
         LiftColumn > -1;
@@ -12,15 +10,15 @@ public record FloorInfo(BuilderType FloorType, int LiftColumn, int LiftRow, stri
 
     public bool IsArtworksFloor =>
         IsFloor
-        && FloorType != BuilderType.GroundFloor
-        && FloorType != BuilderType.Operations;
+        && FloorType != FloorType.GroundFloor
+        && FloorType != FloorType.Operations;
 
     public bool HasFloorParam =>
         IsFloor
-        && FloorType != BuilderType.Atelier
-        && FloorType != BuilderType.GroundFloor
-        && FloorType != BuilderType.Depot
-        && FloorType != BuilderType.Operations;
+        && FloorType != FloorType.Atelier
+        && FloorType != FloorType.GroundFloor
+        && FloorType != FloorType.Depot
+        && FloorType != FloorType.Operations;
 
     public string PageAndParam() =>
         HasFloorParam ? $"{Page}/{(int)FloorType}" : Page;

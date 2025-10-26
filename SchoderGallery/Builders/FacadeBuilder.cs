@@ -13,7 +13,7 @@ public class FacadeBuilder(
     Colours colours)
     : BaseBuilder(settingsFactory, svgPainter, navigation, galleryService), IBuilder
 {
-    public override BuilderType Type => BuilderType.Facade;
+    public override FloorType FloorType => FloorType.Facade;
     public int Interval => 5000;
 
     protected override async Task DrawAsync()

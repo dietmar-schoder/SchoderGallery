@@ -12,6 +12,6 @@ public class AtelierBuilder(
     IGalleryService galleryService)
     : BaseFloorBuilder(settingsFactory, svgPainter, navigation, galleryService), IBuilder
 {
-    public override BuilderType Type => BuilderType.Atelier;
+    public override FloorType FloorType => FloorType.Atelier;
     public int Interval => 0;
 }

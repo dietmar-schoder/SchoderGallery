@@ -6,7 +6,7 @@ public class RatioSizeHelper : ISizeHelper
 {
     public SizeType SizeType => SizeType.Ratio;
 
-    public SizeDto GetArtworkSize(ArtworkDto artwork, int screenWidth, int screenHeight)
+    public SizeDto GetArtworkSize(ArtworkDto artwork, int screenWidth, int screenHeight, bool isMobile = false)
     {
         double ratioW = artwork.Width;
         double ratioH = artwork.Height;

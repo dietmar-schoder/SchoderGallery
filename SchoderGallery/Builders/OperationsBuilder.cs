@@ -13,7 +13,7 @@ public class OperationsBuilder(
     IGalleryService galleryService)
     : BaseFloorBuilder(settingsFactory, svgPainter, navigation, galleryService), IBuilder
 {
-    public override BuilderType Type => BuilderType.Operations;
+    public override FloorType FloorType => FloorType.Operations;
     public int Interval => 0;
     protected override async Task DrawAsync()
     {

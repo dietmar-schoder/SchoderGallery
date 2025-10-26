@@ -6,7 +6,7 @@ public class DynamicSizeHelper : ISizeHelper
 {
     public SizeType SizeType => SizeType.Dynamic;
 
-    public SizeDto GetArtworkSize(ArtworkDto artwork, int screenWidth, int screenHeight)
+    public SizeDto GetArtworkSize(ArtworkDto artwork, int screenWidth, int screenHeight, bool isMobile = false)
     {
         const double maxRatioW = 16.0;
         const double maxRatioH = 9.0;

@@ -12,6 +12,6 @@ public class DepotBuilder(
     IGalleryService galleryService)
     : BaseFloorBuilder(settingsFactory, svgPainter, navigation, galleryService), IBuilder
 {
-    public override BuilderType Type => BuilderType.Depot;
+    public override FloorType FloorType => FloorType.Depot;
     public int Interval => 0;
 }

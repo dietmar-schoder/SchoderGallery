@@ -7,7 +7,7 @@ namespace SchoderGallery.Shared;
 
 public partial class BuildingRenderer : SvgComponentBase
 {
-    [Parameter] public BuilderType BuilderType { get; set; }
+    [Parameter] public FloorType BuilderType { get; set; }
 
     [Inject] private BuilderFactory BuilderFactory { get; set; }
     [Inject] private NavigationService Navigation { get; set; }
@@ -21,7 +21,7 @@ public partial class BuildingRenderer : SvgComponentBase
     }
 
     protected override string PageTitle =>
-        $"Schoder Gallery{(BuilderType == BuilderType.Facade ? string.Empty : $" - {Navigation.GetFloor(BuilderType).LiftLabel}")}";
+        $"Schoder Gallery{(BuilderType == FloorType.Facade ? string.Empty : $" - {Navigation.GetFloor(BuilderType).LiftLabel}")}";
 
     protected override async Task<string> GetSvgContentAsync(SizeDto size) =>
         await _builder.GetSvgContentAsync(size.Width, size.Height);

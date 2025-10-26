@@ -20,7 +20,7 @@ public partial class Lift : SvgComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        _builder = BuilderFactory.GetBuilder(BuilderType.Lift) as LiftBuilder;
+        _builder = BuilderFactory.GetBuilder(FloorType.Lift) as LiftBuilder;
         await base.OnInitializedAsync();
         _currentFloorNumber = _builder.CurrentFloor.FloorNumber;
     }

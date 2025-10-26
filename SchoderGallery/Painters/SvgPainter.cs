@@ -67,26 +67,41 @@ public class SvgPainter
     public void IconLeftArrow(int x, int y, int size, int thickness = 1)
     {
         var (xMid, yMid) = IconMiddle(x, y, size);
-        Append($"<path d='M{xMid},{y}L{x},{yMid}L{xMid},{y + size}M{x},{yMid}L{x + size},{yMid}' fill='none' stroke='{Colours.Gray}' stroke-width='{thickness}' />");
+        Append($"<path d='M{xMid},{y}L{x},{yMid}L{xMid},{y + size}M{x},{yMid}L{x + size},{yMid}' fill='none' stroke='{Colours.DarkGray}' stroke-width='{thickness}' />");
     }
 
     public void IconRefresh(int x, int y, int size, int thickness = 1)
     {
         var (xMid, yMid) = IconMiddle(x, y, size);
-        Append($"<path d='M{xMid},{y} A{size / 2},{size / 2} 0 1,0 {x + size},{yMid} L{x + size * 0.7},{y + size * 0.8} M{x + size},{yMid} L{x + size},{y + size}' fill='none' stroke='{Colours.Gray}' stroke-width='{thickness}' />");
+        Append($"<path d='M{xMid},{y} A{size / 2},{size / 2} 0 1,0 {x + size},{yMid} L{x + size * 0.7},{y + size * 0.8} M{x + size},{yMid} L{x + size},{y + size}' fill='none' stroke='{Colours.DarkGray}' stroke-width='{thickness}' />");
     }
 
     public void IconLeft(int x, int y, int size, int thickness = 1)
     {
         var (xMid, yMid) = IconMiddle(x, y, size);
-        Append($"<path d='M{xMid},{y}L{x},{yMid}L{xMid},{y + size}' fill='none' stroke='{Colours.Gray}' stroke-width='{thickness}' />");
+        Append($"<path d='M{xMid},{y}L{x},{yMid}L{xMid},{y + size}' fill='none' stroke='{Colours.DarkGray}' stroke-width='{thickness}' />");
     }
 
     public void IconRight(int x, int y, int size, int thickness = 1)
     {
         var (xMid, yMid) = IconMiddle(x, y, size);
-        Append($"<path d='M{xMid},{y}L{x + size},{yMid}L{xMid},{y + size}' fill='none' stroke='{Colours.Gray}' stroke-width='{thickness}' />");
+        Append($"<path d='M{xMid},{y}L{x + size},{yMid}L{xMid},{y + size}' fill='none' stroke='{Colours.DarkGray}' stroke-width='{thickness}' />");
     }
+
+    public void IconQuestionMark(int x, int y, int size, int thickness = 1)
+    {
+        var (xMid, yMid) = IconMiddle(x, y, size);
+        int quarterX = x + size / 4;
+        int threeQuarterX = x + 3 * size / 4;
+        int quarterY = y + size / 4;
+        int threeQuarterY = y + 3 * size / 4;
+        Append($"<path d='M{quarterX},{quarterY} A{size / 4},{size / 4} 0 0 1 {xMid},{y} A{size / 4},{size / 4} 0 0 1 {threeQuarterX},{quarterY} A{size / 4},{size / 4} 0 0 1 {xMid},{yMid} L{xMid},{threeQuarterY}' fill='none' stroke='{Colours.DarkGray}' stroke-width='{thickness}' />");
+        int circleRadius = 2;
+        Append($"<circle cx='{xMid}' cy='{y + size - circleRadius}' r='{circleRadius}' fill='{Colours.DarkGray}' />");
+    }
+
+    public void IconClose(int x, int y, int size, int thickness = 1) =>
+        Append($"<path d='M{x},{y}L{x + size},{y + size}M{x + size},{y}L{x},{y + size}' fill='none' stroke='{Colours.DarkGray}' stroke-width='{thickness}' />");
 
     private static (int xMid, int yMid) IconMiddle(int x, int y, int size) =>
         (x + size / 2, y + size / 2);
@@ -94,7 +109,7 @@ public class SvgPainter
     public void Image(int width, int height, string filename) =>
         Append($"<image x='0' y='0' width='{width}' height='{height}' href='{filename}' preserveAspectRatio='none' />");
 
-    public void FloorPattern1(double x, double y, int width, int height, int spacing, string lineColour = Colours.FloorPattern)
+    public void FloorPattern1(double x, double y, int width, int height, int spacing, string colour = Colours.FloorPattern)
     {
         int cols = width / spacing;
         int rows = height / spacing;
@@ -110,7 +125,7 @@ public class SvgPainter
                 double s = spacing;
                 double offset = spacing / 4.0;
 
-                Append($@"<path d='M {sx + s / 2},{sy + offset} L {sx + s - offset},{sy + s / 2} L {sx + s / 2},{sy + s - offset} L {sx + offset},{sy + s / 2} Z' fill='none' stroke='{lineColour}' stroke-width='1' />");
+                Append($@"<path d='M {sx + s / 2},{sy + offset} L {sx + s - offset},{sy + s / 2} L {sx + s / 2},{sy + s - offset} L {sx + offset},{sy + s / 2} Z' fill='none' stroke='{colour}' stroke-width='1' />");
             }
         }
 
@@ -121,7 +136,28 @@ public class SvgPainter
                 double sx = x + col * spacing + remainderX / 2;
                 double sy = y + row * spacing + remainderY / 2;
                 double radius = spacing;
-                Append($@"<circle cx='{sx}' cy='{sy}' r='{radius}' fill='none' stroke='{lineColour}' stroke-width='1' />");
+                Append($@"<circle cx='{sx}' cy='{sy}' r='{radius}' fill='none' stroke='{colour}' stroke-width='1' />");
+            }
+        }
+    }
+
+    public void FloorPattern2(double x, double y, int width, int height, int spacing, string colour = Colours.FloorPattern)
+    {
+        int cols = width / spacing;
+        int rows = height / spacing;
+        double remainderX = width - cols * spacing;
+        double remainderY = height - rows * spacing;
+
+        for (int row = 0; row < rows; row++)
+        {
+            for (int col = 0; col < cols; col++)
+            {
+                double sx = x + col * spacing + remainderX / 2;
+                double sy = y + row * spacing + remainderY / 2;
+                double s = spacing;
+                double offset = spacing / 8.0;
+
+                Append($@"<path d='M {sx + s / 2},{sy + offset} L {sx + s - offset},{sy + s / 2} L {sx + s / 2},{sy + s - offset} L {sx + offset},{sy + s / 2} Z' fill='{colour}' stroke-width='0' />");
             }
         }
     }

@@ -1,7 +1,8 @@
-﻿namespace SchoderGallery.Builders;
+﻿namespace SchoderGallery.Navigation;
 
-public enum BuilderType
+public enum FloorType
 {
+    ArtworkInfo = 16,
     Artwork = 15,
     Facade = 14,
     Cafe = 13,

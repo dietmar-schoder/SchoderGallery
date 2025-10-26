@@ -11,7 +11,8 @@ public class ArtworkDto(
     int height,
     string artist,
     int id,
-    string fileName = default)
+    string fileName = default,
+    string info = default)
 {
     // "000051-Weather Forecast Bright-2025-Dietmar Schoder-0-1920-1080.png"
     // "Id-Title-Year-Artist-SizeType-Width-Height.FileExtension"
@@ -31,4 +32,5 @@ public class ArtworkDto(
     public int WallX { get; set; }
     public int WallY { get; set; }
     public int WallWidth { get; set; }
+    public string Info { get; } = info;
 }

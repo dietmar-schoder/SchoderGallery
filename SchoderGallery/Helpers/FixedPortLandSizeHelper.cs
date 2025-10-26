@@ -6,7 +6,7 @@ public class FixedPortLandSizeHelper : ISizeHelper
 {
     public SizeType SizeType => SizeType.PortraitLandscape;
 
-    public SizeDto GetArtworkSize(ArtworkDto artwork, int screenWidth, int screenHeight)
+    public SizeDto GetArtworkSize(ArtworkDto artwork, int screenWidth, int screenHeight, bool isMobile = false)
     {
         double scale = 1.0;
 

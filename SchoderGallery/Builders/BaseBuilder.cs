@@ -44,7 +44,7 @@ public abstract class BaseBuilder(
     protected int ShortSize => ScreenMode == ScreenMode.Portrait ? SvgWidth : SvgHeight;
     protected int ShortWindowSize => ScreenMode == ScreenMode.Portrait ? _windowWidth : _windowHeight;
 
-    public abstract BuilderType Type { get; }
+    public abstract FloorType FloorType { get; }
 
     public int SvgWidth { get; set; }
 
@@ -82,7 +82,7 @@ public abstract class BaseBuilder(
     {
         Init(screenWidth, screenHeight);
 
-        await _navigation.SetVisitorFloorAsync(Type);
+        await _navigation.SetVisitorFloorAsync(FloorType);
 
         _rowsColumns = _settings.RowsColumns;
         _gap = (int)(ShortSize / _rowsColumns * _settings.GapToRowColumnWidthRatio);
@@ -104,6 +104,16 @@ public abstract class BaseBuilder(
     protected int IconSize => IsMobile ? _settings.IconSizeMobile : _settings.IconSizeDesktop;
 
     protected virtual async Task DrawAsync() { await Task.CompletedTask; }
+
+    protected static string ConvertToParagraphs(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            return string.Empty;
+
+        var paragraphs = text.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+        var paragraphTags = paragraphs.Select(p => $"<p>{p.Trim()}</p>");
+        return string.Join("", paragraphTags);
+    }
 
     private int WindowWidth(int totalGapSpace)
     {

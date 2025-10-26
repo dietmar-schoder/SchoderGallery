@@ -12,7 +12,7 @@ public class GroundFloorBuilder(
     IGalleryService galleryService)
     : BaseFloorBuilder(settingsFactory, svgPainter, navigation, galleryService), IBuilder
 {
-    public override BuilderType Type => BuilderType.GroundFloor;
+    public override FloorType FloorType => FloorType.GroundFloor;
     public int Interval => 0;
 
     protected override async Task DrawAsync()

@@ -41,6 +41,7 @@ builder.Services.AddSingleton<ISizeHelper, FixedPortLandSizeHelper>();
 builder.Services.AddSingleton<ISizeHelper, TextSizeHelper>();
 
 builder.Services.AddScoped<BuilderFactory>();
+builder.Services.AddScoped<IArtworkInfoBuilder, ArtworkInfoBuilder>();
 builder.Services.AddScoped<IArtworkBuilder, ArtworkBuilder>();
 builder.Services.AddScoped<IBuilder, AtelierBuilder>();
 builder.Services.AddScoped<IBuilder, Basement1Builder>();
