@@ -32,5 +32,6 @@ public class ArtworkDto(
     public int WallX { get; set; }
     public int WallY { get; set; }
     public int WallWidth { get; set; }
+    public int ThumbnailSize { get; set; }
     public string Info { get; } = info;
 }

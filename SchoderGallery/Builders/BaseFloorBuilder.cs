@@ -66,7 +66,11 @@ public abstract class BaseFloorBuilder(
 
         void DrawFloorPattern()
         {
-            if (FloorType == FloorType.Atelier || FloorType < 0)
+            if (FloorType == FloorType.Atelier)
+            {
+                _svgPainter.FloorPattern3(wall + 4, wall + 4, SvgWidth - 2 * wall - 8, SvgHeight - 2 * wall - 8, _gap * 2);
+            }
+            else if (FloorType < 0)
             {
                 _svgPainter.FloorPattern2(wall + 4, wall + 4, SvgWidth - 2 * wall - 8, SvgHeight - 2 * wall - 8, _gap * 2);
             }
@@ -119,7 +123,18 @@ public abstract class BaseFloorBuilder(
         {
             foreach (var artwork in artworks)
             {
-                _svgPainter.Area(artwork.WallX, artwork.WallY, 4, artwork.WallWidth, Colours.White, Colours.Black);
+                _svgPainter.Area(artwork.WallX, artwork.WallY, artwork.ThumbnailSize, artwork.WallWidth, Colours.White, Colours.Black);
+                var thumbnailFileName = $"images/floor{floor.FloorNumber}/{artwork.Id:D6}.jpg";
+
+                _svgPainter.Thumbnail(artwork.WallX + 1, artwork.WallY + 1, artwork.ThumbnailSize - 2, artwork.WallWidth - 2, thumbnailFileName);
+                if (artwork.IsLeftWall)
+                {
+                    ClickableAreas.Add(new ClickableArea(0, artwork.WallY, _width20, artwork.WallWidth + 4, $"/Artwork/{artwork.Id}", artwork.Title));
+                }
+                else
+                {
+                    ClickableAreas.Add(new ClickableArea(_width80, artwork.WallY, _width20, artwork.WallWidth + 4, $"/Artwork/{artwork.Id}", artwork.Title));
+                }
             }
         }
 
@@ -152,7 +167,8 @@ public abstract class BaseFloorBuilder(
             {
                 if (_navigation.GetLatestFloorArtwork(FloorType, exhibition) is { } artwork)
                 {
-                    visitorX = artwork.IsLeftWall ? _gap * 2 : SvgWidth - _gap * 2;
+                    var distance = artwork.ThumbnailSize + _gap * 2;
+                    visitorX = artwork.IsLeftWall ? distance : SvgWidth - distance;
                     visitorY = artwork.WallY + artwork.WallWidth / 2;
                 }
             }
@@ -163,31 +179,35 @@ public abstract class BaseFloorBuilder(
 
     private static List<ArtworkDto> HangArtworks(List<ArtworkDto> artworks, int innerRoomWidth, int innerRoomHeight, int wall)
     {
-        int artworkGap = 4;
-        int artworkThickness = 4;
-        int rightCount = (artworks.Count + 1) / 2;
-        int leftCount = artworks.Count - rightCount;
-        double rightArtWorkSpace = (innerRoomHeight - artworkGap) / (double)rightCount;
-        double leftArtWorkSpace = (innerRoomHeight - artworkGap) / (double)leftCount;
+        var artworkGap = 4;
 
+        var rightCount = (artworks.Count + 1) / 2;
+        double rightArtWorkSpace = (innerRoomHeight - artworkGap) / (double)rightCount;
         for (int i = 0; i < rightCount; i++)
         {
             var artwork = artworks[i];
             artwork.IsRightWall = true;
-            artwork.WallX = wall + innerRoomWidth - artworkThickness - artworkGap;
-            artwork.WallY = wall + artworkGap + (int)(i * rightArtWorkSpace);
             artwork.WallWidth = (int)rightArtWorkSpace - 4;
+            artwork.ThumbnailSize = ThumbnailSize(artwork.SizeType, artwork.WallWidth);
+            artwork.WallX = wall + innerRoomWidth - artwork.ThumbnailSize - artworkGap;
+            artwork.WallY = wall + artworkGap + (int)(i * rightArtWorkSpace);
         }
 
+        var leftCount = artworks.Count - rightCount;
+        double leftArtWorkSpace = (innerRoomHeight - artworkGap) / (double)leftCount;
         for (int i = 0; i < leftCount; i++)
         {
             var artwork = artworks[rightCount + i];
             artwork.IsRightWall = false;
+            artwork.WallWidth = (int)leftArtWorkSpace - 4;
+            artwork.ThumbnailSize = ThumbnailSize(artwork.SizeType, artwork.WallWidth);
             artwork.WallX = wall + artworkGap;
             artwork.WallY = wall + artworkGap + (int)((leftCount - 1 - i) * leftArtWorkSpace);
-            artwork.WallWidth = (int)leftArtWorkSpace - 4;
         }
 
         return artworks;
     }
+
+    private static int ThumbnailSize(SizeType sizeType, int wallWidth) =>
+        Math.Min(sizeType == SizeType.Fixed || sizeType == SizeType.PortraitLandscape ? wallWidth : 4, 200);
 }

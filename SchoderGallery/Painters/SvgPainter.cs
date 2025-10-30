@@ -109,6 +109,9 @@ public class SvgPainter
     public void Image(int width, int height, string filename) =>
         Append($"<image x='0' y='0' width='{width}' height='{height}' href='{filename}' preserveAspectRatio='none' />");
 
+    public void Thumbnail(int x, int y, int width, int height, string filename) =>
+        Append($"<image x='{x}' y='{y}' width='{width}' height='{height}' href='{filename}' preserveAspectRatio='none' />");
+
     public void FloorPattern1(double x, double y, int width, int height, int spacing, string colour = Colours.FloorPattern)
     {
         int cols = width / spacing;
@@ -158,6 +161,29 @@ public class SvgPainter
                 double offset = spacing / 8.0;
 
                 Append($@"<path d='M {sx + s / 2},{sy + offset} L {sx + s - offset},{sy + s / 2} L {sx + s / 2},{sy + s - offset} L {sx + offset},{sy + s / 2} Z' fill='{colour}' stroke-width='0' />");
+            }
+        }
+    }
+
+    public void FloorPattern3(double x, double y, int width, int height, int spacing, string colour = Colours.FloorPattern)
+    {
+        int cols = width / spacing;
+        int rows = height / spacing;
+        double remainderX = width - cols * spacing;
+        double remainderY = height - rows * spacing;
+
+        for (int row = 0; row < rows; row++)
+        {
+            for (int col = 0; col < cols; col++)
+            {
+                double sx = x + col * spacing + remainderX / 2;
+                double sy = y + row * spacing + remainderY / 2;
+                double s = spacing;
+                double offset = s / 8.0;
+
+                Append($@"<path d='M {sx + s / 2},{sy + offset} L {sx + s - offset},{sy + s / 2} L {sx + s / 2},{sy + s - offset} L {sx + offset},{sy + s / 2} Z' fill='{colour}' stroke-width='0' />");
+                double radius = spacing / 3.8;
+                Append($@"<circle cx='{sx + s / 2}' cy='{sy + s / 2}' r='{radius}' fill='{Colours.Background}' stroke-width='0' />");
             }
         }
     }

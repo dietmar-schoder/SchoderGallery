@@ -31,17 +31,18 @@ public class GalleryService : IGalleryService
 
     private List<ArtworkDto> CreateAtelierArtworks(int floorNumber) => LinkArtworks(
     [
-        NewArtwork("Attempt #1", 2025, 102, (s, w, h) => _turtleGraphics.Turtle1(s, w, h, 8, 4, closePath: true), Dietmar),
-        NewArtwork("Attempt #2", 2025, 103, (s, w, h) => _turtleGraphics.Turtle1Smooth(s, w, h, 8, 4, closePath : true), Dietmar),
-        NewArtwork("Attempt #3", 2025, 104, (s, w, h) => _turtleGraphics.Turtle1(s, w, h, 16, 9), Dietmar),
-        NewArtwork("Attempt #4", 2025, 105, (s, w, h) => _turtleGraphics.Turtle2(s, w, h, 13, 7), Dietmar),
-        NewArtwork("Attempt #5", 2025, 106, (s, w, h) => _turtleGraphics.Turtle2(s, w, h, 32, 18, 1), Dietmar),
-        NewArtwork("Attempt #6", 2025, 107, (s, w, h) => _turtleGraphics.Turtle1Smooth(s, w, h, 12, 6, closePath : true), Dietmar),
-        NewArtwork("Attempt #7", 2025, 108, (s, w, h) => _fourColours.Pattern1(s, w, h, 10, 6, _colours.Blueish20Colours), Dietmar),
-        NewArtwork("Attempt #8", 2025, 109, (s, w, h) => _fourColours.Pattern1(s, w, h, 21, 13, _colours.Warm20AccentColours), Dietmar),
-        NewArtwork("Attempt #9", 2025, 110, (s, w, h) => _fourColours.Pattern1(s, w, h, 49, 37, _colours.MixedColoursBW), Dietmar),
-        NewArtwork("Attempt #10", 2025, 111, (s, w, h) => _fourColours.Pattern2(s, w, h, 4, 4, _colours.Warm20AccentColours), Dietmar),
-        NewArtwork("Attempt #11", 2025, 112, (s, w, h) => _fourColours.Pattern2(s, w, h, 8, 6, _colours.Blueish20Colours), Dietmar),
+        NewArtwork("In my line of work everything is true and false.", 2025, 111, default, Dietmar, SizeType.Text),
+        NewArtwork("Attempt #1", 2025, 112, (s, w, h) => _turtleGraphics.Turtle1(s, w, h, 8, 4, closePath: true), Dietmar),
+        NewArtwork("Attempt #2", 2025, 113, (s, w, h) => _turtleGraphics.Turtle1Smooth(s, w, h, 8, 4, closePath : true), Dietmar),
+        NewArtwork("Attempt #3", 2025, 114, (s, w, h) => _turtleGraphics.Turtle1(s, w, h, 16, 9), Dietmar),
+        NewArtwork("Attempt #4", 2025, 115, (s, w, h) => _turtleGraphics.Turtle2(s, w, h, 13, 7), Dietmar),
+        NewArtwork("Attempt #5", 2025, 116, (s, w, h) => _turtleGraphics.Turtle2(s, w, h, 32, 18, 1), Dietmar),
+        NewArtwork("Attempt #6", 2025, 117, (s, w, h) => _turtleGraphics.Turtle1Smooth(s, w, h, 12, 6, closePath : true), Dietmar),
+        NewArtwork("Attempt #7", 2025, 118, (s, w, h) => _fourColours.Pattern1(s, w, h, 10, 6, _colours.Blueish20Colours), Dietmar),
+        NewArtwork("Attempt #8", 2025, 119, (s, w, h) => _fourColours.Pattern1(s, w, h, 21, 13, _colours.Warm20AccentColours), Dietmar),
+        NewArtwork("Attempt #9", 2025, 120, (s, w, h) => _fourColours.Pattern1(s, w, h, 49, 37, _colours.MixedColoursBW), Dietmar),
+        NewArtwork("Attempt #10", 2025, 121, (s, w, h) => _fourColours.Pattern2(s, w, h, 4, 4, _colours.Warm20AccentColours), Dietmar),
+        NewArtwork("Attempt #11", 2025, 122, (s, w, h) => _fourColours.Pattern2(s, w, h, 8, 6, _colours.Blueish20Colours), Dietmar),
     ]);
 
     public GalleryService(ClientFactory http, AlgorithmFactory algorithmFactory, Colours colours)
@@ -57,6 +58,7 @@ public class GalleryService : IGalleryService
     public List<TodoDto> GetTodosAsync()
     {
         List<TodoDto> todos = [
+            new("Thumbnails", TodoStatus.InProgress),
             new("Buy membership", TodoStatus.InProgress),
             new("Subscribe to invitations", TodoStatus.InProgress),
             new("Center vistior point", TodoStatus.InProgress),
@@ -73,6 +75,7 @@ public class GalleryService : IGalleryService
             new("Exhibition \"Hitler Eats Beigel\"", TodoStatus.Planned),
             new("Exhibition \"Who Am I?\"", TodoStatus.Planned),
             new("Exhibition \"Boris Bike\"", TodoStatus.Planned),
+            new("Exhibition \"Egyptian Judgement Day\"", TodoStatus.Planned),
 
             new("Remember artwork id per floor", TodoStatus.Finished, 26, 10, 2025),
             new("Explanation pages", TodoStatus.Finished, 26, 10, 2025),
