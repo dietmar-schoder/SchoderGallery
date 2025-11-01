@@ -128,13 +128,16 @@ public abstract class BaseFloorBuilder(
                 var thumbnailFileName = $"images/floor{floor.FloorNumber}/{artwork.Id:D6}.jpg";
 
                 _svgPainter.Thumbnail(artwork.WallX + 1, artwork.WallY + 1, artwork.ThumbnailSize - 2, artwork.WallWidth - 2, thumbnailFileName);
+                
+                var tooltip = artwork.SizeType == SizeType.Text ? "Info" : artwork.Title; // Shorter tooltip?????
+
                 if (artwork.IsLeftWall)
                 {
-                    ClickableAreas.Add(new ClickableArea(0, artwork.WallY, _width20, artwork.WallWidth + 4, $"/Artwork/{artwork.Id}", artwork.Title));
+                    ClickableAreas.Add(new ClickableArea(0, artwork.WallY, _width20, artwork.WallWidth + 4, $"/Artwork/{artwork.Id}", tooltip));
                 }
                 else
                 {
-                    ClickableAreas.Add(new ClickableArea(_width80, artwork.WallY, _width20, artwork.WallWidth + 4, $"/Artwork/{artwork.Id}", artwork.Title));
+                    ClickableAreas.Add(new ClickableArea(_width80, artwork.WallY, _width20, artwork.WallWidth + 4, $"/Artwork/{artwork.Id}", tooltip));
                 }
             }
         }

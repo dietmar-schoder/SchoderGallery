@@ -30,15 +30,18 @@ public class NavigationService(ClientFactory http, ILocalStorageService localSto
 
     public async Task<Visitor> GetInitVisitorAsync()
     {
+        // Later: track in which floor a visitor is, what artwork they view
+
         if (_visitor is null)
         {
-            _visitor = await localStorage.GetItemAsync<Visitor>(Const.VisitorStorageKey);
-            if (_visitor is null)
+            _visitor = await localStorage.GetItemAsync<Visitor>(Const.VisitorStorageKey) ?? Visitor.Create();
+            var response = await http.Backend.PostAsJsonAsync("/api/visits", new VisitDto(_visitor.Id));
+            if (response.IsSuccessStatusCode)
             {
-                var locale = await http.Backend.GetFromJsonAsync<LocaleDto>("/api/countries");
-                _visitor = new Visitor(locale);
-                await StoreVisitorDataAsync();
+                _visitor.Locale = await response.Content.ReadFromJsonAsync<LocaleDto>();
             }
+
+            await StoreVisitorDataAsync();
         }
 
         if (_visitor.Locale is null)

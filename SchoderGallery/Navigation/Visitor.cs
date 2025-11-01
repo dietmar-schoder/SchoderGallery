@@ -12,13 +12,10 @@ public class Visitor
 
     public Dictionary<FloorType, int> LatestArtworkIds { get; set; }
 
-    public Visitor() { }
-
-    public Visitor(LocaleDto locale)
+    public static Visitor Create() => new()
     {
-        Id = Guid.NewGuid();
-        Locale = locale;
-        CurrentFloorType = FloorType.GroundFloor;
+        Id = Guid.NewGuid(),
+        CurrentFloorType = FloorType.GroundFloor,
         LatestArtworkIds = new Dictionary<FloorType, int>
         {
             { FloorType.Atelier, 0 },
@@ -31,8 +28,8 @@ public class Visitor
             { FloorType.Basement1, 0 },
             { FloorType.Basement2, 0 },
             { FloorType.Depot, 0 },
-        };
-    }
+        }
+    };
 
     public void MoveToFloor(FloorType newFloor) =>
         CurrentFloorType = newFloor;

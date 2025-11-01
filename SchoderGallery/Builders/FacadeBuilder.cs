@@ -40,7 +40,7 @@ public class FacadeBuilder(
                     double lineY = y + 0.5;
                     if (row == _rowsColumns - 1 && column == _rowsColumns / 2 - 1)
                     {
-                        var latestFloor = _navigation.GetFloor(Visitor.CurrentFloorType);
+                        var latestFloor = _navigation.GetFloor(FloorType.GroundFloor); // _navigation.GetFloor(Visitor.CurrentFloorType);
                         DrawDoor(lineX, lineY, latestFloor);
                         continue;
                     }
