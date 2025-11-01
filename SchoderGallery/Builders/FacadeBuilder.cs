@@ -16,9 +16,8 @@ public class FacadeBuilder(
     public override FloorType FloorType => FloorType.Facade;
     public int Interval => 5000;
 
-    protected override async Task DrawAsync()
+    protected override void Draw()
     {
-        var locale = await _navigation.GetVisitorLocaleAsync();
         var schoderText = "Schoder";
         var galleryText = "Gallery";
         var entrance = "Entrance";
@@ -41,7 +40,8 @@ public class FacadeBuilder(
                     double lineY = y + 0.5;
                     if (row == _rowsColumns - 1 && column == _rowsColumns / 2 - 1)
                     {
-                        DrawDoor(lineX, lineY);
+                        var latestFloor = _navigation.GetFloor(Visitor.CurrentFloorType);
+                        DrawDoor(lineX, lineY, latestFloor);
                         continue;
                     }
 
@@ -75,7 +75,7 @@ public class FacadeBuilder(
             _svgPainter.Area(x, y, width, height, Colours.Gray);
         }
 
-        void DrawDoor(double x, double y)
+        void DrawDoor(double x, double y, FloorInfo floor)
         {
             int doorWidth = 3 * _windowWidth + 2 * _gap;
             int doorHeight = _windowHeight + _margin - 3;
@@ -92,7 +92,7 @@ public class FacadeBuilder(
             DrawEntranceText((int)xMiddle + 1, (int)y + 1, _gap, Colours.White); // Shadow
             DrawEntranceText((int)xMiddle, (int)y, _gap, Colours.Black);
 
-            ClickableAreas.Add(new ClickableArea(0, _height66, SvgWidth, _height33, "/GroundFloor", welcome));
+            ClickableAreas.Add(new ClickableArea(0, _height66, SvgWidth, _height33, floor.Page, welcome));
         }
 
         string[] GetRandomColours() =>

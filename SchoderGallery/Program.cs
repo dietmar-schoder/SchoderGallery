@@ -14,8 +14,9 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-builder.Services.AddHttpClient(Constants.Backend, client => { client.BaseAddress = new Uri(Constants.SchoderGalleryServerUrl); });
+builder.Services.AddHttpClient(Const.Backend, client => { client.BaseAddress = new Uri(Const.SchoderGalleryServerUrl); });
 builder.Services.AddScoped<ClientFactory>();
+builder.Services.AddSingleton<ILocalStorageService, LocalStorageService>();
 
 builder.Services.AddSingleton<Colours>();
 builder.Services.AddSingleton<Image>();

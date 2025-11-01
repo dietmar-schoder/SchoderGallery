@@ -1,7 +1,7 @@
 ﻿@page "/Basement/{floorNumber:int}"
 @inject NavigationService Navigation
 
-<BuildingRenderer BuilderType=@Navigation.GetBuilderType(FloorNumber) />
+<BuildingRenderer BuilderType=@NavigationService.GetFloorType(FloorNumber) />
 
 @code {
     [Parameter] public int FloorNumber { get; set; }

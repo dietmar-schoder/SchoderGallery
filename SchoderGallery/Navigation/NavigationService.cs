@@ -1,28 +1,13 @@
 ﻿using SchoderGallery.DTOs;
+using SchoderGallery.Helpers;
 using SchoderGallery.Services;
 using System.Net.Http.Json;
 
 namespace SchoderGallery.Navigation;
 
-public class NavigationService(ClientFactory http)
+public class NavigationService(ClientFactory http, ILocalStorageService localStorage)
 {
     private Visitor _visitor;
-
-    public async Task<Visitor> GetInitVisitorAsync()
-    {
-        _visitor ??= new Visitor
-        {
-            Locale = await http.Backend.GetFromJsonAsync<LocaleDto>("/api/countries")
-        };
-
-        if (_visitor.Locale is null)
-        {
-            // Alert (and later disallow use of the app)
-        }
-
-        return _visitor;
-    }
-
     private readonly IReadOnlyDictionary<FloorType, FloorInfo> _floors = new Dictionary<FloorType, FloorInfo>
     {
         { FloorType.Atelier, new FloorInfo(FloorType.Atelier, 1, 0, "Atelier", "/Atelier") },
@@ -38,8 +23,31 @@ public class NavigationService(ClientFactory http)
         { FloorType.Depot, new FloorInfo(FloorType.Depot, 0, 5, "Depot", "/Depot") },
         { FloorType.Operations, new FloorInfo(FloorType.Operations, 1, 5, "Operations", "/Operations") },
 
+        // My Collection
+
         { FloorType.Lift, new FloorInfo(FloorType.Lift, -1, -1, "Lift", "/Lift") }
     };
+
+    public async Task<Visitor> GetInitVisitorAsync()
+    {
+        if (_visitor is null)
+        {
+            _visitor = await localStorage.GetItemAsync<Visitor>(Const.VisitorStorageKey);
+            if (_visitor is null)
+            {
+                var locale = await http.Backend.GetFromJsonAsync<LocaleDto>("/api/countries");
+                _visitor = new Visitor(locale);
+                await StoreVisitorDataAsync();
+            }
+        }
+
+        if (_visitor.Locale is null)
+        {
+            // Alert (and later disallow use of the app)
+        }
+
+        return _visitor;
+    }
 
     public IEnumerable<FloorInfo> GetFloors() =>
         _floors.Values.Where(f => f.LiftColumn > -1);
@@ -47,11 +55,11 @@ public class NavigationService(ClientFactory http)
     public FloorInfo GetFloor(FloorType type) =>
         _floors.TryGetValue(type, out var floor) ? floor : _floors[FloorType.GroundFloor];
 
-    public FloorInfo GetFloor(int floorNumber) =>
-        GetFloor(GetBuilderType(floorNumber));
-
     public FloorInfo GetFloor(string floorNumberString) =>
-        GetFloor(GetBuilderType(int.TryParse(floorNumberString, out var floorNumber) ? floorNumber : 0));
+        GetFloor(GetFloorType(int.TryParse(floorNumberString, out var floorNumber) ? floorNumber : 0));
+
+    public static FloorType GetFloorType(int floorNumber) =>
+        Enum.TryParse<FloorType>(floorNumber.ToString(), out var result) ? result : FloorType.GroundFloor;
 
     public async Task<LocaleDto> GetVisitorLocaleAsync() =>
         (await GetInitVisitorAsync()).Locale;
@@ -59,18 +67,13 @@ public class NavigationService(ClientFactory http)
     public async Task<FloorInfo> GetVisitorFloorAsync() =>
         GetFloor(await GetVisitorFloorTypeAsync());
 
-    public FloorType GetBuilderType(int floorNumber) =>
-        Enum.TryParse<FloorType>(floorNumber.ToString(), out var result) ? result : FloorType.GroundFloor;
-
-    public async Task<FloorType> GetVisitorFloorTypeAsync() =>
-        (await GetInitVisitorAsync()).CurrentFloorType;
-
     public async Task SetVisitorFloorAsync(FloorType floor)
     {
         await GetInitVisitorAsync();
         if (GetFloor(floor)?.IsFloor ?? false)
         {
             _visitor.MoveToFloor(floor);
+            await StoreVisitorDataAsync();
         }
     }
 
@@ -85,6 +88,15 @@ public class NavigationService(ClientFactory http)
             : null;
     }
 
-    public void SetLatestArtworkId(FloorType floorType, int artworkId) =>
+    public async Task SetLatestArtworkIdAsync(FloorType floorType, int artworkId)
+    {
         _visitor.ViewArtwork(floorType, artworkId);
+        await StoreVisitorDataAsync();
+    }
+
+    private async Task<FloorType> GetVisitorFloorTypeAsync() =>
+        (await GetInitVisitorAsync()).CurrentFloorType;
+
+    private async Task StoreVisitorDataAsync() =>
+        await localStorage.SetItemAsync(Const.VisitorStorageKey, _visitor);
 }

@@ -19,7 +19,6 @@ public class GalleryService : IGalleryService
     private readonly ClientFactory _http;
     private readonly Colours _colours;
     private readonly FourColours _fourColours;
-    private readonly Image _image;
     private readonly TurtleGraphics _turtleGraphics;
     private readonly Dictionary<int, ExhibitionDto> _exhibitions;
 
@@ -50,7 +49,6 @@ public class GalleryService : IGalleryService
         _http = http;
         _colours = colours;
         _fourColours = algorithmFactory.GetAlgorithm(AlgorithmType.FourColours) as FourColours;
-        _image = algorithmFactory.GetAlgorithm(AlgorithmType.Image) as Image;
         _turtleGraphics = algorithmFactory.GetAlgorithm(AlgorithmType.TurtleGraphics) as TurtleGraphics;
         _exhibitions = CreateExhibitions;
     }
@@ -58,25 +56,40 @@ public class GalleryService : IGalleryService
     public List<TodoDto> GetTodosAsync()
     {
         List<TodoDto> todos = [
-            new("Thumbnails", TodoStatus.InProgress),
-            new("Buy membership", TodoStatus.InProgress),
+            new("Automatic register", TodoStatus.InProgress),
+            new("My Collection", TodoStatus.InProgress),
             new("Subscribe to invitations", TodoStatus.InProgress),
             new("Center vistior point", TodoStatus.InProgress),
-            new("Make artworks clickable", TodoStatus.InProgress),
-
             new("Artwork: comments", TodoStatus.Planned),
             new("Artwork: buy", TodoStatus.Planned),
             new("Artwork: sell", TodoStatus.Planned),
             new("Cafe with payment and coffee as artworks", TodoStatus.Planned),
             new("Launch the SCHODER GALLERY", TodoStatus.Planned),
+            new("Buy membership", TodoStatus.InProgress),
 
-            new("Exhibition \"Morning Walk\"", TodoStatus.Planned),
-            new("Exhibition \"Find Me!\"", TodoStatus.Planned),
-            new("Exhibition \"Hitler Eats Beigel\"", TodoStatus.Planned),
-            new("Exhibition \"Who Am I?\"", TodoStatus.Planned),
-            new("Exhibition \"Boris Bike\"", TodoStatus.Planned),
             new("Exhibition \"Egyptian Judgement Day\"", TodoStatus.Planned),
+            new("Exhibition \"Self Portraits\"", TodoStatus.Planned),
+            new("Exhibition \"Evolution\"", TodoStatus.Planned),
+            new("Exhibition \"Find Me!\"", TodoStatus.Planned),
+            new("Exhibition \"Morning Walk\"", TodoStatus.Planned),
 
+            new("Exhibition \"Advent Calendar\"", TodoStatus.Planned),
+
+            new("Exhibition \"New Home\"", TodoStatus.Planned),
+            new("Exhibition \"Book: Civilized\"", TodoStatus.Planned),
+            new("Exhibition \"Book: Innovation\"", TodoStatus.Planned),
+            new("Exhibition \"Who Am I?\"", TodoStatus.Planned),
+            new("Exhibition \"Book: Goettlich?\"", TodoStatus.Planned),
+            new("Exhibition \"Music 2\"", TodoStatus.Planned),
+            new("Exhibition \"Boris Bike\"", TodoStatus.Planned),
+            new("Exhibition \"Hitler Eats Beigel\"", TodoStatus.Planned),
+            new("Exhibition \"Digital 2\"", TodoStatus.Planned),
+            new("Exhibition \"Cafe Weidinger\"", TodoStatus.Planned),
+            new("Exhibition \"Giordano Bruno\"", TodoStatus.Planned),
+            new("Exhibition \"Digital 1\"", TodoStatus.Planned),
+
+            new("Make artworks clickable", TodoStatus.InProgress),
+            new("Thumbnails", TodoStatus.Finished, 30, 10, 2025),
             new("Remember artwork id per floor", TodoStatus.Finished, 26, 10, 2025),
             new("Explanation pages", TodoStatus.Finished, 26, 10, 2025),
             new("Jpg/Png images as artworks", TodoStatus.Finished, 20, 10, 2025),

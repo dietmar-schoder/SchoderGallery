@@ -54,6 +54,8 @@ public abstract class BaseBuilder(
 
     public List<ClickableArea> ClickableAreas { get; } = [];
 
+    public Visitor Visitor { get; set; }
+
     public void Init(int screenWidth, int screenHeight)
     {
         _settings = _settingsFactory.GetSettings(screenWidth, screenHeight);
@@ -82,7 +84,7 @@ public abstract class BaseBuilder(
     {
         Init(screenWidth, screenHeight);
 
-        await _navigation.SetVisitorFloorAsync(FloorType);
+        Visitor = await _navigation.GetInitVisitorAsync();
 
         _rowsColumns = _settings.RowsColumns;
         _gap = (int)(ShortSize / _rowsColumns * _settings.GapToRowColumnWidthRatio);
@@ -96,6 +98,7 @@ public abstract class BaseBuilder(
         _windowGlassColumnWidth = (_windowWidth - 1.0) / _windowGlassColumns;
         _windowGlassRowHeight = (_windowHeight - 1.0) / _windowGlassRows;
         await DrawAsync();
+        Draw();
         return _svgPainter.SvgContent();
     }
 
@@ -104,6 +107,8 @@ public abstract class BaseBuilder(
     protected int IconSize => IsMobile ? _settings.IconSizeMobile : _settings.IconSizeDesktop;
 
     protected virtual async Task DrawAsync() { await Task.CompletedTask; }
+
+    protected virtual void Draw() { }
 
     protected static string ConvertToParagraphs(string text)
     {

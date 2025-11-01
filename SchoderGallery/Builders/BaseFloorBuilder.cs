@@ -15,10 +15,11 @@ public abstract class BaseFloorBuilder(
 {
     protected override async Task DrawAsync()
     {
-        var locale = await _navigation.GetVisitorLocaleAsync();
         var wall = _settings.WallThickness;
         var floor = _navigation.GetFloor(FloorType);
         var exhibition = floor.IsArtworksFloor ? await _galleryService.GetExhibitionAsync(floor.FloorNumber) : null;
+
+        await _navigation.SetVisitorFloorAsync(FloorType);
 
         DrawOuterWalls();
         DrawFloorPattern();
