@@ -17,7 +17,7 @@ public abstract class BaseFloorBuilder(
     {
         var wall = _settings.WallThickness;
         var floor = _navigation.GetFloor(FloorType);
-        var exhibition = floor.IsArtworksFloor ? await _galleryService.GetExhibitionAsync(floor.FloorNumber) : null;
+        var exhibition = floor.IsArtworksFloor ? await _galleryService.GetExhibitionArtworksAsync(floor.FloorNumber) : null;
 
         await _navigation.SetVisitorFloorAsync(FloorType);
 
@@ -125,7 +125,7 @@ public abstract class BaseFloorBuilder(
             foreach (var artwork in artworks)
             {
                 _svgPainter.Area(artwork.WallX, artwork.WallY, artwork.ThumbnailSize, artwork.WallWidth, Colours.White, Colours.Black);
-                var thumbnailFileName = $"images/floor{floor.FloorNumber}/{artwork.Id:D6}.jpg";
+                var thumbnailFileName = $"images/floor{floor.FloorNumber}/{artwork.Number:D6}.jpg";
 
                 _svgPainter.Thumbnail(artwork.WallX + 1, artwork.WallY + 1, artwork.ThumbnailSize - 2, artwork.WallWidth - 2, thumbnailFileName);
                 
@@ -133,11 +133,11 @@ public abstract class BaseFloorBuilder(
 
                 if (artwork.IsLeftWall)
                 {
-                    ClickableAreas.Add(new ClickableArea(0, artwork.WallY, _width20, artwork.WallWidth + 4, $"/Artwork/{artwork.Id}", tooltip));
+                    ClickableAreas.Add(new ClickableArea(0, artwork.WallY, _width20, artwork.WallWidth + 4, $"/Artwork/{artwork.Number}", tooltip));
                 }
                 else
                 {
-                    ClickableAreas.Add(new ClickableArea(_width80, artwork.WallY, _width20, artwork.WallWidth + 4, $"/Artwork/{artwork.Id}", tooltip));
+                    ClickableAreas.Add(new ClickableArea(_width80, artwork.WallY, _width20, artwork.WallWidth + 4, $"/Artwork/{artwork.Number}", tooltip));
                 }
             }
         }
@@ -156,7 +156,7 @@ public abstract class BaseFloorBuilder(
             var gap125 = (int)(_largeFontSize * 1.25);
 
             _svgPainter.Text(_width50, _height66 - gap125, floor.LiftLabel, _largeFontSize * 2, Colours.LightGray);
-            _svgPainter.Text(_width50, _height66 + gap125, exhibition.LiftLabel, _largeFontSize * 2, exhibition.LabelColour);
+            _svgPainter.Text(_width50, _height66 + gap125, exhibition.Title, _largeFontSize * 2, exhibition.Colour);
             _svgPainter.TextLink(_width50, _height33, "ARTWORKS", _fontSize);
 
             ClickableAreas.Add(new ClickableArea(0, _height25 + 2, SvgWidth, SvgHeight - _height25 - 2, $"/Artwork/0", "Look at artworks"));

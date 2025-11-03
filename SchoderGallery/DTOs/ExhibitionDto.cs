@@ -1,17 +1,27 @@
-﻿namespace SchoderGallery.DTOs;
+﻿using SchoderGallery.Helpers;
+
+namespace SchoderGallery.DTOs;
 
 public record ExhibitionDto
 {
-    public string LiftLabel { get; init; }
-    public string LabelColour { get; init; }
-    public Func<int, List<ArtworkDto>> ArtworkFactory { get; init; }
-    public List<ArtworkDto> Artworks { get; init; }
+    public Guid Id { get; set; }
+    public string Title { get; set; }
+    public string Colour { get; set; }
+    public int Floor { get; set; }
+    public Func<int, List<ArtworkDto>> ArtworkFactory { get; set; }
+    public List<ArtworkDto> Artworks { get; set; }
+    public DateTime ArtworksLastLoadedDateTime { get; set; } = DateTime.MinValue;
+    public bool LoadArtworksNeeded =>
+        Artworks is null
+        || Artworks.Count == 0
+        || ArtworksLastLoadedDateTime < DateTime.UtcNow.AddMinutes(-Const.ARTWORKS_CACHE_TIMEOUT_MINUTES);
+
     public bool ReadFromArtworksJson => ArtworkFactory is null;
 
-    public ExhibitionDto(string liftLabel, string labelColour, Func<int, List<ArtworkDto>> artworkFactory)
+    public ExhibitionDto(string title, string colour, Func<int, List<ArtworkDto>> artworkFactory)
     {
-        LiftLabel = liftLabel;
-        LabelColour = labelColour;
+        Title = title;
+        Colour = colour;
         ArtworkFactory = artworkFactory;
         Artworks = [];
     }

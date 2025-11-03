@@ -44,7 +44,7 @@ public class ArtworkInfoBuilder(
 
         // Later: If no artwork found, clear latest artwork id and go back to the floor
 
-        await _navigation.SetLatestArtworkIdAsync(floor.FloorType, artwork.Id);
+        await _navigation.SetLatestArtworkIdAsync(floor.FloorType, artwork.Number);
 
         var sizeHelper = sizeHelperFactory.GetHelper(SizeType.Text);
         var tinyMargin = _settings.TinyMargin;

@@ -2,29 +2,19 @@
 
 namespace SchoderGallery.DTOs;
 
-public class ArtworkDto(
-    string title,
-    int year,
-    Func<ISettings, int, int, ArtworkType> renderAlgorithm,
-    SizeType sizeType,
-    int width,
-    int height,
-    string artist,
-    int id,
-    string fileName = default,
-    string info = default)
+public class ArtworkDto
 {
     // "000051-Weather Forecast Bright-2025-Dietmar Schoder-0-1920-1080.png"
     // "Id-Title-Year-Artist-SizeType-Width-Height.FileExtension"
-    public string Title { get; } = title;
-    public int Year { get; } = year;
-    public Func<ISettings, int, int, ArtworkType> RenderAlgorithm { get; } = renderAlgorithm;
-    public SizeType SizeType { get; } = sizeType;
-    public int Width { get; } = width;
-    public int Height { get; } = height;
-    public string Artist { get; } = artist;
-    public int Id { get; } = id;
-    public string FileName { get; } = fileName;
+    public string Title { get; set; }
+    public int Year { get; set; }
+    public Func<ISettings, int, int, ArtworkType> RenderAlgorithm { get; set; }
+    public SizeType SizeType { get; set; }
+    public int Width { get; set; }
+    public int Height { get; set; }
+    public string Artist { get; set; }
+    public int Number { get; set; }
+    public string FileName { get; set; }
     public int PreviousId { get; set; }
     public int NextId { get; set; }
     public bool IsRightWall { get; set; }
@@ -33,5 +23,31 @@ public class ArtworkDto(
     public int WallY { get; set; }
     public int WallWidth { get; set; }
     public int ThumbnailSize { get; set; }
-    public string Info { get; } = info;
+    public string Info { get; set; }
+
+    public ArtworkDto() { }
+
+    public ArtworkDto(
+        string title,
+        int year,
+        Func<ISettings, int, int, ArtworkType> renderAlgorithm,
+        SizeType sizeType,
+        int width,
+        int height,
+        string artist,
+        int id,
+        string fileName = default,
+        string info = default)
+    {
+        Title = title;
+        Year = year;
+        RenderAlgorithm = renderAlgorithm;
+        SizeType = sizeType;
+        Width = width;
+        Height = height;
+        Artist = artist;
+        Number = id;
+        FileName = fileName;
+        Info = info;
+    }
 }

@@ -38,8 +38,8 @@ public class LiftBuilder(
             int radius = buttonSize / 2;
             bool isGroundFloor = floor.FloorType == FloorType.GroundFloor;
             var exhibition = await _galleryService.GetExhibitionAsync(floor.FloorNumber);
-            var label = exhibition?.LiftLabel ?? floor.LiftLabel;
-            var colour = isGroundFloor ? Colours.WarmAccentRed : exhibition?.LabelColour ?? Colours.DarkGray;
+            var label = exhibition?.Title ?? floor.LiftLabel;
+            var colour = isGroundFloor ? Colours.WarmAccentRed : exhibition?.Colour ?? Colours.DarkGray;
 
             _svgPainter.Circle(x - 4, y - 6, buttonSize + 8, Colours.Black, 2);
             _svgPainter.Circle(x, y - 2, buttonSize, Colours.DarkGray, isGroundFloor ? 2 : 1, Colours.LighterGray);

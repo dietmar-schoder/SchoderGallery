@@ -87,7 +87,7 @@ public class NavigationService(ClientFactory http, ILocalStorageService localSto
     {
         var latestArtworkId = _visitor.LatestArtworkId(floorType);
         return latestArtworkId > 0
-            ? exhibition.Artworks.FirstOrDefault(a => a.Id == latestArtworkId)
+            ? exhibition.Artworks.FirstOrDefault(a => a.Number == latestArtworkId)
             : null;
     }
 

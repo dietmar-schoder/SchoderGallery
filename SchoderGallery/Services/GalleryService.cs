@@ -10,6 +10,7 @@ public interface IGalleryService
 {
     List<TodoDto> GetTodosAsync();
     Task<ExhibitionDto> GetExhibitionAsync(int floorNumber);
+    Task<ExhibitionDto> GetExhibitionArtworksAsync(int floorNumber);
     Task<ArtworkDto> GetArtworkAsync(int floorNumber, int id);
 }
 
@@ -20,7 +21,12 @@ public class GalleryService : IGalleryService
     private readonly Colours _colours;
     private readonly FourColours _fourColours;
     private readonly TurtleGraphics _turtleGraphics;
-    private readonly Dictionary<int, ExhibitionDto> _exhibitions;
+
+    private Dictionary<int, ExhibitionDto> _exhibitions;
+    private DateTime _exhibitionsLastLoadedDate = DateTime.MinValue;
+
+    private bool LoadExhibitionsNeeded =>
+        _exhibitions is null || _exhibitions.Count == 0 || _exhibitionsLastLoadedDate.Date < DateTime.UtcNow.Date;
 
     private Dictionary<int, ExhibitionDto> CreateExhibitions => new()
     {
@@ -56,6 +62,7 @@ public class GalleryService : IGalleryService
     public List<TodoDto> GetTodosAsync()
     {
         List<TodoDto> todos = [
+            // https://learn.microsoft.com/en-us/azure/azure-functions/migrate-dotnet-to-isolated-model?tabs=net8
             new("Automatic register", TodoStatus.InProgress),
             new("My Collection", TodoStatus.InProgress),
             new("Subscribe to invitations", TodoStatus.InProgress),
@@ -120,9 +127,9 @@ public class GalleryService : IGalleryService
 
     public async Task<ArtworkDto> GetArtworkAsync(int floorNumber, int id)
     {
-        var artworks = await GetArtworksAsync(floorNumber);
+        var artworks = (await GetExhibitionArtworksAsync(floorNumber)).Artworks;
         var artwork = id > 0
-            ? artworks.FirstOrDefault(a => a.Id == id)
+            ? artworks.FirstOrDefault(a => a.Number == id)
             : null;
 
         return artwork ?? artworks.FirstOrDefault(a => a.PreviousId == -1);
@@ -130,39 +137,36 @@ public class GalleryService : IGalleryService
 
     public async Task<ExhibitionDto> GetExhibitionAsync(int floorNumber)
     {
-        if (!_exhibitions.TryGetValue(floorNumber, out var exhibition))
-            return null;
-
-        if (exhibition.Artworks.Count == 0)
+        if (LoadExhibitionsNeeded)
         {
-            await GetArtworksAsync(floorNumber);
+            await LoadExhibitionsFromBackendAsync();
+        }
+
+        return _exhibitions.TryGetValue(floorNumber, out var exhibition) ? exhibition : null;
+    }
+
+    public async Task<ExhibitionDto> GetExhibitionArtworksAsync(int floorNumber)
+    {
+        var exhibition = await GetExhibitionAsync(floorNumber);
+        if (exhibition is null) { return null; }
+
+        if (exhibition.LoadArtworksNeeded)
+        {
+            await LoadArtworksFromBackendAsync(exhibition);
+            //var artworks = exhibition.ReadFromArtworksJson
+            //    ? await GetArtworksFromJson(floorNumber)
+            //    : exhibition.ArtworkFactory(floorNumber);
+            //exhibition.Artworks.AddRange(LinkArtworks(artworks));
         }
 
         return exhibition;
     }
 
-    private async Task<List<ArtworkDto>> GetArtworksAsync(int floorNumber)
-    {
-        if (!_exhibitions.TryGetValue(floorNumber, out var exhibition))
-            return [];
+    //private async Task<List<ArtworkDto>> GetArtworksFromJson(int floorNumber) =>
+    //    await _http.Frontend.GetFromJsonAsync<List<ArtworkDto>>(ArtworksJson(floorNumber));
 
-        if (exhibition.Artworks.Count == 0)
-        {
-            var artworks = exhibition.ReadFromArtworksJson
-                ? await GetArtworksFromJson(floorNumber)
-                : exhibition.ArtworkFactory(floorNumber); // Later: Get artworks for ALL floors from their JSON file
-
-            exhibition.Artworks.AddRange(LinkArtworks(artworks));
-        }
-
-        return exhibition.Artworks;
-    }
-
-    private async Task<List<ArtworkDto>> GetArtworksFromJson(int floorNumber) =>
-        await _http.Frontend.GetFromJsonAsync<List<ArtworkDto>>(ArtworksJson(floorNumber));
-
-    private static string ArtworksJson(int floorNumber) =>
-        $"images/floor{floorNumber}/_artworks.json";
+    //private static string ArtworksJson(int floorNumber) =>
+    //    $"images/floor{floorNumber}/_artworks.json";
 
     private static ArtworkDto NewArtwork(
         string title,
@@ -174,18 +178,48 @@ public class GalleryService : IGalleryService
         int fixedWidth = 0, int fixedHeight = 0)
         => new(title, year, renderAlgorithm, sizeType, fixedWidth, fixedHeight, artist, id);
 
+    private async Task LoadExhibitionsFromBackendAsync()
+    {
+        var response = await _http.Backend.GetAsync("/api/exhibitions");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            //alert
+            return;
+        }
+
+        var exhibitions = await response.Content.ReadFromJsonAsync<List<ExhibitionDto>>();
+        _exhibitions = exhibitions.ToDictionary(e => e.Floor, e => e);
+        _exhibitionsLastLoadedDate = DateTime.UtcNow.Date;
+    }
+
+    private async Task LoadArtworksFromBackendAsync(ExhibitionDto exhibition)
+    {
+        var response = await _http.Backend.GetAsync($"/api/exhibitions/{exhibition.Id}/artworks");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            //alert
+            return;
+        }
+
+        exhibition.ArtworksLastLoadedDateTime = DateTime.UtcNow;
+        var artworks = await response.Content.ReadFromJsonAsync<List<ArtworkDto>>();
+        exhibition.Artworks = LinkArtworks(artworks);
+    }
+
     private static List<ArtworkDto> LinkArtworks(List<ArtworkDto> artworks)
     {
         if (artworks.Count == 0) { return artworks; }
 
-        artworks = [.. artworks.OrderBy(a => a.Id)];
+        artworks = [.. artworks.OrderBy(a => a.Number)];
         artworks.First().PreviousId = -1;
         artworks.Last().NextId = -1;
 
         for (int j = 0; j < artworks.Count - 1; j++)
         {
-            artworks[j].NextId = artworks[j + 1].Id;
-            artworks[j + 1].PreviousId = artworks[j].Id;
+            artworks[j].NextId = artworks[j + 1].Number;
+            artworks[j + 1].PreviousId = artworks[j].Number;
         }
 
         return artworks;
