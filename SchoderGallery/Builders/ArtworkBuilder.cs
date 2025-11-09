@@ -27,9 +27,6 @@ public class ArtworkBuilder(
     : BaseBuilder(settingsFactory, svgPainter, navigation, galleryService), IArtworkBuilder, IBuilder
 {
     public override FloorType FloorType => FloorType.Artwork;
-
-    public int Interval => 0;
-
     public string Html { get; set; }
     public int HtmlWidth { get; set; }
     public int HtmlFontSize { get; set; }

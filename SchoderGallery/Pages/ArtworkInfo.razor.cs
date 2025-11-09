@@ -14,6 +14,4 @@ public partial class ArtworkInfo : SvgComponentBase
 
     protected override async Task<string> GetSvgContentAsync(SizeDto size) =>
         await ArtworkInfoBuilder.GetHtmlAsync(size.Width, size.Height, ArtworkId);
-
-    protected override int GetInterval() => ArtworkInfoBuilder.Interval;
 }

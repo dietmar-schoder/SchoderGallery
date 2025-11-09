@@ -14,7 +14,6 @@ public class OperationsBuilder(
     : BaseFloorBuilder(settingsFactory, svgPainter, navigation, galleryService), IBuilder
 {
     public override FloorType FloorType => FloorType.Operations;
-    public int Interval => 0;
     protected override async Task DrawAsync()
     {
         await base.DrawAsync();

@@ -18,12 +18,18 @@ public partial class Lift : SvgComponentBase
 
     private bool IsMoving => _isMovingUp || _isMovingDown;
 
+    protected override string PageTitle => "Schoder Gallery - Lift";
+
     protected override async Task OnInitializedAsync()
     {
         _builder = BuilderFactory.GetBuilder(FloorType.Lift) as LiftBuilder;
         await base.OnInitializedAsync();
         _currentFloorNumber = _builder.CurrentFloor.FloorNumber;
     }
+
+    protected override async Task<string> GetSvgContentAsync(SizeDto size) =>
+        await _builder.GetSvgContentAsync(size.Width, size.Height);
+
     private async Task OnLiftClick(string floorNumber)
     {
         var currentFloor = await Navigation.GetVisitorFloorAsync();
@@ -36,19 +42,9 @@ public partial class Lift : SvgComponentBase
         {
             StateHasChanged();
             await Task.Yield();
-
-            // await Task.Delay(1000);
         }
 
         _isMovingUp = _isMovingDown = false;
         Nav.NavigateTo(newFloor.PageAndParam());
     }
-
-    protected override string PageTitle =>
-        "Schoder Gallery - Lift";
-
-    protected override async Task<string> GetSvgContentAsync(SizeDto size) =>
-        await _builder.GetSvgContentAsync(size.Width, size.Height);
-
-    protected override int GetInterval() => _builder.Interval;
 }

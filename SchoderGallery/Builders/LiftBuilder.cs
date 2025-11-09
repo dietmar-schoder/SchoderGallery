@@ -13,7 +13,6 @@ public class LiftBuilder(
     : BaseBuilder(settingsFactory, svgPainter, navigation, galleryService), IBuilder
 {
     public override FloorType FloorType => FloorType.Lift;
-    public int Interval => 0;
     public FloorInfo CurrentFloor { get; set; }
 
     protected override async Task DrawAsync()

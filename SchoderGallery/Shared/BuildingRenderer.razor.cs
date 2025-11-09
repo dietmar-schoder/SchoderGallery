@@ -14,17 +14,15 @@ public partial class BuildingRenderer : SvgComponentBase
 
     private IBuilder _builder;
 
+    protected override string PageTitle =>
+        $"Schoder Gallery{(BuilderType == FloorType.Facade ? string.Empty : $" - {Navigation.GetFloor(BuilderType).LiftLabel}")}";
+
     protected override async Task OnInitializedAsync()
     {
         _builder = BuilderFactory.GetBuilder(BuilderType);
         await base.OnInitializedAsync();
     }
 
-    protected override string PageTitle =>
-        $"Schoder Gallery{(BuilderType == FloorType.Facade ? string.Empty : $" - {Navigation.GetFloor(BuilderType).LiftLabel}")}";
-
     protected override async Task<string> GetSvgContentAsync(SizeDto size) =>
         await _builder.GetSvgContentAsync(size.Width, size.Height);
-
-    protected override int GetInterval() => _builder.Interval;
 }

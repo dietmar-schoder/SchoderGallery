@@ -27,7 +27,7 @@ public abstract class SvgComponentBase : ComponentBase, IDisposable
         _isLoading = false;
 
         _dotNetRef = DotNetObjectReference.Create(this);
-        await JS.InvokeVoidAsync("initResizeHandler", _dotNetRef, GetInterval());
+        await JS.InvokeVoidAsync("initResizeHandler", _dotNetRef);
     }
 
     protected override async Task OnParametersSetAsync()
@@ -63,8 +63,6 @@ public abstract class SvgComponentBase : ComponentBase, IDisposable
         _isLoading = false;
         await InvokeAsync(StateHasChanged);
     }
-
-    protected abstract int GetInterval();
 
     public void Dispose()
     {

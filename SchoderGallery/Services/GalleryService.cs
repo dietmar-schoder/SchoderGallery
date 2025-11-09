@@ -74,7 +74,8 @@ public class GalleryService : IGalleryService
             new("Launch the SCHODER GALLERY", TodoStatus.Planned),
             new("Buy membership", TodoStatus.InProgress),
 
-            new("Exhibition \"Egyptian Judgement Day\"", TodoStatus.Planned),
+            new("Exhibition \"Tomato\"", TodoStatus.Planned),
+            new("Exhibition \"Judgement Day\"", TodoStatus.Planned),
             new("Exhibition \"Self Portraits\"", TodoStatus.Planned),
             new("Exhibition \"Evolution\"", TodoStatus.Planned),
             new("Exhibition \"Find Me!\"", TodoStatus.Planned),

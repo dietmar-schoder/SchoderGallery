@@ -13,7 +13,6 @@ public class GroundFloorBuilder(
     : BaseFloorBuilder(settingsFactory, svgPainter, navigation, galleryService), IBuilder
 {
     public override FloorType FloorType => FloorType.GroundFloor;
-    public int Interval => 0;
 
     protected override async Task DrawAsync()
     {

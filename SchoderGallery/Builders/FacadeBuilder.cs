@@ -14,7 +14,6 @@ public class FacadeBuilder(
     : BaseBuilder(settingsFactory, svgPainter, navigation, galleryService), IBuilder
 {
     public override FloorType FloorType => FloorType.Facade;
-    public int Interval => 5000;
 
     protected override void Draw()
     {

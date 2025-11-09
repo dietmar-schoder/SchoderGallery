@@ -13,5 +13,4 @@ public class Floor4Builder(
     : BaseFloorBuilder(settingsFactory, svgPainter, navigation, galleryService), IBuilder
 {
     public override FloorType FloorType => FloorType.Floor4;
-    public int Interval => 0;
 }
