@@ -14,6 +14,7 @@ public interface IArtworkInfoBuilder : IBuilder
     public int HtmlWidth { get; set; }
     public int HtmlFontSize { get; set; }
     public string HtmlColor { get; set; }
+    public ArtworkDto Artwork { get; set; }
 }
 
 public class ArtworkInfoBuilder(
@@ -29,6 +30,7 @@ public class ArtworkInfoBuilder(
     public int HtmlWidth { get; set; }
     public int HtmlFontSize { get; set; }
     public string HtmlColor { get; set; }
+    public ArtworkDto Artwork { get; set; }
 
     public async Task<string> GetHtmlAsync(int screenWidth, int screenHeight, int artworkId)
     {
@@ -37,11 +39,11 @@ public class ArtworkInfoBuilder(
 
         var floor = await _navigation.GetVisitorFloorAsync();
         artworkId = _navigation.GetArtworkIdOrLatestArtworkId(floor.FloorType, artworkId);
-        var artwork = await _galleryService.GetArtworkAsync(floor.FloorNumber, artworkId);
+        Artwork = await _galleryService.GetArtworkAsync(floor.FloorNumber, artworkId);
 
         // Later: If no artwork found, clear latest artwork id and go back to the floor
 
-        await _navigation.SetLatestArtworkIdAsync(floor.FloorType, artwork.Number);
+        await _navigation.SetLatestArtworkIdAsync(floor.FloorType, Artwork.Number);
 
         var sizeHelper = sizeHelperFactory.GetHelper(SizeType.Text);
         var tinyMargin = _settings.TinyMargin;
@@ -51,22 +53,22 @@ public class ArtworkInfoBuilder(
         var topMargin = iconSize + 2 * tinyMargin;
         var availableArtworkWidth = SvgWidth - tinyMargin * 2;
         var availableArtworkHeight = SvgHeight - topMargin * 2 - tinyMargin * 2;
-        var artworkSize = sizeHelper.GetArtworkSize(artwork, availableArtworkWidth, availableArtworkHeight, IsMobile);
+        var artworkSize = sizeHelper.GetArtworkSize(Artwork, availableArtworkWidth, availableArtworkHeight, IsMobile);
 
         // Close -> back to artwork (top right)
         _svgPainter.IconClose(_width50 - iconSize / 2 - tinyMargin, tinyMargin, iconSize);
         ClickableAreas.Add(new ClickableArea(_width33 + 2, 0, _width33 - 4, iconSizePlusx4, $"/Artwork/{artworkId}", "Close"));
 
         // Buy (top right)
-        if (artwork.SizeType != SizeType.Text)
+        if (Artwork.SizeType != SizeType.Text)
         {
         }
 
         // Previous artwork (bottom left)
         _svgPainter.IconLeft(tinyMargin, SvgHeight - iconSizePlus, iconSize);
-        if (artwork.PreviousId > -1)
+        if (Artwork.PreviousId > -1)
         {
-            ClickableAreas.Add(new ClickableArea(0, SvgHeight - iconSizePlusx4, _width33 - 2, iconSizePlusx4, $"/Artwork/{artwork.PreviousId}", "Previous artwork"));
+            ClickableAreas.Add(new ClickableArea(0, SvgHeight - iconSizePlusx4, _width33 - 2, iconSizePlusx4, $"/Artwork/{Artwork.PreviousId}", "Previous artwork"));
         }
         else
         {
@@ -75,20 +77,20 @@ public class ArtworkInfoBuilder(
 
         // Next artwork or back to floor (bottom right)
         _svgPainter.IconRight(SvgWidth - iconSizePlus, SvgHeight - iconSizePlus, iconSize);
-        if (artwork.NextId > -1)
+        if (Artwork.NextId > -1)
         {
-            ClickableAreas.Add(new ClickableArea(_width33 * 2 + 2, SvgHeight - iconSizePlusx4, _width33 - 2, iconSizePlusx4, $"/Artwork/{artwork.NextId}", "Next artwork"));
+            ClickableAreas.Add(new ClickableArea(_width33 * 2 + 2, SvgHeight - iconSizePlusx4, _width33 - 2, iconSizePlusx4, $"/Artwork/{Artwork.NextId}", "Next artwork"));
         }
         else
         {
             ClickableAreas.Add(new ClickableArea(_width33 * 2 + 2, SvgHeight - iconSizePlusx4, _width33 - 2, iconSizePlusx4, floor.PageAndParam(), "Back"));
         }
 
-        var size = artwork.SizeType == SizeType.PortraitLandscape
+        var size = Artwork.SizeType == SizeType.PortraitLandscape
             ? "Up to 411 trillion px (~1 square mile)"
-            : $"{artwork.Width}x{artwork.Height} px";
+            : $"{Artwork.Width}x{Artwork.Height} px";
 
-        Html = ConvertToParagraphs($"{artwork.Info ?? "Work in progress..."}\nTitle: {artwork.Title}\nYear: {artwork.Year}\nSize: {size}\nMaterial: Pixels\nArtist: {artwork.Artist}\nOwner: Schoder Factory Ltd");
+        Html = ConvertToParagraphs($"{Artwork.Info ?? "Work in progress..."}\nTitle: {Artwork.Title}\nYear: {Artwork.Year}\nSize: {size}\nMaterial: Pixels\nArtist: {Artwork.Artist}\nOwner: Schoder Factory Ltd");
         HtmlWidth = artworkSize.Width;
         HtmlFontSize = _fontSize;
         HtmlColor = Colours.DarkGray;

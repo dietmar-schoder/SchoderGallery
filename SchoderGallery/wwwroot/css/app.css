@@ -129,3 +129,18 @@ svg rect[style*="cursor:pointer"] {
 .hidden {
     display: none;
 }
+
+.buy-button {
+    background-color: yellow;
+    border: none;
+    padding: 12px 24px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 4px;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+    .buy-button:hover {
+        background-color: #fff000;
+    }

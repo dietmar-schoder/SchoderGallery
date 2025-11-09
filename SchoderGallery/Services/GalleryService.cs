@@ -2,6 +2,7 @@
 using SchoderGallery.DTOs;
 using SchoderGallery.Painters;
 using SchoderGallery.Settings;
+using SchoderGalleryServer.DTOs;
 using System.Net.Http.Json;
 
 namespace SchoderGallery.Services;
@@ -12,6 +13,7 @@ public interface IGalleryService
     Task<ExhibitionDto> GetExhibitionAsync(int floorNumber);
     Task<ExhibitionDto> GetExhibitionArtworksAsync(int floorNumber);
     Task<ArtworkDto> GetArtworkAsync(int floorNumber, int id);
+    Task<CheckoutDto> BuyArtworkAsync(Guid collectorId, ArtworkDto artwork);
 }
 
 public class GalleryService : IGalleryService
@@ -161,6 +163,15 @@ public class GalleryService : IGalleryService
         }
 
         return exhibition;
+    }
+
+    public async Task<CheckoutDto> BuyArtworkAsync(Guid collectorId, ArtworkDto artwork)
+    {
+        var purchaseDto = new PurchaseDto(collectorId, artwork.Id, null);
+        var response = await _http.Backend.PostAsJsonAsync("/api/checkouts", purchaseDto);
+        return response.IsSuccessStatusCode
+            ? await response.Content.ReadFromJsonAsync<CheckoutDto>()
+            : new CheckoutDto(default, "Checkout failed.");
     }
 
     //private async Task<List<ArtworkDto>> GetArtworksFromJson(int floorNumber) =>

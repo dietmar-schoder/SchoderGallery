@@ -6,6 +6,7 @@ public class ArtworkDto
 {
     // "000051-Weather Forecast Bright-2025-Dietmar Schoder-0-1920-1080.png"
     // "Id-Title-Year-Artist-SizeType-Width-Height.FileExtension"
+    public Guid Id { get; set; }
     public string Title { get; set; }
     public int Year { get; set; }
     public Func<ISettings, int, int, ArtworkType> RenderAlgorithm { get; set; }

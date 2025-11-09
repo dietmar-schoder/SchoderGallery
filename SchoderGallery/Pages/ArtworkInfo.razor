@@ -22,8 +22,9 @@
         </svg>
         @if (!string.IsNullOrEmpty(ArtworkInfoBuilder.Html))
         {
-            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); z-index:2; pointer-events:none; width:@(ArtworkInfoBuilder.HtmlWidth)px; font-size:@(ArtworkInfoBuilder.HtmlFontSize)px;; color:@(ArtworkInfoBuilder.HtmlColor); font-family:sans-serif; letter-spacing:1.2px; text-align:justify;">
+            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); z-index:2; width:@(ArtworkInfoBuilder.HtmlWidth)px; font-size:@(ArtworkInfoBuilder.HtmlFontSize)px;; color:@(ArtworkInfoBuilder.HtmlColor); font-family:sans-serif; letter-spacing:1.2px; text-align:justify;">
                 @((MarkupString)ArtworkInfoBuilder.Html)
+                <button class="buy-button" @onclick="HandleBuy">BUY</button>
             </div>
         }
     </div>
