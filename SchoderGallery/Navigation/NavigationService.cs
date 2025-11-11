@@ -21,7 +21,7 @@ public class NavigationService(ClientFactory http, ILocalStorageService localSto
         { FloorType.Basement1, new FloorInfo(FloorType.Basement1, 0, 4, "Basement 1", "/Basement") },
         { FloorType.Basement2, new FloorInfo(FloorType.Basement2, 1, 4, "Basement 2", "/Basement") },
         { FloorType.Depot, new FloorInfo(FloorType.Depot, 0, 5, "Depot", "/Depot") },
-        { FloorType.Operations, new FloorInfo(FloorType.Operations, 1, 5, "Operations", "/Operations") },
+        { FloorType.MyCollection, new FloorInfo(FloorType.MyCollection, 1, 5, "Operations", "/Operations") },
 
         // My Collection
 
@@ -30,8 +30,6 @@ public class NavigationService(ClientFactory http, ILocalStorageService localSto
 
     public async Task<Visitor> GetInitVisitorAsync()
     {
-        // Later: track in which floor a visitor is, what artwork they view
-
         if (_visitor is null)
         {
             _visitor = await localStorage.GetItemAsync<Visitor>(Const.VisitorStorageKey) ?? Visitor.Create();

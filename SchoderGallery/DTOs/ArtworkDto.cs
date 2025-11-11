@@ -16,6 +16,8 @@ public class ArtworkDto
     public string Artist { get; set; }
     public int Number { get; set; }
     public string FileName { get; set; }
+    public string Info { get; set; }
+    public int Price { get; set; }
     public int PreviousId { get; set; }
     public int NextId { get; set; }
     public bool IsRightWall { get; set; }
@@ -24,7 +26,9 @@ public class ArtworkDto
     public int WallY { get; set; }
     public int WallWidth { get; set; }
     public int ThumbnailSize { get; set; }
-    public string Info { get; set; }
+
+    public bool IsForSale => Price > 0;
+    public string PriceFormatted => (Price / 100.0).ToString("#,##0.00");
 
     public ArtworkDto() { }
 

@@ -15,9 +15,12 @@ public abstract class BaseFloorBuilder(
 {
     protected override async Task DrawAsync()
     {
+        var visitor = await _navigation.GetInitVisitorAsync();
         var wall = _settings.WallThickness;
         var floor = _navigation.GetFloor(FloorType);
-        var exhibition = floor.IsArtworksFloor ? await _galleryService.GetExhibitionArtworksAsync(floor.FloorNumber) : null;
+        var exhibition = floor.IsArtworksFloor
+            ? await _galleryService.GetExhibitionArtworksAsync(visitor.Id, floor.FloorNumber)
+            : null;
 
         await _navigation.SetVisitorFloorAsync(FloorType);
 
@@ -31,7 +34,7 @@ public abstract class BaseFloorBuilder(
         {
             DrawWindowsAndDoor();
         }
-        else if (FloorType > 0) // Only for floors above ground floor
+        else if (FloorType > 0)
         {
             DrawWindows();
         }

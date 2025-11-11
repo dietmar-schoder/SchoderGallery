@@ -15,6 +15,7 @@ public interface IArtworkInfoBuilder : IBuilder
     public int HtmlFontSize { get; set; }
     public string HtmlColor { get; set; }
     public ArtworkDto Artwork { get; set; }
+    public bool ShowBuyButton => Artwork.IsForSale;
 }
 
 public class ArtworkInfoBuilder(
@@ -37,9 +38,10 @@ public class ArtworkInfoBuilder(
         Init(screenWidth, screenHeight);
         Html = string.Empty;
 
+        var visitor = await _navigation.GetInitVisitorAsync();
         var floor = await _navigation.GetVisitorFloorAsync();
         artworkId = _navigation.GetArtworkIdOrLatestArtworkId(floor.FloorType, artworkId);
-        Artwork = await _galleryService.GetArtworkAsync(floor.FloorNumber, artworkId);
+        Artwork = await _galleryService.GetArtworkAsync(visitor.Id, floor.FloorNumber, artworkId);
 
         // Later: If no artwork found, clear latest artwork id and go back to the floor
 
@@ -90,7 +92,11 @@ public class ArtworkInfoBuilder(
             ? "Up to 411 trillion px (~1 square mile)"
             : $"{Artwork.Width}x{Artwork.Height} px";
 
-        Html = ConvertToParagraphs($"{Artwork.Info ?? "Work in progress..."}\nTitle: {Artwork.Title}\nYear: {Artwork.Year}\nSize: {size}\nMaterial: Pixels\nArtist: {Artwork.Artist}\nOwner: Schoder Factory Ltd");
+        Html = ConvertToParagraphs($"{Artwork.Info ?? "Work in progress..."}\nTitle: {Artwork.Title}\nYear: {Artwork.Year}\nSize: {size}\nMaterial: Pixels\nArtist: Schoder Factory Ltd\nOwner: Schoder Factory Ltd");
+        if (Artwork.IsForSale)
+        {
+            Html += $"\nPrice: GBP {Artwork.PriceFormatted}"; // Currency and recalculated price later
+        }
         HtmlWidth = artworkSize.Width;
         HtmlFontSize = _fontSize;
         HtmlColor = Colours.DarkGray;

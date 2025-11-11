@@ -11,14 +11,14 @@ public record FloorInfo(FloorType FloorType, int LiftColumn, int LiftRow, string
     public bool IsArtworksFloor =>
         IsFloor
         && FloorType != FloorType.GroundFloor
-        && FloorType != FloorType.Operations;
+        && FloorType != FloorType.MyCollection;
 
     public bool HasFloorParam =>
         IsFloor
         && FloorType != FloorType.Atelier
         && FloorType != FloorType.GroundFloor
         && FloorType != FloorType.Depot
-        && FloorType != FloorType.Operations;
+        && FloorType != FloorType.MyCollection;
 
     public string PageAndParam() =>
         HasFloorParam ? $"{Page}/{(int)FloorType}" : Page;

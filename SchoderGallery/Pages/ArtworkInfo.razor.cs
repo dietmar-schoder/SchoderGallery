@@ -21,6 +21,10 @@ public partial class ArtworkInfo : SvgComponentBase
 
     private async Task HandleBuy()
     {
+        _isLoading = true;
+        await InvokeAsync(StateHasChanged);
+        await Task.Yield();
+        
         var collector = await NavigationService.GetInitVisitorAsync();
         var artwork = ArtworkInfoBuilder.Artwork;
         var checkout = await GalleryService.BuyArtworkAsync(collector.Id, artwork);

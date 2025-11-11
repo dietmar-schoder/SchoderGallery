@@ -17,6 +17,7 @@ public class LiftBuilder(
 
     protected override async Task DrawAsync()
     {
+        var visitor = await _navigation.GetInitVisitorAsync();
         var floors = _navigation.GetFloors();
 
         int buttonSize = _largeFontSize * 2;
@@ -36,7 +37,7 @@ public class LiftBuilder(
             int y = startY + floor.LiftRow * (buttonSize + buttonGap);
             int radius = buttonSize / 2;
             bool isGroundFloor = floor.FloorType == FloorType.GroundFloor;
-            var exhibition = await _galleryService.GetExhibitionAsync(floor.FloorNumber);
+            var exhibition = await _galleryService.GetExhibitionAsync(visitor.Id, floor.FloorNumber);
             var label = exhibition?.Title ?? floor.LiftLabel;
             var colour = isGroundFloor ? Colours.WarmAccentRed : exhibition?.Colour ?? Colours.DarkGray;
 

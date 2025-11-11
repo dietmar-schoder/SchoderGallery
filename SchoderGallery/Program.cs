@@ -57,6 +57,6 @@ builder.Services.AddScoped<IBuilder, Floor5Builder>();
 builder.Services.AddScoped<IBuilder, Floor6Builder>();
 builder.Services.AddScoped<IBuilder, GroundFloorBuilder>();
 builder.Services.AddScoped<IBuilder, LiftBuilder>();
-builder.Services.AddScoped<IBuilder, OperationsBuilder>();
+builder.Services.AddScoped<IBuilder, MyCollectionBuilder>();
 
 await builder.Build().RunAsync();

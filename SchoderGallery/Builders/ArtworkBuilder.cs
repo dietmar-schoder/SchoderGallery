@@ -37,9 +37,10 @@ public class ArtworkBuilder(
         Init(screenWidth, screenHeight);
         Html = string.Empty;
 
+        var visitor = await _navigation.GetInitVisitorAsync();
         var floor = await _navigation.GetVisitorFloorAsync();
         artworkId = _navigation.GetArtworkIdOrLatestArtworkId(floor.FloorType, artworkId);
-        var artwork = await _galleryService.GetArtworkAsync(floor.FloorNumber, artworkId);
+        var artwork = await _galleryService.GetArtworkAsync(visitor.Id, floor.FloorNumber, artworkId);
 
         // Later: If no artwork found, clear latest artwork id and go back to the floor
 

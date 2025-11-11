@@ -8,7 +8,6 @@ public record ExhibitionDto
     public string Title { get; set; }
     public string Colour { get; set; }
     public int Floor { get; set; }
-    public Func<int, List<ArtworkDto>> ArtworkFactory { get; set; }
     public List<ArtworkDto> Artworks { get; set; }
     public DateTime ArtworksLastLoadedDateTime { get; set; } = DateTime.MinValue;
     public bool LoadArtworksNeeded =>
@@ -16,13 +15,10 @@ public record ExhibitionDto
         || Artworks.Count == 0
         || ArtworksLastLoadedDateTime < DateTime.UtcNow.AddMinutes(-Const.ARTWORKS_CACHE_TIMEOUT_MINUTES);
 
-    public bool ReadFromArtworksJson => ArtworkFactory is null;
-
-    public ExhibitionDto(string title, string colour, Func<int, List<ArtworkDto>> artworkFactory)
+    public ExhibitionDto(string title, string colour)
     {
         Title = title;
         Colour = colour;
-        ArtworkFactory = artworkFactory;
         Artworks = [];
     }
 }

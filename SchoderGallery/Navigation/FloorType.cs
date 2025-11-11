@@ -22,5 +22,5 @@ public enum FloorType
     Basement1 = -1,
     Basement2 = -2,
     Depot = -3,
-    Operations = -4
+    MyCollection = -4
 }
