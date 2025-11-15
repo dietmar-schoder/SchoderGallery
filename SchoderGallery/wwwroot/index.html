@@ -39,23 +39,6 @@
 
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="js/screenSize.js"></script>
-    <script>
-        function centerSpinner() {
-            const spinner = document.getElementById('spinner');
-            if (!spinner) return;
-
-            const width = spinner.offsetWidth;
-            const height = spinner.offsetHeight;
-
-            const viewportWidth = document.documentElement.clientWidth;
-            const viewportHeight = document.documentElement.clientHeight;
-
-            spinner.style.left = `${(viewportWidth - width) / 2}px`;
-            spinner.style.top = `${(viewportHeight - height) / 2}px`;
-        }
-
-        window.addEventListener('load', centerSpinner);
-    </script>
 </body>
 
 </html>
