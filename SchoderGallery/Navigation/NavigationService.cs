@@ -21,9 +21,7 @@ public class NavigationService(ClientFactory http, ILocalStorageService localSto
         { FloorType.Basement1, new FloorInfo(FloorType.Basement1, 0, 4, "Basement 1", "/Basement") },
         { FloorType.Basement2, new FloorInfo(FloorType.Basement2, 1, 4, "Basement 2", "/Basement") },
         { FloorType.Depot, new FloorInfo(FloorType.Depot, 0, 5, "Depot", "/Depot") },
-        { FloorType.MyCollection, new FloorInfo(FloorType.MyCollection, 1, 5, "Operations", "/Operations") },
-
-        // My Collection
+        { FloorType.MyCollection, new FloorInfo(FloorType.MyCollection, 1, 5, "My Collection", "/MyCollection") },
 
         { FloorType.Lift, new FloorInfo(FloorType.Lift, -1, -1, "Lift", "/Lift") }
     };
@@ -61,9 +59,6 @@ public class NavigationService(ClientFactory http, ILocalStorageService localSto
 
     public static FloorType GetFloorType(int floorNumber) =>
         Enum.TryParse<FloorType>(floorNumber.ToString(), out var result) ? result : FloorType.GroundFloor;
-
-    public async Task<LocaleDto> GetVisitorLocaleAsync() =>
-        (await GetInitVisitorAsync()).Locale;
 
     public async Task<FloorInfo> GetVisitorFloorAsync() =>
         GetFloor(await GetVisitorFloorTypeAsync());

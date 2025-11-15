@@ -19,7 +19,7 @@ public abstract class BaseFloorBuilder(
         var wall = _settings.WallThickness;
         var floor = _navigation.GetFloor(FloorType);
         var exhibition = floor.IsArtworksFloor
-            ? await _galleryService.GetExhibitionArtworksAsync(visitor.Id, floor.FloorNumber)
+            ? await _galleryService.GetExhibitionArtworksAsync(visitor, floor.FloorNumber)
             : null;
 
         await _navigation.SetVisitorFloorAsync(FloorType);
@@ -189,7 +189,7 @@ public abstract class BaseFloorBuilder(
         var artworkGap = 4;
 
         var rightCount = (artworks.Count + 1) / 2;
-        double rightArtWorkSpace = (innerRoomHeight - artworkGap) / (double)rightCount;
+        double rightArtWorkSpace = Math.Min((innerRoomHeight - artworkGap) / (double)rightCount, 200);
         for (int i = 0; i < rightCount; i++)
         {
             var artwork = artworks[i];
@@ -201,7 +201,7 @@ public abstract class BaseFloorBuilder(
         }
 
         var leftCount = artworks.Count - rightCount;
-        double leftArtWorkSpace = (innerRoomHeight - artworkGap) / (double)leftCount;
+        double leftArtWorkSpace = Math.Min((innerRoomHeight - artworkGap) / (double)leftCount, 200);
         for (int i = 0; i < leftCount; i++)
         {
             var artwork = artworks[rightCount + i];

@@ -9,6 +9,7 @@ namespace SchoderGallery.Builders;
 
 public interface IArtworkInfoBuilder : IBuilder
 {
+    void Init(int screenWidth, int screenHeight);
     Task<string> GetHtmlAsync(int screenWidth, int screenHeight, int artworkId);
     public string Html { get; set; }
     public int HtmlWidth { get; set; }
@@ -41,7 +42,7 @@ public class ArtworkInfoBuilder(
         var visitor = await _navigation.GetInitVisitorAsync();
         var floor = await _navigation.GetVisitorFloorAsync();
         artworkId = _navigation.GetArtworkIdOrLatestArtworkId(floor.FloorType, artworkId);
-        Artwork = await _galleryService.GetArtworkAsync(visitor.Id, floor.FloorNumber, artworkId);
+        Artwork = await _galleryService.GetArtworkAsync(visitor, floor.FloorNumber, artworkId);
 
         // Later: If no artwork found, clear latest artwork id and go back to the floor
 

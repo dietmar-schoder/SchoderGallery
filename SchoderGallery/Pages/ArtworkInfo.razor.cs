@@ -13,6 +13,7 @@ public partial class ArtworkInfo : SvgComponentBase
     [Inject] private IArtworkInfoBuilder ArtworkInfoBuilder { get; set; } = default!;
     [Inject] private IGalleryService GalleryService { get; set; } = default!;
     [Inject] private NavigationService NavigationService { get; set; } = default!;
+    [Inject] private ILocalStorageService LocalStorageService { get; set; } = default!;
 
     protected override string PageTitle => $"Schoder Gallery - Artwork Info {ArtworkId}";
 
@@ -25,14 +26,16 @@ public partial class ArtworkInfo : SvgComponentBase
         await InvokeAsync(StateHasChanged);
         await Task.Yield();
         
-        var collector = await NavigationService.GetInitVisitorAsync();
+        var visitor = await NavigationService.GetInitVisitorAsync();
         var artwork = ArtworkInfoBuilder.Artwork;
-        var checkout = await GalleryService.BuyArtworkAsync(collector.Id, artwork);
+        var checkout = await GalleryService.BuyArtworkAsync(visitor.Id, artwork);
         if (!string.IsNullOrEmpty(checkout.ErrorMessage))
         {
             // Error = checkout.ErrorMessage
             return;
         }
+        var reservedArtwork = new ReservedArtworkDto(artwork.Id, artwork.Number);
+        await LocalStorageService.SetItemAsync("reservedArtwork", reservedArtwork);
         Nav.NavigateTo(checkout.PaymentUrl);
     }
 }

@@ -6,10 +6,8 @@ using System.Net.Http.Json;
 
 namespace SchoderGallery.Services;
 
-//        new("Artwork: buy", TodoStatus.Planned),
 //        // https://learn.microsoft.com/en-us/azure/azure-functions/migrate-dotnet-to-isolated-model?tabs=net8
 //        new("Automatic register", TodoStatus.InProgress),
-//        new("My Collection", TodoStatus.InProgress),
 //        new("Subscribe to invitations", TodoStatus.InProgress),
 //        new("Center vistior point", TodoStatus.InProgress),
 //        new("Artwork: comments", TodoStatus.Planned),
@@ -43,9 +41,10 @@ namespace SchoderGallery.Services;
 public interface IGalleryService
 {
     Task<ExhibitionDto> GetExhibitionAsync(Guid collectorId, int floorNumber);
-    Task<ExhibitionDto> GetExhibitionArtworksAsync(Guid collectorId, int floorNumber);
-    Task<ArtworkDto> GetArtworkAsync(Guid collectorId, int floorNumber, int id);
+    Task<ExhibitionDto> GetExhibitionArtworksAsync(Visitor collector, int floorNumber);
+    Task<ArtworkDto> GetArtworkAsync(Visitor collector, int floorNumber, int id);
     Task<CheckoutDto> BuyArtworkAsync(Guid collectorId, ArtworkDto artwork);
+    Task CancelCheckoutAsync(Guid collectorId, Guid artworkId);
 }
 
 public class GalleryService(ClientFactory http) : IGalleryService
@@ -61,9 +60,9 @@ public class GalleryService(ClientFactory http) : IGalleryService
     private bool LoadExhibitionsNeeded =>
         _exhibitions is null || _exhibitions.Count == 0 || _exhibitionsLastLoadedDate.Date < DateTime.UtcNow.Date;
 
-    public async Task<ArtworkDto> GetArtworkAsync(Guid collectorId, int floorNumber, int id)
+    public async Task<ArtworkDto> GetArtworkAsync(Visitor collector, int floorNumber, int id)
     {
-        var artworks = (await GetExhibitionArtworksAsync(collectorId, floorNumber)).Artworks;
+        var artworks = (await GetExhibitionArtworksAsync(collector, floorNumber)).Artworks;
         var artwork = id > 0
             ? artworks.FirstOrDefault(a => a.Number == id)
             : null;
@@ -81,14 +80,14 @@ public class GalleryService(ClientFactory http) : IGalleryService
         return _exhibitions.TryGetValue(floorNumber, out var exhibition) ? exhibition : null;
     }
 
-    public async Task<ExhibitionDto> GetExhibitionArtworksAsync(Guid collectorId, int floorNumber)
+    public async Task<ExhibitionDto> GetExhibitionArtworksAsync(Visitor collector, int floorNumber)
     {
-        var exhibition = await GetExhibitionAsync(collectorId, floorNumber);
+        var exhibition = await GetExhibitionAsync(collector.Id, floorNumber);
         if (exhibition is null) { return null; }
 
         if (exhibition.LoadArtworksNeeded)
         {
-            await LoadArtworksFromBackendAsync(collectorId, floorNumber, exhibition);
+            await LoadArtworksFromBackendAsync(collector, floorNumber, exhibition);
         }
 
         return exhibition;
@@ -101,6 +100,12 @@ public class GalleryService(ClientFactory http) : IGalleryService
         return response.IsSuccessStatusCode
             ? await response.Content.ReadFromJsonAsync<CheckoutDto>()
             : new CheckoutDto(default, "Checkout failed.");
+    }
+
+    public async Task CancelCheckoutAsync(Guid collectorId, Guid artworkId)
+    {
+        var purchaseDto = new PurchaseDto(collectorId, artworkId, null);
+        await _http.Backend.PostAsJsonAsync("/api/checkouts/cancel", purchaseDto);
     }
 
     private async Task LoadExhibitionsFromBackendAsync()
@@ -119,11 +124,11 @@ public class GalleryService(ClientFactory http) : IGalleryService
         _exhibitionsLastLoadedDate = DateTime.UtcNow.Date;
     }
 
-    private async Task LoadArtworksFromBackendAsync(Guid collectorId, int floorNumber, ExhibitionDto exhibition)
+    private async Task LoadArtworksFromBackendAsync(Visitor collector, int floorNumber, ExhibitionDto exhibition)
     {
         var response = floorNumber == (int)FloorType.MyCollection
-            ? await MyCollectionArtworksFromBackendAsync(collectorId)
-            : await ExhibitionArtworksFromBackendAsync(exhibition.Id);
+            ? await MyCollectionArtworksFromBackendAsync(collector.Id)
+            : await ExhibitionArtworksFromBackendAsync(exhibition.Id, collector.Locale.CountryIsoCode);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -139,8 +144,8 @@ public class GalleryService(ClientFactory http) : IGalleryService
     private async Task<HttpResponseMessage> MyCollectionArtworksFromBackendAsync(Guid collectorId) =>
         await _http.Backend.GetAsync($"/api/collectors/{collectorId}/artworks");
 
-    private async Task<HttpResponseMessage> ExhibitionArtworksFromBackendAsync(Guid exhibitionId) =>
-        await _http.Backend.GetAsync($"/api/exhibitions/{exhibitionId}/artworks");
+    private async Task<HttpResponseMessage> ExhibitionArtworksFromBackendAsync(Guid exhibitionId, string country) =>
+        await _http.Backend.GetAsync($"/api/exhibitions/{exhibitionId}/artworks?country={country}");
 
     private static List<ArtworkDto> LinkArtworks(List<ArtworkDto> artworks)
     {

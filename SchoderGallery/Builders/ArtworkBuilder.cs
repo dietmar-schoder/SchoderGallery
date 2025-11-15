@@ -40,7 +40,7 @@ public class ArtworkBuilder(
         var visitor = await _navigation.GetInitVisitorAsync();
         var floor = await _navigation.GetVisitorFloorAsync();
         artworkId = _navigation.GetArtworkIdOrLatestArtworkId(floor.FloorType, artworkId);
-        var artwork = await _galleryService.GetArtworkAsync(visitor.Id, floor.FloorNumber, artworkId);
+        var artwork = await _galleryService.GetArtworkAsync(visitor, floor.FloorNumber, artworkId);
 
         // Later: If no artwork found, clear latest artwork id and go back to the floor
 
@@ -141,7 +141,7 @@ public class ArtworkBuilder(
             _svgPainter.Border(artworkLeftMargin - 1, artworkTopMargin - 1, artworkSize.Width + 2, artworkSize.Height + 2, Colours.Gray);
 
             // Title, Year, Artist
-            var titleYearArtist = $"{artwork.Title} ({artwork.Year}) - {artwork.Artist}";
+            var titleYearArtist = $"{artwork.Title} ({artwork.Year})"; //  - {artwork.Artist}
             _svgPainter.TextRight(artworkLeftMargin + artworkSize.Width - iconSize, artworkTopMargin + artworkSize.Height + _smallFontSize * 2 / 3 + 2, titleYearArtist, _smallFontSize, Colours.Gray, 0);
         }
 
