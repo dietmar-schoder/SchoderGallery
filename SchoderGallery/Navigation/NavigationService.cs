@@ -37,12 +37,8 @@ public class NavigationService(ClientFactory http, ILocalStorageService localSto
                 _visitor.Locale = await response.Content.ReadFromJsonAsync<LocaleDto>();
             }
 
+            _visitor.Locale ??= new LocaleDto("US");
             await StoreVisitorDataAsync();
-        }
-
-        if (_visitor.Locale is null)
-        {
-            // Alert (and later disallow use of the app)
         }
 
         return _visitor;
