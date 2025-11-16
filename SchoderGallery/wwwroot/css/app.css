@@ -133,7 +133,7 @@ svg rect[style*="cursor:pointer"] {
 .buy-button {
     background-color: yellow;
     border: none;
-    padding: 12px 24px;
+    padding: 8px 16px;
     font-weight: bold;
     cursor: pointer;
     font-size: 16px;

@@ -94,7 +94,7 @@ public class ArtworkInfoBuilder(
 
         Html = ConvertToParagraphs(
             $"{Artwork.Info ?? "Work in progress..."}" +
-            $"\nTitle: {Artwork.Title}" +
+            $"\nTitle: <b>{Artwork.Title}</b>" +
             $"\nYear: {Artwork.Year}" +
             $"\nSize: {size}" +
             $"\nMaterial: Pixels" +

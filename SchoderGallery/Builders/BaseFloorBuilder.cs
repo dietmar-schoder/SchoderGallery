@@ -188,7 +188,7 @@ public abstract class BaseFloorBuilder(
         var artworkGap = 4;
 
         var rightCount = (artworks.Count + 1) / 2;
-        double rightArtWorkSpace = Math.Min((innerRoomHeight - artworkGap) / (double)rightCount, 200);
+        double rightArtWorkSpace = Math.Min((innerRoomHeight - artworkGap) / (double)rightCount, 100);
         for (int i = 0; i < rightCount; i++)
         {
             var artwork = artworks[i];
@@ -200,7 +200,7 @@ public abstract class BaseFloorBuilder(
         }
 
         var leftCount = artworks.Count - rightCount;
-        double leftArtWorkSpace = Math.Min((innerRoomHeight - artworkGap) / (double)leftCount, 200);
+        double leftArtWorkSpace = Math.Min((innerRoomHeight - artworkGap) / (double)leftCount, 100);
         for (int i = 0; i < leftCount; i++)
         {
             var artwork = artworks[rightCount + i];
@@ -212,8 +212,8 @@ public abstract class BaseFloorBuilder(
         }
 
         return artworks;
-    }
 
-    private static int ThumbnailSize(SizeType sizeType, int wallWidth) =>
-        Math.Min(sizeType == SizeType.Fixed || sizeType == SizeType.PortraitLandscape ? wallWidth : 4, 200);
+        static int ThumbnailSize(SizeType sizeType, int wallWidth) =>
+            sizeType == SizeType.Fixed || sizeType == SizeType.PortraitLandscape ? wallWidth : 4;
+    }
 }

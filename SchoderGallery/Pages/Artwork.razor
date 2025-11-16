@@ -1,5 +1,5 @@
 ﻿@page "/Artwork/{artworkId:int}"
-@inherits SvgComponentBase
+@inherits ArtworkBase
 @inject NavigationManager Nav
 
 @if (_svgContent?.Length > 0)
@@ -39,6 +39,12 @@
             </div>
         }
     </div>
+    @if (ArtworkBuilder.ShowBuyButton)
+    {
+        <div style="position: absolute; top: 4px; right: 4px; z-index: 1000;">
+            <button class="buy-button" @onclick="HandleBuy">@ArtworkBuilder.Artwork.PriceFormatted</button>
+        </div>
+    }
 }
 
 @if (_isLoading)

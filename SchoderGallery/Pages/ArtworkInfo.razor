@@ -1,6 +1,14 @@
 ﻿@page "/ArtworkInfo/{artworkId:int}"
-@inherits SvgComponentBase
+@inherits ArtworkBase
 @inject NavigationManager Nav
+
+@if (!string.IsNullOrEmpty(_errorMessage))
+{
+    <div style="position: fixed; top: 20px; right: 20px; background-color: #ff4444; color: white; padding: 15px 20px; border-radius: 4px; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
+        @_errorMessage
+        <button @onclick="ClearError" style="background: none; border: none; color: white; margin-left: 10px; cursor: pointer;">×</button>
+    </div>
+}
 
 @if (_svgContent?.Length > 0)
 {
