@@ -21,7 +21,7 @@ public class ArtworkBuilder(
     SettingsFactory settingsFactory,
     SvgPainter svgPainter,
     NavigationService navigation,
-    IGalleryService galleryService,
+    GalleryService galleryService,
     SizeHelperFactory sizeHelperFactory,
     Image image)
     : BaseBuilder(settingsFactory, svgPainter, navigation, galleryService), IArtworkBuilder, IBuilder
@@ -37,10 +37,9 @@ public class ArtworkBuilder(
         Init(screenWidth, screenHeight);
         Html = string.Empty;
 
-        var visitor = await _navigation.GetInitVisitorAsync();
         var floor = await _navigation.GetVisitorFloorAsync();
         artworkId = _navigation.GetArtworkIdOrLatestArtworkId(floor.FloorType, artworkId);
-        var artwork = await _galleryService.GetArtworkAsync(visitor, floor.FloorNumber, artworkId);
+        var artwork = await _galleryService.GetArtworkAsync(Visitor, floor.FloorNumber, artworkId);
 
         // Later: If no artwork found, clear latest artwork id and go back to the floor
 

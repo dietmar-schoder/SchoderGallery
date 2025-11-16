@@ -10,16 +10,15 @@ public abstract class BaseFloorBuilder(
     SettingsFactory settingsFactory,
     SvgPainter svgPainter,
     NavigationService navigation,
-    IGalleryService galleryService)
+    GalleryService galleryService)
     : BaseBuilder(settingsFactory, svgPainter, navigation, galleryService)
 {
     protected override async Task DrawAsync()
     {
-        var visitor = await _navigation.GetInitVisitorAsync();
         var wall = _settings.WallThickness;
         var floor = _navigation.GetFloor(FloorType);
         var exhibition = floor.IsArtworksFloor
-            ? await _galleryService.GetExhibitionArtworksAsync(visitor, floor.FloorNumber)
+            ? await _galleryService.GetExhibitionArtworksAsync(Visitor, floor.FloorNumber)
             : null;
 
         await _navigation.SetVisitorFloorAsync(FloorType);

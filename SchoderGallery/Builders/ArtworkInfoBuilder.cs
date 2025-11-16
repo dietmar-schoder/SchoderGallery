@@ -23,7 +23,7 @@ public class ArtworkInfoBuilder(
     SettingsFactory settingsFactory,
     SvgPainter svgPainter,
     NavigationService navigation,
-    IGalleryService galleryService,
+    GalleryService galleryService,
     SizeHelperFactory sizeHelperFactory)
     : BaseBuilder(settingsFactory, svgPainter, navigation, galleryService), IArtworkInfoBuilder, IBuilder
 {
@@ -39,10 +39,9 @@ public class ArtworkInfoBuilder(
         Init(screenWidth, screenHeight);
         Html = string.Empty;
 
-        var visitor = await _navigation.GetInitVisitorAsync();
         var floor = await _navigation.GetVisitorFloorAsync();
         artworkId = _navigation.GetArtworkIdOrLatestArtworkId(floor.FloorType, artworkId);
-        Artwork = await _galleryService.GetArtworkAsync(visitor, floor.FloorNumber, artworkId);
+        Artwork = await _galleryService.GetArtworkAsync(Visitor, floor.FloorNumber, artworkId);
 
         // Later: If no artwork found, clear latest artwork id and go back to the floor
 
@@ -93,11 +92,15 @@ public class ArtworkInfoBuilder(
             ? "Up to 411 trillion px (~1 square mile)"
             : $"{Artwork.Width}x{Artwork.Height} px";
 
-        Html = ConvertToParagraphs($"{Artwork.Info ?? "Work in progress..."}\nTitle: {Artwork.Title}\nYear: {Artwork.Year}\nSize: {size}\nMaterial: Pixels\nArtist: Schoder Factory Ltd\nOwner: Schoder Factory Ltd");
-        if (Artwork.IsForSale)
-        {
-            Html += $"\nPrice: GBP {Artwork.PriceFormatted}"; // Currency and recalculated price later
-        }
+        Html = ConvertToParagraphs(
+            $"{Artwork.Info ?? "Work in progress..."}" +
+            $"\nTitle: {Artwork.Title}" +
+            $"\nYear: {Artwork.Year}" +
+            $"\nSize: {size}" +
+            $"\nMaterial: Pixels" +
+            $"\nArtist: Schoder Factory Ltd" +
+            $"\nOwner: {(Artwork.HasOwner ? "Private Collector" : "Schoder Factory Ltd")}" +
+            $"{(Artwork.IsForSale ? $"\nPrice: {Artwork.PriceFormatted}" : string.Empty)}");
         HtmlWidth = artworkSize.Width;
         HtmlFontSize = _fontSize;
         HtmlColor = Colours.DarkGray;

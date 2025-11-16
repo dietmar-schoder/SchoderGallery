@@ -9,12 +9,12 @@ public abstract class BaseBuilder(
     SettingsFactory settingsFactory,
     SvgPainter svgPainter,
     NavigationService navigation,
-    IGalleryService galleryService)
+    GalleryService galleryService)
 {
     protected readonly SvgPainter _svgPainter = svgPainter;
     protected readonly NavigationService _navigation = navigation;
     protected readonly SettingsFactory _settingsFactory = settingsFactory;
-    protected readonly IGalleryService _galleryService = galleryService;
+    protected readonly GalleryService _galleryService = galleryService;
     protected Random _random = new();
     protected ISettings _settings;
 

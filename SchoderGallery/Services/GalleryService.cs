@@ -38,16 +38,7 @@ namespace SchoderGallery.Services;
 //        new("Exhibition \"Giordano Bruno\"", TodoStatus.Planned),
 //        new("Exhibition \"Digital 1\"", TodoStatus.Planned),
 
-public interface IGalleryService
-{
-    Task<ExhibitionDto> GetExhibitionAsync(Guid collectorId, int floorNumber);
-    Task<ExhibitionDto> GetExhibitionArtworksAsync(Visitor collector, int floorNumber);
-    Task<ArtworkDto> GetArtworkAsync(Visitor collector, int floorNumber, int id);
-    Task<CheckoutDto> BuyArtworkAsync(Guid collectorId, ArtworkDto artwork);
-    Task CancelCheckoutAsync(Guid collectorId, Guid artworkId);
-}
-
-public class GalleryService(ClientFactory http) : IGalleryService
+public class GalleryService(ClientFactory http)
 {
     private readonly ClientFactory _http = http;
     //private readonly Colours _colours = colours;
@@ -70,19 +61,23 @@ public class GalleryService(ClientFactory http) : IGalleryService
         return artwork ?? artworks.FirstOrDefault(a => a.PreviousId == -1);
     }
 
-    public async Task<ExhibitionDto> GetExhibitionAsync(Guid collectorId, int floorNumber)
+    public async Task<ExhibitionDto> GetExhibitionAsync(int floorNumber)
+    {
+        await LoadExhibitionsAsync();
+        return _exhibitions.TryGetValue(floorNumber, out var exhibition) ? exhibition : null;
+    }
+
+    public async Task LoadExhibitionsAsync()
     {
         if (LoadExhibitionsNeeded)
         {
             await LoadExhibitionsFromBackendAsync();
         }
-
-        return _exhibitions.TryGetValue(floorNumber, out var exhibition) ? exhibition : null;
     }
 
     public async Task<ExhibitionDto> GetExhibitionArtworksAsync(Visitor collector, int floorNumber)
     {
-        var exhibition = await GetExhibitionAsync(collector.Id, floorNumber);
+        var exhibition = await GetExhibitionAsync(floorNumber);
         if (exhibition is null) { return null; }
 
         if (exhibition.LoadArtworksNeeded)

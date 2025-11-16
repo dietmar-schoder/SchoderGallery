@@ -2,6 +2,7 @@
 using SchoderGallery.Builders;
 using SchoderGallery.DTOs;
 using SchoderGallery.Navigation;
+using SchoderGallery.Services;
 using SchoderGallery.Shared;
 
 namespace SchoderGallery.Pages;
@@ -10,6 +11,7 @@ public partial class Lift : SvgComponentBase
 {
     [Inject] private BuilderFactory BuilderFactory { get; set; }
     [Inject] private NavigationService Navigation { get; set; }
+    [Inject] private GalleryService GalleryService { get; set; }
 
     private LiftBuilder _builder;
     private bool _isMovingUp = false;
@@ -32,6 +34,7 @@ public partial class Lift : SvgComponentBase
 
     private async Task OnLiftClick(string floorNumber)
     {
+        var visitor = await Navigation.GetInitVisitorAsync();
         var currentFloor = await Navigation.GetVisitorFloorAsync();
         var newFloor = Navigation.GetFloor(floorNumber);
 
@@ -44,6 +47,7 @@ public partial class Lift : SvgComponentBase
             await Task.Yield();
         }
 
+        await GalleryService.GetExhibitionArtworksAsync(visitor, newFloor.FloorNumber);
         _isMovingUp = _isMovingDown = false;
         Nav.NavigateTo(newFloor.PageAndParam());
     }

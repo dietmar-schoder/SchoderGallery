@@ -21,8 +21,8 @@ builder.Services.AddSingleton<ILocalStorageService, LocalStorageService>();
 builder.Services.AddSingleton<Colours>();
 builder.Services.AddSingleton<Image>();
 builder.Services.AddSingleton<SvgPainter>();
-builder.Services.AddScoped<IGalleryService, GalleryService>();
 
+builder.Services.AddScoped<GalleryService>();
 builder.Services.AddScoped<NavigationService>();
 
 builder.Services.AddScoped<SettingsFactory>();

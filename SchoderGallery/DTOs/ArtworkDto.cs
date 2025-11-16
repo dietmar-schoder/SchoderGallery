@@ -18,6 +18,8 @@ public class ArtworkDto
     public string FileName { get; set; }
     public string Info { get; set; }
     public int Price { get; set; }
+    public string Currency { get; set; }
+    public bool HasOwner { get; set; }
     public int PreviousId { get; set; }
     public int NextId { get; set; }
     public bool IsRightWall { get; set; }
@@ -28,7 +30,7 @@ public class ArtworkDto
     public int ThumbnailSize { get; set; }
 
     public bool IsForSale => Price > 0;
-    public string PriceFormatted => (Price / 100.0).ToString("#,##0.00");
+    public string PriceFormatted => $"{Currency} {Price / 100.0:#,##0.00}";
 
     public ArtworkDto() { }
 

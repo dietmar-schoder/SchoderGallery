@@ -2,6 +2,7 @@
 using SchoderGallery.Builders;
 using SchoderGallery.DTOs;
 using SchoderGallery.Navigation;
+using SchoderGallery.Services;
 
 namespace SchoderGallery.Shared;
 
@@ -11,6 +12,8 @@ public partial class BuildingRenderer : SvgComponentBase
 
     [Inject] private BuilderFactory BuilderFactory { get; set; }
     [Inject] private NavigationService Navigation { get; set; }
+    [Inject] private GalleryService GalleryService { get; set; }
+
 
     private IBuilder _builder;
 
@@ -25,4 +28,18 @@ public partial class BuildingRenderer : SvgComponentBase
 
     protected override async Task<string> GetSvgContentAsync(SizeDto size) =>
         await _builder.GetSvgContentAsync(size.Width, size.Height);
+
+    private async Task OnAreaClick(ClickableArea area)
+    {
+        _isLoading = true;
+        await InvokeAsync(StateHasChanged);
+        await Task.Yield();
+
+        if (area.Page == "/Lift")
+        {
+            await GalleryService.LoadExhibitionsAsync();
+        }
+
+        Nav.NavigateTo(area.Page);
+    }
 }

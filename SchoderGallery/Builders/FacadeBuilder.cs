@@ -9,7 +9,7 @@ public class FacadeBuilder(
     SettingsFactory settingsFactory,
     SvgPainter svgPainter,
     NavigationService navigation,
-    IGalleryService galleryService,
+    GalleryService galleryService,
     Colours colours)
     : BaseBuilder(settingsFactory, svgPainter, navigation, galleryService), IBuilder
 {

@@ -11,7 +11,7 @@ public partial class CancelCheckout : SvgComponentBase
 {
     [Parameter] public int ArtworkId { get; set; }
     [Inject] private IArtworkInfoBuilder ArtworkInfoBuilder { get; set; } = default!;
-    [Inject] private IGalleryService GalleryService { get; set; } = default!;
+    [Inject] private GalleryService GalleryService { get; set; } = default!;
     [Inject] private NavigationService NavigationService { get; set; } = default!;
     [Inject] private ILocalStorageService LocalStorageService { get; set; } = default!;
 
