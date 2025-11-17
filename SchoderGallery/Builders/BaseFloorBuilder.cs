@@ -26,7 +26,7 @@ public abstract class BaseFloorBuilder(
         DrawOuterWalls();
         DrawFloorPattern();
 
-        if (FloorType == FloorType.Atelier)
+        if (FloorType == FloorType.Atelier || floor.IsGroundFloorRoom)
         {
         }
         else if (FloorType == FloorType.GroundFloor)
@@ -57,7 +57,14 @@ public abstract class BaseFloorBuilder(
             DrawFloorCaption();
         }
 
-        DrawLiftLink();
+        if (floor.IsGroundFloorRoom)
+        {
+            DrawExitToGroundFloorLink();
+        }
+        else
+        {
+            DrawLiftLink();
+        }
 
         DrawVisitor(exhibition);
 
@@ -145,12 +152,18 @@ public abstract class BaseFloorBuilder(
         }
 
         void DrawFloorCaption() =>
-            _svgPainter.Text(_width50, _height66, floor.LiftLabel, _largeFontSize * 2, Colours.LightGray);
+            _svgPainter.Text(_width50, _height50, floor.LiftLabel, _largeFontSize * 2, Colours.LightGray);
 
         void DrawLiftLink()
         {
             ClickableAreas.Add(new ClickableArea(_width33 + 2, 0, _width33 - 4, _height25 - 2, "/Lift", "Enter lift"));
-            _svgPainter.TextLink(_width50, wall + _largeFontSize * 2, "LIFT", _fontSize);
+            _svgPainter.TextLink(_width50, wall + _largeFontSize * 2, "LIFT", _fontSize * 3 / 2);
+        }
+
+        void DrawExitToGroundFloorLink()
+        {
+            ClickableAreas.Add(new ClickableArea(_width33 + 2, 0, _width33 - 4, _height25 - 2, "/GroundFloor", "Back to ground floor"));
+            _svgPainter.TextLink(_width50, wall + _largeFontSize * 2, "EXIT", _fontSize * 3 / 2);
         }
 
         void DrawExhibitionInfoAndArtworksLink(ExhibitionDto exhibition)
@@ -159,7 +172,7 @@ public abstract class BaseFloorBuilder(
 
             _svgPainter.Text(_width50, _height66 - gap125, floor.LiftLabel, _largeFontSize * 2, Colours.LightGray);
             _svgPainter.Text(_width50, _height66 + gap125, exhibition.Title, _largeFontSize * 2, exhibition.Colour);
-            _svgPainter.TextLink(_width50, _height33, "ARTWORKS", _fontSize);
+            _svgPainter.TextLink(_width50, _height33, "ARTWORKS", _fontSize * 3 / 2);
 
             ClickableAreas.Add(new ClickableArea(0, _height25 + 2, SvgWidth, SvgHeight - _height25 - 2, $"/Artwork/0", "Look at artworks"));
         }
@@ -167,7 +180,7 @@ public abstract class BaseFloorBuilder(
         void DrawVisitor(ExhibitionDto exhibition)
         {
             var visitorX = _width50;
-            var visitorY = _height50;
+            var visitorY = _height50 - 75;
 
             if (exhibition is not null && exhibition.Artworks.Count > 0)
             {

@@ -2,6 +2,7 @@
 
 public enum FloorType
 {
+    Info = 17,
     ArtworkInfo = 16,
     Artwork = 15,
     Facade = 14,

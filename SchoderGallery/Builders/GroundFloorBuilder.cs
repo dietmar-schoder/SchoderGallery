@@ -19,12 +19,20 @@ public class GroundFloorBuilder(
         await base.DrawAsync();
 
         var wall = _settings.WallThickness;
-        int doorWidth = 3 * _windowWidth + 2 * _gap;
-        var x = (SvgWidth - (3 * _windowWidth + 2 * _gap)) / 2;
-        var xMiddle = x + doorWidth / 2;
 
-        ClickableAreas.Add(new ClickableArea(x, SvgHeight - wall - _largeFontSize * 4, doorWidth, wall + _largeFontSize * 4, "/", "Good buy"));
+        ClickableAreas.Add(new ClickableArea(0, 0, _width33 - 2, _height50 - 2, "/Cafe", "Café"));
+        _svgPainter.TextLink(_width25, _height33, "CAFE", _fontSize * 3 / 2);
 
-        _svgPainter.TextLink(xMiddle, SvgHeight - wall - _largeFontSize * 2, "EXIT", _fontSize);
+        ClickableAreas.Add(new ClickableArea(_width66 + 2, 0, _width33 - 2, _height50 - 2, "/Shop", "Shop"));
+        _svgPainter.TextLink(_width75, _height33, "SHOP", _fontSize * 3 / 2);
+
+        ClickableAreas.Add(new ClickableArea(0, _height50 + 2, _width33 - 2, _height50 - 2, "/Info", "Information"));
+        _svgPainter.TextLink(_width25, _height66, "INFO", _fontSize * 3 / 2);
+
+        ClickableAreas.Add(new ClickableArea(_width66 + 2, _height50 + 2, _width33 - 2, _height50 - 2, "/Toilets", "Toilets"));
+        _svgPainter.TextLink(_width75, _height66, "TOILETS", _fontSize * 3 / 2);
+
+        ClickableAreas.Add(new ClickableArea(_width33 + 2, _height75 + 2, _width33 - 4, _height25 - 2, "/", "Good buy"));
+        _svgPainter.TextLink(_width50, SvgHeight - wall - _largeFontSize * 2, "EXIT", _fontSize * 3 / 2);
     }
 }

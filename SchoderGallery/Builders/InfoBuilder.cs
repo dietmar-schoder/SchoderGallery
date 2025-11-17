@@ -5,12 +5,12 @@ using SchoderGallery.Settings;
 
 namespace SchoderGallery.Builders;
 
-public class AtelierBuilder(
+public class InfoBuilder(
     SettingsFactory settingsFactory,
     SvgPainter svgPainter,
     NavigationService navigation,
     GalleryService galleryService)
     : BaseFloorBuilder(settingsFactory, svgPainter, navigation, galleryService), IBuilder
 {
-    public override FloorType FloorType => FloorType.Atelier;
+    public override FloorType FloorType => FloorType.Info;
 }

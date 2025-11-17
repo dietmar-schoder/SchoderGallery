@@ -19,13 +19,17 @@ public abstract class BaseBuilder(
     protected ISettings _settings;
 
     protected int _width20;
+    protected int _width25;
     protected int _width33;
     protected int _width50;
+    protected int _width66;
+    protected int _width75;
     protected int _width80;
     protected int _height25;
     protected int _height33;
     protected int _height50;
     protected int _height66;
+    protected int _height75;
 
     protected int _rowsColumns;
     protected int _gap;
@@ -68,13 +72,17 @@ public abstract class BaseBuilder(
         _largeFontSize = IsMobile ? _settings.LargeFontSizeMobile : _settings.LargeFontSizeDesktop;
 
         _width20 = SvgWidth / 5;
-        _width50 = SvgWidth / 2;
+        _width25 = SvgWidth / 4;
         _width33 = SvgWidth / 3;
+        _width50 = SvgWidth / 2;
+        _width66 = SvgWidth * 2 / 3;
+        _width75 = SvgWidth * 3 / 4;
         _width80 = SvgWidth * 4 / 5;
         _height25 = SvgHeight / 4;
         _height33 = SvgHeight / 3;
         _height50 = SvgHeight / 2;
-        _height66 = _height33 * 2;
+        _height66 = SvgHeight * 2 / 3;
+        _height75 = SvgHeight * 3 / 4;
 
         _svgPainter.Clear();
         ClickableAreas.Clear();

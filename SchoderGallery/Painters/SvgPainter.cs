@@ -61,7 +61,8 @@ public class SvgPainter
     public void TextLink(int x, int y, string content, int fontSize)
     {
         Text(x + 1, y + 1, content, fontSize, Colours.White);
-        Text(x, y, content, fontSize, Colours.Black);
+        Text(x - 1, y - 1, content, fontSize, Colours.Black);
+        Text(x, y, content, fontSize, Colours.Gray);
     }
 
     public void IconLeftArrow(int x, int y, int size, int thickness = 1)

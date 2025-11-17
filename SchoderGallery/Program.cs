@@ -47,6 +47,7 @@ builder.Services.AddScoped<IArtworkBuilder, ArtworkBuilder>();
 builder.Services.AddScoped<IBuilder, AtelierBuilder>();
 builder.Services.AddScoped<IBuilder, Basement1Builder>();
 builder.Services.AddScoped<IBuilder, Basement2Builder>();
+builder.Services.AddScoped<IBuilder, CafeBuilder>();
 builder.Services.AddScoped<IBuilder, DepotBuilder>();
 builder.Services.AddScoped<IBuilder, FacadeBuilder>();
 builder.Services.AddScoped<IBuilder, Floor1Builder>();
@@ -56,7 +57,10 @@ builder.Services.AddScoped<IBuilder, Floor4Builder>();
 builder.Services.AddScoped<IBuilder, Floor5Builder>();
 builder.Services.AddScoped<IBuilder, Floor6Builder>();
 builder.Services.AddScoped<IBuilder, GroundFloorBuilder>();
+builder.Services.AddScoped<IBuilder, InfoBuilder>();
 builder.Services.AddScoped<IBuilder, LiftBuilder>();
 builder.Services.AddScoped<IBuilder, MyCollectionBuilder>();
+builder.Services.AddScoped<IBuilder, ShopBuilder>();
+builder.Services.AddScoped<IBuilder, ToiletsBuilder>();
 
 await builder.Build().RunAsync();

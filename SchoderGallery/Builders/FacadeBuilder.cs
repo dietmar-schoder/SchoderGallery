@@ -15,7 +15,7 @@ public class FacadeBuilder(
 {
     public override FloorType FloorType => FloorType.Facade;
 
-    protected override void Draw()
+    protected override async Task DrawAsync()
     {
         var schoderText = "Schoder";
         var galleryText = "Gallery";
@@ -23,11 +23,11 @@ public class FacadeBuilder(
         var welcome = "Welcome";
 
         DrawFrontWall();
-        DrawDoorAndWindows();
+        await DrawDoorAndWindowsAsync();
 
         void DrawFrontWall() => _svgPainter.Area(0, 0, SvgWidth, SvgHeight, Colours.LightGray);
 
-        void DrawDoorAndWindows()
+        async Task DrawDoorAndWindowsAsync()
         {
             for (int row = 1; row < _rowsColumns; row++)
             {
@@ -39,7 +39,7 @@ public class FacadeBuilder(
                     double lineY = y + 0.5;
                     if (row == _rowsColumns - 1 && column == _rowsColumns / 2 - 1)
                     {
-                        var latestFloor = _navigation.GetFloor(FloorType.GroundFloor); // _navigation.GetFloor(Visitor.CurrentFloorType);
+                        var latestFloor = await _navigation.GetVisitorFloorAsync();
                         DrawDoor(lineX, lineY, latestFloor);
                         continue;
                     }
@@ -88,10 +88,11 @@ public class FacadeBuilder(
             var xMiddle = x + doorWidth / 2;
             _svgPainter.VerticalLine(xMiddle, y, doorHeight, Colours.DarkGray, 2);
 
-            DrawEntranceText((int)xMiddle + 1, (int)y + 1, _gap, Colours.White); // Shadow
-            DrawEntranceText((int)xMiddle, (int)y, _gap, Colours.Black);
+            DrawEntranceText((int)xMiddle + 1, (int)y + 1, _gap, Colours.White);
+            DrawEntranceText((int)xMiddle - 1, (int)y - 1, _gap, Colours.Black);
+            DrawEntranceText((int)xMiddle, (int)y, _gap, Colours.Gray);
 
-            ClickableAreas.Add(new ClickableArea(0, _height66, SvgWidth, _height33, floor.Page, welcome));
+            ClickableAreas.Add(new ClickableArea(0, _height66, SvgWidth, _height33, floor.PageAndParam(), welcome));
         }
 
         string[] GetRandomColours() =>

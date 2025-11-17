@@ -25,11 +25,13 @@ public class PortraitSettings : ISettings
         {
             int x = margin + column * (windowWidth + gap);
             var y = margin + windowHeight / 5;
-            svgPainter.Append(Letter(schoderText[column], x + 1, y + 1, windowWidth, Colours.White)); // Shadow
-            svgPainter.Append(Letter(schoderText[column], x, y, windowWidth, Colours.Black));
+            svgPainter.Append(Letter(schoderText[column], x + 1, y + 1, windowWidth, Colours.White));
+            svgPainter.Append(Letter(schoderText[column], x - 1, y - 1, windowWidth, Colours.Black));
+            svgPainter.Append(Letter(schoderText[column], x, y, windowWidth, Colours.Gray));
             y = margin + windowHeight * 4 / 5;
-            svgPainter.Append(Letter(galleryText[column], x + 1, y + 1, windowWidth, Colours.White)); // Shadow
-            svgPainter.Append(Letter(galleryText[column], x, y, windowWidth, Colours.Black));
+            svgPainter.Append(Letter(galleryText[column], x + 1, y + 1, windowWidth, Colours.White));
+            svgPainter.Append(Letter(galleryText[column], x - 1, y - 1, windowWidth, Colours.Black));
+            svgPainter.Append(Letter(galleryText[column], x, y, windowWidth, Colours.Gray));
 
             string Letter(char letter, int x, int y, int w, string colour) =>
                 $"<text x='{x + w / 2.0}' y='{y}' " +

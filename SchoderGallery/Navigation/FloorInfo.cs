@@ -13,6 +13,12 @@ public record FloorInfo(FloorType FloorType, int LiftColumn, int LiftRow, string
         && FloorType != FloorType.GroundFloor
         && FloorType != FloorType.MyCollection;
 
+    public bool IsGroundFloorRoom =>
+        FloorType == FloorType.Cafe
+        || FloorType == FloorType.Shop
+        || FloorType == FloorType.Toilets
+        || FloorType == FloorType.Info;
+
     public bool HasFloorParam =>
         IsFloor
         && FloorType != FloorType.Atelier

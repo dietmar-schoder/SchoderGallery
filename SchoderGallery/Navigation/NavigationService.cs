@@ -23,6 +23,11 @@ public class NavigationService(ClientFactory http, ILocalStorageService localSto
         { FloorType.Depot, new FloorInfo(FloorType.Depot, 0, 5, "Depot", "/Depot") },
         { FloorType.MyCollection, new FloorInfo(FloorType.MyCollection, 1, 5, "My Collection", "/MyCollection") },
 
+        { FloorType.Cafe, new FloorInfo(FloorType.Cafe, -1, -1, "Café", "/Cafe") },
+        { FloorType.Shop, new FloorInfo(FloorType.Shop, -1, -1, "Shop", "/Shop") },
+        { FloorType.Toilets, new FloorInfo(FloorType.Toilets, -1, -1, "Toilets", "/Toilets") },
+        { FloorType.Info, new FloorInfo(FloorType.Info, -1, -1, "Information", "/Info") },
+
         { FloorType.Lift, new FloorInfo(FloorType.Lift, -1, -1, "Lift", "/Lift") }
     };
 
