@@ -59,6 +59,7 @@ public abstract class BaseFloorBuilder(
 
         if (floor.IsGroundFloorRoom)
         {
+            DrawRoomDoor(_width50 - _windowWidth, _windowWidth * 2);
             DrawExitToGroundFloorLink();
         }
         else
@@ -97,7 +98,7 @@ public abstract class BaseFloorBuilder(
                 int x = _margin + column * (_windowWidth + _gap);
                 if (column == _rowsColumns / 2 - 1)
                 {
-                    DrawDoor((SvgWidth - (3 * _windowWidth + 2 * _gap)) / 2, SvgHeight - wall);
+                    DrawMainDoor((SvgWidth - (3 * _windowWidth + 2 * _gap)) / 2, SvgHeight - wall);
                     continue;
                 }
 
@@ -117,7 +118,13 @@ public abstract class BaseFloorBuilder(
             }
         }
 
-        void DrawDoor(double x, double y)
+        void DrawRoomDoor(int x, int width)
+        {
+            _svgPainter.Area(x, 0, width, wall, Colours.Background, Colours.Black);
+            _svgPainter.Area(x + 1, 0, width - 2, wall + 2, Colours.Background, Colours.Background);
+        }
+
+        void DrawMainDoor(double x, double y)
         {
             int doorWidth = 3 * _windowWidth + 2 * _gap;
 
