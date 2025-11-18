@@ -21,7 +21,10 @@ public class GroundFloorBuilder(
         var wall = _settings.WallThickness;
 
         ClickableAreas.Add(new ClickableArea(0, 0, _width33 - 2, _height50 - 2, "/Cafe", "Café"));
-        _svgPainter.TextLink(_width25, _height33, "CAFE", _fontSize * 3 / 2);
+        //_svgPainter.TextLink(_width25, _height33, "CAFE", _fontSize * 3 / 2);
+        _svgPainter.IconCafe(_width25 - 80 + 1, _height33 - 80 + 1, 16, Colours.White, 1 / 8m);
+        _svgPainter.IconCafe(_width25 - 80 - 1, _height33 - 80 - 1, 16, Colours.Black, 1 / 8m);
+        _svgPainter.IconCafe(_width25 - 80, _height33 - 80, 16, Colours.Gray, 1 / 8m);
 
         ClickableAreas.Add(new ClickableArea(_width66 + 2, 0, _width33 - 2, _height50 - 2, "/Shop", "Shop"));
         _svgPainter.TextLink(_width75, _height33, "SHOP", _fontSize * 3 / 2);

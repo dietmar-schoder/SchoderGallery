@@ -104,6 +104,11 @@ public class SvgPainter
     public void IconClose(int x, int y, int size, int thickness = 1) =>
         Append($"<path d='M{x},{y}L{x + size},{y + size}M{x + size},{y}L{x},{y + size}' fill='none' stroke='{Colours.DarkGray}' stroke-width='{thickness}' />");
 
+    public void IconCafe(int x, int y, int sizeFactor, string colour, decimal thickness = 1) =>
+        Append($"<g transform='translate({x},{y}) scale({sizeFactor})'>" +
+            $"<path d='M 1 1 H 9 V 9 H 1 V 1 M 7 6 V 5 H 3 V 6 A 1 1 0 0 0 7 6 A 0.5 0.5 0 0 0 8 6 A 0.5 0.5 0 0 0 7 6 M 4 3 C 3.6667 3.3333 4.3333 3.6667 4 4 M 5 2 C 4.3333 2.6667 5.6667 3.3333 5 4 M 6 3 C 5.6667 3.3333 6.3333 3.6667 6 4' fill='none' stroke='{colour}' stroke-width='{thickness}' />" +
+            $"</g>");
+
     private static (int xMid, int yMid) IconMiddle(int x, int y, int size) =>
         (x + size / 2, y + size / 2);
 
