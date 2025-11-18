@@ -20,7 +20,7 @@ public class GroundFloorBuilder(
 
         var wall = _settings.WallThickness;
         var smallerWindowSize = Math.Min(_windowWidth, _windowHeight);
-        var factor = Math.Min(smallerWindowSize / 3, 25);
+        var factor = Math.Min(smallerWindowSize / 5, 25);
         var offset = factor * 10 / 2;
         var thickness = 2.0 / factor;
 
