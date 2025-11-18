@@ -59,8 +59,9 @@ public abstract class BaseFloorBuilder(
 
         if (floor.IsGroundFloorRoom)
         {
-            DrawRoomDoor(_width50 - _windowWidth, _windowWidth * 2);
-            DrawExitToGroundFloorLink();
+            var doorsize = (int)(_windowHeight * 1.5);
+            DrawRoomDoor(_height50 - doorsize / 2, doorsize, floor);
+            DrawExitToGroundFloorLink(floor);
         }
         else
         {
@@ -118,10 +119,11 @@ public abstract class BaseFloorBuilder(
             }
         }
 
-        void DrawRoomDoor(int x, int width)
+        void DrawRoomDoor(int y, int width, FloorInfo floor)
         {
-            _svgPainter.Area(x, 0, width, wall, Colours.Background, Colours.Black);
-            _svgPainter.Area(x + 1, 0, width - 2, wall + 2, Colours.Background, Colours.Background);
+            var x = floor.FloorType == FloorType.Cafe || floor.FloorType == FloorType.Info ? SvgWidth - wall : 0;
+            _svgPainter.Area(x, y, wall, width, Colours.Background, Colours.Black);
+            _svgPainter.Area(x - 1, y + 1, wall + 2, width - 2, Colours.Background, Colours.Background);
         }
 
         void DrawMainDoor(double x, double y)
@@ -167,10 +169,19 @@ public abstract class BaseFloorBuilder(
             _svgPainter.TextLink(_width50, wall + _largeFontSize * 2, "LIFT", _fontSize * 3 / 2);
         }
 
-        void DrawExitToGroundFloorLink()
+        void DrawExitToGroundFloorLink(FloorInfo floor)
         {
-            ClickableAreas.Add(new ClickableArea(_width33 + 2, 0, _width33 - 4, _height25 - 2, "/GroundFloor", "Back to ground floor"));
-            _svgPainter.TextLink(_width50, wall + _largeFontSize * 2, "EXIT", _fontSize * 3 / 2);
+            if (floor.FloorType == FloorType.Shop
+                || floor.FloorType == FloorType.Toilets)
+            {
+                ClickableAreas.Add(new ClickableArea(0, _height33 + 2, _width33 - 2, _height33 - 4, "/GroundFloor", "Back to ground floor"));
+                _svgPainter.TextLink(wall + _largeFontSize * 3, _height50, "EXIT", _fontSize * 3 / 2);
+            }
+            else
+            {
+                ClickableAreas.Add(new ClickableArea(_width66 + 2, _height33 + 2, _width33 - 2, _height33 - 4, "/GroundFloor", "Back to ground floor"));
+                _svgPainter.TextLink(SvgWidth - wall - _largeFontSize * 3, _height50, "EXIT", _fontSize * 3 / 2);
+            }
         }
 
         void DrawExhibitionInfoAndArtworksLink(ExhibitionDto exhibition)

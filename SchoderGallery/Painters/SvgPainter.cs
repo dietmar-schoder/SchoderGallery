@@ -104,9 +104,24 @@ public class SvgPainter
     public void IconClose(int x, int y, int size, int thickness = 1) =>
         Append($"<path d='M{x},{y}L{x + size},{y + size}M{x + size},{y}L{x},{y + size}' fill='none' stroke='{Colours.DarkGray}' stroke-width='{thickness}' />");
 
-    public void IconCafe(int x, int y, int sizeFactor, string colour, decimal thickness = 1) =>
+    public void IconCafe(int x, int y, int sizeFactor, string colour, double thickness) =>
         Append($"<g transform='translate({x},{y}) scale({sizeFactor})'>" +
-            $"<path d='M 1 1 H 9 V 9 H 1 V 1 M 7 6 V 5 H 3 V 6 A 1 1 0 0 0 7 6 A 0.5 0.5 0 0 0 8 6 A 0.5 0.5 0 0 0 7 6 M 4 3 C 3.6667 3.3333 4.3333 3.6667 4 4 M 5 2 C 4.3333 2.6667 5.6667 3.3333 5 4 M 6 3 C 5.6667 3.3333 6.3333 3.6667 6 4' fill='none' stroke='{colour}' stroke-width='{thickness}' />" +
+            $"<path d='M 1 1 H 9 V 9 H 1 Z M 7 6 V 5 H 3 V 6 A 1 1 0 0 0 7 6 A 0.5 0.5 0 0 0 8 6 A 0.5 0.5 0 0 0 7 6 M 4 3 C 3.6667 3.3333 4.3333 3.6667 4 4 M 5 2 C 4.3333 2.6667 5.6667 3.3333 5 4 M 6 3 C 5.6667 3.3333 6.3333 3.6667 6 4' fill='none' stroke='{colour}' stroke-width='{thickness}' />" +
+            $"</g>");
+
+    public void IconInfo(int x, int y, int sizeFactor, string colour, double thickness) =>
+        Append($"<g transform='translate({x},{y}) scale({sizeFactor})'>" +
+            $"<path d='M 1 1 H 9 V 9 H 1 Z M 4 3 A 1 1 0 0 0 6 3 A 1 1 0 0 0 4 3 M 4 5 H 6 V 8 H 4 Z' fill='none' stroke='{colour}' stroke-width='{thickness}' />" +
+            $"</g>");
+
+    public void IconShop(int x, int y, int sizeFactor, string colour, double thickness) =>
+        Append($"<g transform='translate({x},{y}) scale({sizeFactor})'>" +
+            $"<path d='M 1 1 H 9 V 9 H 1 Z M 2 4 C 2 5 2 7 4 7 H 6 C 8 7 8 5 8 4 Z M 3 4 L 4 3 M 7 4 L 6 3 M 3.5 5 V 6 M 5 5 V 6 M 6.5 5 V 6' fill='none' stroke='{colour}' stroke-width='{thickness}' />" +
+            $"</g>");
+
+    public void IconToilets(int x, int y, int sizeFactor, string colour, double thickness) =>
+        Append($"<g transform='translate({x},{y}) scale({sizeFactor})'>" +
+            $"<path d='M 1 1 H 9 V 9 H 1 Z M 2 3 L 2.875 7 L 3.75 3 L 4.625 7 L 5.5 3 M 8 4 A 1 1 0 0 0 6 4 V 6 A 1 1 0 0 0 8 6' fill='none' stroke='{colour}' stroke-width='{thickness}' />" +
             $"</g>");
 
     private static (int xMid, int yMid) IconMiddle(int x, int y, int size) =>

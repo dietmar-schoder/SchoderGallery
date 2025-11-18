@@ -2,6 +2,7 @@
 using SchoderGallery.Painters;
 using SchoderGallery.Services;
 using SchoderGallery.Settings;
+using System.Drawing;
 
 namespace SchoderGallery.Builders;
 
@@ -47,6 +48,13 @@ public abstract class BaseBuilder(
     protected ScreenMode ScreenMode => SvgWidth > SvgHeight ? ScreenMode.Landscape : ScreenMode.Portrait;
     protected int ShortSize => ScreenMode == ScreenMode.Portrait ? SvgWidth : SvgHeight;
     protected int ShortWindowSize => ScreenMode == ScreenMode.Portrait ? _windowWidth : _windowHeight;
+
+    protected List<(int off, string colour)> ShadowList =
+    [
+        (1, Colours.White),
+        (-1, Colours.Black),
+        (0, Colours.Gray)
+    ];
 
     public abstract FloorType FloorType { get; }
 

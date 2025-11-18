@@ -19,21 +19,34 @@ public class GroundFloorBuilder(
         await base.DrawAsync();
 
         var wall = _settings.WallThickness;
+        var smallerWindowSize = Math.Min(_windowWidth, _windowHeight);
+        var factor = Math.Min(smallerWindowSize / 3, 25);
+        var offset = factor * 10 / 2;
+        var thickness = 2.0 / factor;
 
         ClickableAreas.Add(new ClickableArea(0, 0, _width33 - 2, _height50 - 2, "/Cafe", "Café"));
-        //_svgPainter.TextLink(_width25, _height33, "CAFE", _fontSize * 3 / 2);
-        _svgPainter.IconCafe(_width25 - 80 + 1, _height33 - 80 + 1, 16, Colours.White, 1 / 8m);
-        _svgPainter.IconCafe(_width25 - 80 - 1, _height33 - 80 - 1, 16, Colours.Black, 1 / 8m);
-        _svgPainter.IconCafe(_width25 - 80, _height33 - 80, 16, Colours.Gray, 1 / 8m);
+        foreach (var (off, colour) in ShadowList)
+        {
+            _svgPainter.IconCafe(_width25 - offset + off, _height33 - offset + off, factor, colour, thickness);
+        }
 
         ClickableAreas.Add(new ClickableArea(_width66 + 2, 0, _width33 - 2, _height50 - 2, "/Shop", "Shop"));
-        _svgPainter.TextLink(_width75, _height33, "SHOP", _fontSize * 3 / 2);
+        foreach (var (off, colour) in ShadowList)
+        {
+            _svgPainter.IconShop(_width75 - offset + off, _height33 - offset + off, factor, colour, thickness);
+        }
 
         ClickableAreas.Add(new ClickableArea(0, _height50 + 2, _width33 - 2, _height50 - 2, "/Info", "Information"));
-        _svgPainter.TextLink(_width25, _height66, "INFO", _fontSize * 3 / 2);
+        foreach (var (off, colour) in ShadowList)
+        {
+            _svgPainter.IconInfo(_width25 - offset + off, _height66 - offset + off, factor, colour, thickness);
+        }
 
         ClickableAreas.Add(new ClickableArea(_width66 + 2, _height50 + 2, _width33 - 2, _height50 - 2, "/Toilets", "Toilets"));
-        _svgPainter.TextLink(_width75, _height66, "TOILETS", _fontSize * 3 / 2);
+        foreach (var (off, colour) in ShadowList)
+        {
+            _svgPainter.IconToilets(_width75 - offset + off, _height66 - offset + off, factor, colour, thickness);
+        }
 
         ClickableAreas.Add(new ClickableArea(_width33 + 2, _height75 + 2, _width33 - 4, _height25 - 2, "/", "Good buy"));
         _svgPainter.TextLink(_width50, SvgHeight - wall - _largeFontSize * 2, "EXIT", _fontSize * 3 / 2);
