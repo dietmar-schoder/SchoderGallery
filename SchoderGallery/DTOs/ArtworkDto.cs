@@ -19,9 +19,10 @@ public class ArtworkDto
     public string Info { get; set; }
     public int Price { get; set; }
     public string Currency { get; set; }
+    public int FloorNumber { get; set; }
     public bool HasOwner { get; set; }
-    public int PreviousId { get; set; }
-    public int NextId { get; set; }
+    public Guid PreviousId { get; set; }
+    public Guid NextId { get; set; }
     public bool IsRightWall { get; set; }
     public bool IsLeftWall => !IsRightWall;
     public int WallX { get; set; }
@@ -34,27 +35,27 @@ public class ArtworkDto
 
     public ArtworkDto() { }
 
-    public ArtworkDto(
-        string title,
-        int year,
-        Func<ISettings, int, int, ArtworkType> renderAlgorithm,
-        SizeType sizeType,
-        int width,
-        int height,
-        string artist,
-        int id,
-        string fileName = default,
-        string info = default)
-    {
-        Title = title;
-        Year = year;
-        RenderAlgorithm = renderAlgorithm;
-        SizeType = sizeType;
-        Width = width;
-        Height = height;
-        Artist = artist;
-        Number = id;
-        FileName = fileName;
-        Info = info;
-    }
+    //public ArtworkDto(
+    //    string title,
+    //    int year,
+    //    Func<ISettings, int, int, ArtworkType> renderAlgorithm,
+    //    SizeType sizeType,
+    //    int width,
+    //    int height,
+    //    string artist,
+    //    int id,
+    //    string fileName = default,
+    //    string info = default)
+    //{
+    //    Title = title;
+    //    Year = year;
+    //    RenderAlgorithm = renderAlgorithm;
+    //    SizeType = sizeType;
+    //    Width = width;
+    //    Height = height;
+    //    Artist = artist;
+    //    Number = id;
+    //    FileName = fileName;
+    //    Info = info;
+    //}
 }

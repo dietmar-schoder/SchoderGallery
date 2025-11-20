@@ -143,19 +143,22 @@ public abstract class BaseFloorBuilder(
             foreach (var artwork in artworks)
             {
                 _svgPainter.Area(artwork.WallX, artwork.WallY, artwork.ThumbnailSize, artwork.WallWidth, Colours.White, Colours.Black);
-                var thumbnailFileName = $"images/floor{floor.FloorNumber}/{artwork.Number:D6}.jpg";
 
-                _svgPainter.Thumbnail(artwork.WallX + 1, artwork.WallY + 1, artwork.ThumbnailSize - 2, artwork.WallWidth - 2, thumbnailFileName);
+                if (artwork.SizeType != SizeType.Text)
+                {
+                    var thumbnailFileName = $"images/floor{artwork.FloorNumber}/{artwork.Number:D6}.jpg";
+                    _svgPainter.Thumbnail(artwork.WallX + 1, artwork.WallY + 1, artwork.ThumbnailSize - 2, artwork.WallWidth - 2, thumbnailFileName);
+                }
                 
                 var tooltip = artwork.SizeType == SizeType.Text ? "Info" : artwork.Title; // Shorter tooltip?????
 
                 if (artwork.IsLeftWall)
                 {
-                    ClickableAreas.Add(new ClickableArea(0, artwork.WallY, _width20, artwork.WallWidth + 4, $"/Artwork/{artwork.Number}", tooltip));
+                    ClickableAreas.Add(new ClickableArea(0, artwork.WallY, _width20, artwork.WallWidth + 4, $"/Artwork/{artwork.Id}", tooltip));
                 }
                 else
                 {
-                    ClickableAreas.Add(new ClickableArea(_width80, artwork.WallY, _width20, artwork.WallWidth + 4, $"/Artwork/{artwork.Number}", tooltip));
+                    ClickableAreas.Add(new ClickableArea(_width80, artwork.WallY, _width20, artwork.WallWidth + 4, $"/Artwork/{artwork.Id}", tooltip));
                 }
             }
         }

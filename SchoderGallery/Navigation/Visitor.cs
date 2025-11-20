@@ -10,33 +10,37 @@ public class Visitor
 
     public FloorType CurrentFloorType { get; set; }
 
-    public Dictionary<FloorType, int> LatestArtworkIds { get; set; }
+    public Dictionary<FloorType, Guid> LatestArtworkIds { get; set; }
 
-    public static Visitor Create() => new()
+    public static Visitor Create() =>
+        Create(Guid.NewGuid());
+
+    public static Visitor Create(Guid id) => new()
     {
-        Id = Guid.NewGuid(),
+        Id = id,
         CurrentFloorType = FloorType.GroundFloor,
-        LatestArtworkIds = new Dictionary<FloorType, int>
+        LatestArtworkIds = new Dictionary<FloorType, Guid>
         {
-            { FloorType.Atelier, 0 },
-            { FloorType.Floor6, 0 },
-            { FloorType.Floor5, 0 },
-            { FloorType.Floor4, 0 },
-            { FloorType.Floor3, 0 },
-            { FloorType.Floor2, 0 },
-            { FloorType.Floor1, 0 },
-            { FloorType.Basement1, 0 },
-            { FloorType.Basement2, 0 },
-            { FloorType.Depot, 0 },
+            { FloorType.Atelier, Guid.Empty },
+            { FloorType.Floor6, Guid.Empty },
+            { FloorType.Floor5, Guid.Empty },
+            { FloorType.Floor4, Guid.Empty },
+            { FloorType.Floor3, Guid.Empty },
+            { FloorType.Floor2, Guid.Empty },
+            { FloorType.Floor1, Guid.Empty },
+            { FloorType.Basement1, Guid.Empty },
+            { FloorType.Basement2, Guid.Empty },
+            { FloorType.Depot, Guid.Empty },
+            { FloorType.MyCollection, Guid.Empty }
         }
     };
 
     public void MoveToFloor(FloorType newFloor) =>
         CurrentFloorType = newFloor;
 
-    public int LatestArtworkId(FloorType floorType) =>
+    public Guid LatestArtworkNumber(FloorType floorType) =>
         LatestArtworkIds[floorType];
 
-    public void ViewArtwork(FloorType floorType, int artworkId) =>
+    public void ViewArtwork(FloorType floorType, Guid artworkId) =>
         LatestArtworkIds[floorType] = artworkId;
 }

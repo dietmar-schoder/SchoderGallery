@@ -51,14 +51,14 @@ public class GalleryService(ClientFactory http)
     private bool LoadExhibitionsNeeded =>
         _exhibitions is null || _exhibitions.Count == 0 || _exhibitionsLastLoadedDate.Date < DateTime.UtcNow.Date;
 
-    public async Task<ArtworkDto> GetArtworkAsync(Visitor collector, int floorNumber, int id)
+    public async Task<ArtworkDto> GetArtworkAsync(Visitor collector, int floorNumber, Guid id)
     {
         var artworks = (await GetExhibitionArtworksAsync(collector, floorNumber)).Artworks;
-        var artwork = id > 0
-            ? artworks.FirstOrDefault(a => a.Number == id)
-            : null;
+        var artwork = id == Guid.Empty
+            ? null
+            : artworks.FirstOrDefault(a => a.Id == id);
 
-        return artwork ?? artworks.FirstOrDefault(a => a.PreviousId == -1);
+        return artwork ?? artworks.FirstOrDefault(a => a.PreviousId == Guid.Empty);
     }
 
     public async Task<ExhibitionDto> GetExhibitionAsync(int floorNumber)
@@ -115,7 +115,6 @@ public class GalleryService(ClientFactory http)
 
         var exhibitions = await response.Content.ReadFromJsonAsync<List<ExhibitionDto>>();
         _exhibitions = exhibitions.ToDictionary(e => e.Floor, e => e);
-        _exhibitions.Add((int)FloorType.MyCollection, new ExhibitionDto("My Collection", Colours.DarkGray));
         _exhibitionsLastLoadedDate = DateTime.UtcNow.Date;
     }
 
@@ -140,20 +139,20 @@ public class GalleryService(ClientFactory http)
         await _http.Backend.GetAsync($"/api/collectors/{collectorId}/artworks");
 
     private async Task<HttpResponseMessage> ExhibitionArtworksFromBackendAsync(Guid exhibitionId, string country) =>
-        await _http.Backend.GetAsync($"/api/exhibitions/{exhibitionId}/artworks?country={country}");
+        await _http.Backend.GetAsync($"/api/exhibitions/{exhibitionId}/artworks?loc={country}");
 
     private static List<ArtworkDto> LinkArtworks(List<ArtworkDto> artworks)
     {
         if (artworks.Count == 0) { return artworks; }
 
         artworks = [.. artworks.OrderBy(a => a.Number)];
-        artworks.First().PreviousId = -1;
-        artworks.Last().NextId = -1;
+        artworks.First().PreviousId = Guid.Empty;
+        artworks.Last().NextId = Guid.Empty;
 
         for (int j = 0; j < artworks.Count - 1; j++)
         {
-            artworks[j].NextId = artworks[j + 1].Number;
-            artworks[j + 1].PreviousId = artworks[j].Number;
+            artworks[j].NextId = artworks[j + 1].Id;
+            artworks[j + 1].PreviousId = artworks[j].Id;
         }
 
         return artworks;

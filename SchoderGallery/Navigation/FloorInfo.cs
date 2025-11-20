@@ -10,8 +10,7 @@ public record FloorInfo(FloorType FloorType, int LiftColumn, int LiftRow, string
 
     public bool IsArtworksFloor =>
         IsFloor
-        && FloorType != FloorType.GroundFloor
-        && FloorType != FloorType.MyCollection;
+        && FloorType != FloorType.GroundFloor;
 
     public bool IsGroundFloorRoom =>
         FloorType == FloorType.Cafe

@@ -20,9 +20,9 @@ public class GroundFloorBuilder(
 
         var wall = _settings.WallThickness;
         var smallerWindowSize = Math.Min(_windowWidth, _windowHeight);
-        var factor = Math.Min(smallerWindowSize / 5, 25);
+        var factor = Math.Min(smallerWindowSize / 5, 15);
         var offset = factor * 10 / 2;
-        var thickness = 1.5 / factor;
+        var thickness = 1.0 / factor;
 
         ClickableAreas.Add(new ClickableArea(0, 0, _width33 - 2, _height50 - 2, "/Cafe", "Café"));
         foreach (var (off, colour) in ShadowList)

@@ -10,7 +10,7 @@ namespace SchoderGallery.Builders;
 public interface IArtworkInfoBuilder : IBuilder
 {
     void Init(int screenWidth, int screenHeight);
-    Task<string> GetHtmlAsync(int screenWidth, int screenHeight, int artworkId);
+    Task<string> GetHtmlAsync(int screenWidth, int screenHeight, Guid artworkId);
     public string Html { get; set; }
     public int HtmlWidth { get; set; }
     public int HtmlFontSize { get; set; }
@@ -34,7 +34,7 @@ public class ArtworkInfoBuilder(
     public string HtmlColor { get; set; }
     public ArtworkDto Artwork { get; set; }
 
-    public async Task<string> GetHtmlAsync(int screenWidth, int screenHeight, int artworkId)
+    public async Task<string> GetHtmlAsync(int screenWidth, int screenHeight, Guid artworkId)
     {
         Init(screenWidth, screenHeight);
         Html = string.Empty;
@@ -45,7 +45,7 @@ public class ArtworkInfoBuilder(
 
         // Later: If no artwork found, clear latest artwork id and go back to the floor
 
-        await _navigation.SetLatestArtworkIdAsync(floor.FloorType, Artwork.Number);
+        await _navigation.SetLatestIdAsync(floor.FloorType, Artwork.Id);
 
         var sizeHelper = sizeHelperFactory.GetHelper(SizeType.Text);
         var tinyMargin = _settings.TinyMargin;
@@ -61,31 +61,26 @@ public class ArtworkInfoBuilder(
         _svgPainter.IconClose(_width50 - iconSize / 2 - tinyMargin, tinyMargin, iconSize);
         ClickableAreas.Add(new ClickableArea(_width33 + 2, 0, _width33 - 4, iconSizePlusx4, $"/Artwork/{artworkId}", "Close"));
 
-        // Buy (top right)
-        if (Artwork.SizeType != SizeType.Text)
-        {
-        }
-
         // Previous artwork (bottom left)
         _svgPainter.IconLeft(tinyMargin, SvgHeight - iconSizePlus, iconSize);
-        if (Artwork.PreviousId > -1)
+        if (Artwork.PreviousId == Guid.Empty)
         {
-            ClickableAreas.Add(new ClickableArea(0, SvgHeight - iconSizePlusx4, _width33 - 2, iconSizePlusx4, $"/Artwork/{Artwork.PreviousId}", "Previous artwork"));
+            ClickableAreas.Add(new ClickableArea(0, SvgHeight - iconSizePlusx4, _width33 - 2, iconSizePlusx4, floor.PageAndParam(), "Back"));
         }
         else
         {
-            ClickableAreas.Add(new ClickableArea(0, SvgHeight - iconSizePlusx4, _width33 - 2, iconSizePlusx4, floor.PageAndParam(), "Back"));
+            ClickableAreas.Add(new ClickableArea(0, SvgHeight - iconSizePlusx4, _width33 - 2, iconSizePlusx4, $"/Artwork/{Artwork.PreviousId}", "Previous artwork"));
         }
 
         // Next artwork or back to floor (bottom right)
         _svgPainter.IconRight(SvgWidth - iconSizePlus, SvgHeight - iconSizePlus, iconSize);
-        if (Artwork.NextId > -1)
+        if (Artwork.NextId == Guid.Empty)
         {
-            ClickableAreas.Add(new ClickableArea(_width33 * 2 + 2, SvgHeight - iconSizePlusx4, _width33 - 2, iconSizePlusx4, $"/Artwork/{Artwork.NextId}", "Next artwork"));
+            ClickableAreas.Add(new ClickableArea(_width33 * 2 + 2, SvgHeight - iconSizePlusx4, _width33 - 2, iconSizePlusx4, floor.PageAndParam(), "Back"));
         }
         else
         {
-            ClickableAreas.Add(new ClickableArea(_width33 * 2 + 2, SvgHeight - iconSizePlusx4, _width33 - 2, iconSizePlusx4, floor.PageAndParam(), "Back"));
+            ClickableAreas.Add(new ClickableArea(_width33 * 2 + 2, SvgHeight - iconSizePlusx4, _width33 - 2, iconSizePlusx4, $"/Artwork/{Artwork.NextId}", "Next artwork"));
         }
 
         var size = Artwork.SizeType == SizeType.PortraitLandscape

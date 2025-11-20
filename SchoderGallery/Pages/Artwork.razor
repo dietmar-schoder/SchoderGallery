@@ -1,4 +1,4 @@
-﻿@page "/Artwork/{artworkId:int}"
+﻿@page "/Artwork/{artworkId:guid}"
 @inherits ArtworkBase
 @inject NavigationManager Nav
 
@@ -49,17 +49,7 @@
 
 @if (_isLoading)
 {
-    <div style="
-            position:absolute;
-            top:0;
-            left:0;
-            width:@(ArtworkBuilder.SvgWidth)px;
-            height:@(ArtworkBuilder.SvgHeight)px;
-            background-color:rgba(255,255,255,0.75);
-            display:flex;
-            justify-content:center;
-            align-items:center;
-        ">
+    <div class="fullscreen-spinner">
         <div class="loading-progress">
             <div class="square" style="background-color:#e74c3c;"></div>
             <div class="square" style="background-color:#e67e22;"></div>

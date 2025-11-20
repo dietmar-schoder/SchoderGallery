@@ -9,7 +9,7 @@ namespace SchoderGallery.Pages;
 
 public partial class CancelCheckout : SvgComponentBase
 {
-    [Parameter] public int ArtworkId { get; set; }
+    [Parameter] public Guid ArtworkId { get; set; }
     [Inject] private IArtworkInfoBuilder ArtworkInfoBuilder { get; set; } = default!;
     [Inject] private GalleryService GalleryService { get; set; } = default!;
     [Inject] private NavigationService NavigationService { get; set; } = default!;
@@ -29,7 +29,7 @@ public partial class CancelCheckout : SvgComponentBase
             await GalleryService.CancelCheckoutAsync(visitor.Id, reservedArtwork.Id);
         }
         await LocalStorageService.RemoveItemAsync("reservedArtwork");
-        Nav.NavigateTo($"/ArtworkInfo/{ArtworkId}");
-        return await Task.FromResult(string.Empty);
+        Nav.NavigateTo($"/ArtworkInfo/{artwork.Id}");
+        return string.Empty;
     }
 }

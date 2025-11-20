@@ -2,17 +2,7 @@
 @inherits SvgComponentBase
 @inject NavigationManager Nav
 
-<div style="
-            position:absolute;
-            top:0;
-            left:0;
-            width:@(ArtworkInfoBuilder.SvgWidth)px;
-            height:@(ArtworkInfoBuilder.SvgHeight)px;
-            background-color:rgba(255,255,255,0.75);
-            display:flex;
-            justify-content:center;
-            align-items:center;
-        ">
+<div class="fullscreen-spinner">
     <div class="loading-progress">
         <div class="square" style="background-color:#e74c3c;"></div>
         <div class="square" style="background-color:#e67e22;"></div>

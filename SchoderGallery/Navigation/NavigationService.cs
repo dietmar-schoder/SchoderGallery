@@ -36,17 +36,28 @@ public class NavigationService(ClientFactory http, ILocalStorageService localSto
         if (_visitor is null)
         {
             _visitor = await localStorage.GetItemAsync<Visitor>(Const.VisitorStorageKey) ?? Visitor.Create();
-            var response = await http.Backend.PostAsJsonAsync("/api/visits", new VisitDto(_visitor.Id));
-            if (response.IsSuccessStatusCode)
-            {
-                _visitor.Locale = await response.Content.ReadFromJsonAsync<LocaleDto>();
-            }
-
-            _visitor.Locale ??= new LocaleDto("US");
+            _visitor.Locale = await GetLocale(_visitor.Id);
             await StoreVisitorDataAsync();
         }
 
         return _visitor;
+    }
+
+    public async Task LoginVisitorAsync(Guid visitorId)
+    {
+        _visitor = await localStorage.GetItemAsync<Visitor>(Const.VisitorStorageKey);
+
+        if (_visitor is null)
+        {
+            Visitor.Create(visitorId);
+        }
+        else
+        {
+            _visitor.Id = visitorId;
+        }
+
+        _visitor.Locale = await GetLocale(_visitor.Id);
+        await StoreVisitorDataAsync();
     }
 
     public IEnumerable<FloorInfo> GetFloors() =>
@@ -74,21 +85,32 @@ public class NavigationService(ClientFactory http, ILocalStorageService localSto
         }
     }
 
-    public int GetArtworkIdOrLatestArtworkId(FloorType floorType, int artworkId) =>
-        artworkId < 1 ? _visitor.LatestArtworkId(floorType) : artworkId;
+    public Guid GetArtworkIdOrLatestArtworkId(FloorType floorType, Guid artworkId) =>
+        artworkId == Guid.Empty ? _visitor.LatestArtworkNumber(floorType) : artworkId;
 
     public ArtworkDto GetLatestFloorArtwork(FloorType floorType, ExhibitionDto exhibition)
     {
-        var latestArtworkId = _visitor.LatestArtworkId(floorType);
-        return latestArtworkId > 0
-            ? exhibition.Artworks.FirstOrDefault(a => a.Number == latestArtworkId)
-            : null;
+        var latestArtworkId = _visitor.LatestArtworkNumber(floorType);
+        return latestArtworkId == Guid.Empty
+            ? null
+            : exhibition.Artworks.FirstOrDefault(a => a.Id == latestArtworkId);
     }
 
-    public async Task SetLatestArtworkIdAsync(FloorType floorType, int artworkId)
+    public async Task SetLatestIdAsync(FloorType floorType, Guid artworkId)
     {
         _visitor.ViewArtwork(floorType, artworkId);
         await StoreVisitorDataAsync();
+    }
+
+    private async Task<LocaleDto> GetLocale(Guid visitorId)
+    {
+        var response = await http.Backend.PostAsJsonAsync("/api/visits", new VisitDto(visitorId));
+        if (response.IsSuccessStatusCode)
+        {
+            return await response.Content.ReadFromJsonAsync<LocaleDto>();
+        }
+
+        return new LocaleDto("US");
     }
 
     private async Task<FloorType> GetVisitorFloorTypeAsync() =>

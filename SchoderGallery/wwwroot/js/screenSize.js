@@ -23,19 +23,3 @@ window.initResizeHandler = (dotNetObject) => {
 
     window.addEventListener('resize', window._resizeHandler);
 };
-
-window.centerSpinner = () => {
-    const spinner = document.getElementById('spinner');
-    if (!spinner) return;
-
-    const width = spinner.offsetWidth;
-    const height = spinner.offsetHeight;
-
-    const viewportWidth = document.documentElement.clientWidth;
-    const viewportHeight = document.documentElement.clientHeight;
-
-    spinner.style.left = `${(viewportWidth - width) / 2}px`;
-    spinner.style.top = `${(viewportHeight - height) / 2}px`;
-};
-
-window.addEventListener('load', window.centerSpinner);

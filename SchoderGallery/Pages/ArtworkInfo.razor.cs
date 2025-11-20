@@ -7,7 +7,7 @@ namespace SchoderGallery.Pages;
 
 public partial class ArtworkInfo : ArtworkBase
 {
-    [Parameter] public int ArtworkId { get; set; }
+    [Parameter] public Guid ArtworkId { get; set; }
     [Inject] private IArtworkInfoBuilder ArtworkInfoBuilder { get; set; } = default!;
 
     protected override string PageTitle => $"Schoder Gallery - Artwork Info {ArtworkId}";
