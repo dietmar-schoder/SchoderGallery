@@ -78,7 +78,7 @@ public class NavigationService(ClientFactory http, ILocalStorageService localSto
     public async Task SetVisitorFloorAsync(FloorType floor)
     {
         await GetInitVisitorAsync();
-        if (GetFloor(floor)?.IsFloor ?? false)
+        if (GetFloor(floor)?.SaveVisitorFloor ?? false)
         {
             _visitor.MoveToFloor(floor);
             await StoreVisitorDataAsync();
@@ -86,11 +86,11 @@ public class NavigationService(ClientFactory http, ILocalStorageService localSto
     }
 
     public Guid GetArtworkIdOrLatestArtworkId(FloorType floorType, Guid artworkId) =>
-        artworkId == Guid.Empty ? _visitor.LatestArtworkNumber(floorType) : artworkId;
+        artworkId == Guid.Empty ? _visitor.GetLatestArtworkId(floorType) : artworkId;
 
     public ArtworkDto GetLatestFloorArtwork(FloorType floorType, ExhibitionDto exhibition)
     {
-        var latestArtworkId = _visitor.LatestArtworkNumber(floorType);
+        var latestArtworkId = _visitor.GetLatestArtworkId(floorType);
         return latestArtworkId == Guid.Empty
             ? null
             : exhibition.Artworks.FirstOrDefault(a => a.Id == latestArtworkId);

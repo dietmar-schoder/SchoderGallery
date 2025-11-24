@@ -13,6 +13,14 @@ public abstract class BaseFloorBuilder(
     GalleryService galleryService)
     : BaseBuilder(settingsFactory, svgPainter, navigation, galleryService)
 {
+    private readonly Dictionary<FloorType, string> _groundFloorRoomActions = new()
+    {
+        { FloorType.Cafe, "MENU" },
+        { FloorType.Shop, "PRODUCTS" },
+        { FloorType.Toilets, "SHIT" },
+        { FloorType.Info, "MAKE MONEY" }
+    };
+
     protected override async Task DrawAsync()
     {
         var wall = _settings.WallThickness;
@@ -40,12 +48,12 @@ public abstract class BaseFloorBuilder(
 
         if (floor.IsArtworksFloor)
         {
-
             if (exhibition is not null && exhibition.Artworks.Count > 0)
             {
                 DrawExhibitionInfoAndArtworksLink(exhibition);
                 HangArtworks(exhibition.Artworks, SvgWidth - 2* wall, SvgHeight - 2 * wall, wall);
                 DrawArtworks(exhibition.Artworks);
+                DrawSoldDots(exhibition.Artworks);
             }
             else
             {
@@ -62,6 +70,7 @@ public abstract class BaseFloorBuilder(
             var doorsize = (int)(_windowHeight * 1.5);
             DrawRoomDoor(_height50 - doorsize / 2, doorsize, floor);
             DrawExitToGroundFloorLink(floor);
+            // draw two windows
         }
         else
         {
@@ -121,7 +130,7 @@ public abstract class BaseFloorBuilder(
 
         void DrawRoomDoor(int y, int width, FloorInfo floor)
         {
-            var x = floor.FloorType == FloorType.Cafe || floor.FloorType == FloorType.Info ? SvgWidth - wall : 0;
+            var x = floor.IsLeftGroundFloorRoom ? SvgWidth - wall : 0;
             _svgPainter.Area(x, y, wall, width, Colours.Background, Colours.Black);
             _svgPainter.Area(x - 1, y + 1, wall + 2, width - 2, Colours.Background, Colours.Background);
         }
@@ -142,23 +151,37 @@ public abstract class BaseFloorBuilder(
         {
             foreach (var artwork in artworks)
             {
-                _svgPainter.Area(artwork.WallX, artwork.WallY, artwork.ThumbnailSize, artwork.WallWidth, Colours.White, Colours.Black);
+                _svgPainter.Area(artwork.WallX, artwork.WallY, artwork.WidthOnWall, artwork.WidthOnWall, Colours.White, Colours.Black);
 
-                if (artwork.SizeType != SizeType.Text)
-                {
-                    var thumbnailFileName = $"images/floor{artwork.FloorNumber}/{artwork.Number:D6}.jpg";
-                    _svgPainter.Thumbnail(artwork.WallX + 1, artwork.WallY + 1, artwork.ThumbnailSize - 2, artwork.WallWidth - 2, thumbnailFileName);
-                }
-                
-                var tooltip = artwork.SizeType == SizeType.Text ? "Info" : artwork.Title; // Shorter tooltip?????
+                var thumbnailFileName = artwork.SizeType == SizeType.Text
+                    ? $"images/info-thumbnail.png"
+                    : $"images/floor{artwork.FloorNumber}/{artwork.Number:D6}.jpg";
+                _svgPainter.Thumbnail(artwork.WallX + 1, artwork.WallY + 1, artwork.WidthOnWall - 2, artwork.WidthOnWall - 2, thumbnailFileName);
+
+                var tooltip = artwork.SizeType == SizeType.Text ? "Information" : artwork.Title; // Shorter tooltip?????
 
                 if (artwork.IsLeftWall)
                 {
-                    ClickableAreas.Add(new ClickableArea(0, artwork.WallY, _width20, artwork.WallWidth + 4, $"/Artwork/{artwork.Id}", tooltip));
+                    ClickableAreas.Add(new ClickableArea(0, artwork.WallY, _width20, artwork.WidthOnWall + 4, $"/Artwork/{artwork.Id}", tooltip));
                 }
                 else
                 {
-                    ClickableAreas.Add(new ClickableArea(_width80, artwork.WallY, _width20, artwork.WallWidth + 4, $"/Artwork/{artwork.Id}", tooltip));
+                    ClickableAreas.Add(new ClickableArea(_width80, artwork.WallY, _width20, artwork.WidthOnWall + 4, $"/Artwork/{artwork.Id}", tooltip));
+                }
+            }
+        }
+
+        void DrawSoldDots(List<ArtworkDto> artworks)
+        {
+            foreach (var artwork in artworks.Where(a => a.HasOwner))
+            {
+                if (artwork.IsLeftWall)
+                {
+                    _svgPainter.Area(artwork.WallX + artwork.WidthOnWall + 4, artwork.WallY + 2, 2, 2, Colours.WarmAccentRed);
+                }
+                else
+                {
+                    _svgPainter.Area(artwork.WallX - 4, artwork.WallY + 2, 2, 2, Colours.WarmAccentRed);
                 }
             }
         }
@@ -175,7 +198,7 @@ public abstract class BaseFloorBuilder(
         void DrawExitToGroundFloorLink(FloorInfo floor)
         {
             if (floor.FloorType == FloorType.Shop
-                || floor.FloorType == FloorType.Toilets)
+                || floor.FloorType == FloorType.Info)
             {
                 ClickableAreas.Add(new ClickableArea(0, _height33 + 2, _width33 - 2, _height33 - 4, "/GroundFloor", "Back to ground floor"));
                 _svgPainter.TextLink(wall + _largeFontSize * 3, _height50, "EXIT", _fontSize * 3 / 2);
@@ -192,10 +215,21 @@ public abstract class BaseFloorBuilder(
             var gap125 = (int)(_largeFontSize * 1.25);
 
             _svgPainter.Text(_width50, _height66 - gap125, floor.LiftLabel, _largeFontSize * 2, Colours.LightGray);
-            _svgPainter.Text(_width50, _height66 + gap125, exhibition.Title, _largeFontSize * 2, exhibition.Colour);
-            _svgPainter.TextLink(_width50, _height33, "ARTWORKS", _fontSize * 3 / 2);
+            if (!string.IsNullOrEmpty(exhibition.Title))
+            {
+                _svgPainter.Text(_width50, _height66 + gap125, exhibition.Title, _largeFontSize * 2, exhibition.Colour);
+            }
 
-            ClickableAreas.Add(new ClickableArea(0, _height25 + 2, SvgWidth, SvgHeight - _height25 - 2, $"/Artwork/0", "Look at artworks"));
+            if (floor.IsGroundFloorRoom)
+            {
+                _svgPainter.TextLink(_width50, _height33, _groundFloorRoomActions[floor.FloorType], _fontSize * 3 / 2);
+            }
+            else
+            {
+                _svgPainter.TextLink(_width50, _height33, "ARTWORKS", _fontSize * 3 / 2);
+            }
+
+            ClickableAreas.Add(new ClickableArea(0, _height25 + 2, SvgWidth, SvgHeight - _height25 - 2, $"/Artwork/{Guid.Empty}", "Look at artworks"));
         }
 
         void DrawVisitor(ExhibitionDto exhibition)
@@ -207,47 +241,70 @@ public abstract class BaseFloorBuilder(
             {
                 if (_navigation.GetLatestFloorArtwork(FloorType, exhibition) is { } artwork)
                 {
-                    var distance = artwork.ThumbnailSize + _gap * 2;
+                    var distance = artwork.WidthOnWall + _gap * 2;
                     visitorX = artwork.IsLeftWall ? distance : SvgWidth - distance;
-                    visitorY = artwork.WallY + artwork.WallWidth / 2;
+                    visitorY = artwork.WallY + artwork.WidthOnWall / 2;
                 }
             }
 
             _svgPainter.Circle(visitorX - _fontSize / 2, visitorY - _fontSize / 2, _fontSize, Colours.Blue, 1, Colours.DeepBlue);
         }
+
+        void HangArtworks(List<ArtworkDto> artworks, int innerRoomWidth, int innerRoomHeight, int wall)
+        {
+            if (floor.IsLiftFloor)
+            {
+                var (rightArtworks, leftArtworks) = SplitArtworks(artworks);
+                HangRightWallArtworks(rightArtworks, innerRoomWidth, innerRoomHeight, wall);
+                HangLeftWallArtworks(leftArtworks, innerRoomWidth, innerRoomHeight, wall);
+            }
+            else if (floor.IsLeftGroundFloorRoom)
+            {
+                HangLeftWallArtworks(artworks, innerRoomWidth, innerRoomHeight, wall);
+            }
+            else if (floor.IsRightGroundFloorRoom)
+            {
+                HangRightWallArtworks(artworks, innerRoomWidth, innerRoomHeight, wall);
+            }
+        }
     }
 
-    private static List<ArtworkDto> HangArtworks(List<ArtworkDto> artworks, int innerRoomWidth, int innerRoomHeight, int wall)
+    private static (List<ArtworkDto> rightArtworks, List<ArtworkDto> leftArtworks) SplitArtworks(List<ArtworkDto> artworks)
+    {
+        var rightCount = (artworks.Count + 1) / 2;
+        var rightArtworks = artworks.Take(rightCount).ToList();
+        var leftArtworks = artworks.Skip(rightCount).ToList();
+
+        return (rightArtworks, leftArtworks);
+    }
+
+    private static void HangRightWallArtworks(List<ArtworkDto> rightArtworks, int innerRoomWidth, int innerRoomHeight, int wall)
     {
         var artworkGap = 4;
+        double rightArtWorkSpace = Math.Min((innerRoomHeight - artworkGap) / (double)rightArtworks.Count, 100);
 
-        var rightCount = (artworks.Count + 1) / 2;
-        double rightArtWorkSpace = Math.Min((innerRoomHeight - artworkGap) / (double)rightCount, 100);
-        for (int i = 0; i < rightCount; i++)
+        for (int i = 0; i < rightArtworks.Count; i++)
         {
-            var artwork = artworks[i];
+            var artwork = rightArtworks[i];
             artwork.IsRightWall = true;
-            artwork.WallWidth = (int)rightArtWorkSpace - 4;
-            artwork.ThumbnailSize = ThumbnailSize(artwork.SizeType, artwork.WallWidth);
-            artwork.WallX = wall + innerRoomWidth - artwork.ThumbnailSize - artworkGap;
+            artwork.WidthOnWall = (int)rightArtWorkSpace - 4;
+            artwork.WallX = wall + innerRoomWidth - artwork.WidthOnWall - artworkGap;
             artwork.WallY = wall + artworkGap + (int)(i * rightArtWorkSpace);
         }
+    }
 
-        var leftCount = artworks.Count - rightCount;
-        double leftArtWorkSpace = Math.Min((innerRoomHeight - artworkGap) / (double)leftCount, 100);
-        for (int i = 0; i < leftCount; i++)
+    private static void HangLeftWallArtworks(List<ArtworkDto> leftArtworks, int innerRoomWidth, int innerRoomHeight, int wall)
+    {
+        var artworkGap = 4;
+        double leftArtWorkSpace = Math.Min((innerRoomHeight - artworkGap) / (double)leftArtworks.Count, 100);
+
+        for (int i = 0; i < leftArtworks.Count; i++)
         {
-            var artwork = artworks[rightCount + i];
+            var artwork = leftArtworks[i];
             artwork.IsRightWall = false;
-            artwork.WallWidth = (int)leftArtWorkSpace - 4;
-            artwork.ThumbnailSize = ThumbnailSize(artwork.SizeType, artwork.WallWidth);
+            artwork.WidthOnWall = (int)leftArtWorkSpace - 4;
             artwork.WallX = wall + artworkGap;
-            artwork.WallY = wall + artworkGap + (int)((leftCount - 1 - i) * leftArtWorkSpace);
+            artwork.WallY = wall + artworkGap + (int)((leftArtworks.Count - 1 - i) * leftArtWorkSpace);
         }
-
-        return artworks;
-
-        static int ThumbnailSize(SizeType sizeType, int wallWidth) =>
-            sizeType == SizeType.Fixed || sizeType == SizeType.PortraitLandscape ? wallWidth : 4;
     }
 }

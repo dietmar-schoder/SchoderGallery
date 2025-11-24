@@ -36,16 +36,16 @@ public class GroundFloorBuilder(
             _svgPainter.IconShop(_width75 - offset + off, _height33 - offset + off, factor, colour, thickness);
         }
 
-        ClickableAreas.Add(new ClickableArea(0, _height50 + 2, _width33 - 2, _height50 - 2, "/Info", "Information"));
+        ClickableAreas.Add(new ClickableArea(0, _height50 + 2, _width33 - 2, _height50 - 2, "/Toilets", "Toilets"));
         foreach (var (off, colour) in ShadowList)
         {
-            _svgPainter.IconInfo(_width25 - offset + off, _height66 - offset + off, factor, colour, thickness);
+            _svgPainter.IconToilets(_width25 - offset + off, _height66 - offset + off, factor, colour, thickness);
         }
 
-        ClickableAreas.Add(new ClickableArea(_width66 + 2, _height50 + 2, _width33 - 2, _height50 - 2, "/Toilets", "Toilets"));
+        ClickableAreas.Add(new ClickableArea(_width66 + 2, _height50 + 2, _width33 - 2, _height50 - 2, "/Info", "Information"));
         foreach (var (off, colour) in ShadowList)
         {
-            _svgPainter.IconToilets(_width75 - offset + off, _height66 - offset + off, factor, colour, thickness);
+            _svgPainter.IconInfo(_width75 - offset + off, _height66 - offset + off, factor, colour, thickness);
         }
 
         ClickableAreas.Add(new ClickableArea(_width33 + 2, _height75 + 2, _width33 - 4, _height25 - 2, "/", "Good buy"));

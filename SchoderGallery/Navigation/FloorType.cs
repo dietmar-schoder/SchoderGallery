@@ -2,14 +2,13 @@
 
 public enum FloorType
 {
-    Info = 17,
     ArtworkInfo = 16,
     Artwork = 15,
     Facade = 14,
     Cafe = 13,
     Shop = 12,
     Toilets = 11,
-    Information = 10,
+    Info = 10,
     Tickets = 9,
     Lift = 8,
     Atelier = 7,

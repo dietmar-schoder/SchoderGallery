@@ -27,35 +27,10 @@ public class ArtworkDto
     public bool IsLeftWall => !IsRightWall;
     public int WallX { get; set; }
     public int WallY { get; set; }
-    public int WallWidth { get; set; }
-    public int ThumbnailSize { get; set; }
+    public int WidthOnWall { get; set; }
 
     public bool IsForSale => Price > 0;
     public string PriceFormatted => $"{Currency} {Price / 100.0:#,##0.00}";
 
     public ArtworkDto() { }
-
-    //public ArtworkDto(
-    //    string title,
-    //    int year,
-    //    Func<ISettings, int, int, ArtworkType> renderAlgorithm,
-    //    SizeType sizeType,
-    //    int width,
-    //    int height,
-    //    string artist,
-    //    int id,
-    //    string fileName = default,
-    //    string info = default)
-    //{
-    //    Title = title;
-    //    Year = year;
-    //    RenderAlgorithm = renderAlgorithm;
-    //    SizeType = sizeType;
-    //    Width = width;
-    //    Height = height;
-    //    Artist = artist;
-    //    Number = id;
-    //    FileName = fileName;
-    //    Info = info;
-    //}
 }
