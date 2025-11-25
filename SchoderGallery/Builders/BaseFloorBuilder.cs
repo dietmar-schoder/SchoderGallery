@@ -53,7 +53,10 @@ public abstract class BaseFloorBuilder(
                 DrawExhibitionInfoAndArtworksLink(exhibition);
                 HangArtworks(exhibition.Artworks, SvgWidth - 2* wall, SvgHeight - 2 * wall, wall);
                 DrawArtworks(exhibition.Artworks);
-                DrawSoldDots(exhibition.Artworks);
+                if (floor.FloorType != FloorType.MyCollection)
+                {
+                    DrawSoldDots(exhibition.Artworks);
+                }
             }
             else
             {
@@ -177,11 +180,11 @@ public abstract class BaseFloorBuilder(
             {
                 if (artwork.IsLeftWall)
                 {
-                    _svgPainter.Area(artwork.WallX + artwork.WidthOnWall + 4, artwork.WallY + 2, 2, 2, Colours.WarmAccentRed);
+                    _svgPainter.Circle(artwork.WallX + artwork.WidthOnWall + 4, artwork.WallY + 2, 6, Colours.WarmAccentOrange, 1, Colours.WarmAccentRed);
                 }
                 else
                 {
-                    _svgPainter.Area(artwork.WallX - 4, artwork.WallY + 2, 2, 2, Colours.WarmAccentRed);
+                    _svgPainter.Circle(artwork.WallX - 10, artwork.WallY + 2, 6, Colours.WarmAccentOrange, 1, Colours.WarmAccentRed);
                 }
             }
         }
