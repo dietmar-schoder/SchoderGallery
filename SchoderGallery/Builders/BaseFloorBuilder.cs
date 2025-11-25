@@ -154,7 +154,7 @@ public abstract class BaseFloorBuilder(
                 _svgPainter.Area(artwork.WallX, artwork.WallY, artwork.WidthOnWall, artwork.WidthOnWall, Colours.White, Colours.Black);
 
                 var thumbnailFileName = artwork.SizeType == SizeType.Text
-                    ? $"images/info-thumbnail.png"
+                    ? $"images/info-thumbnail2.png"
                     : $"images/floor{artwork.FloorNumber}/{artwork.Number:D6}.jpg";
                 _svgPainter.Thumbnail(artwork.WallX + 1, artwork.WallY + 1, artwork.WidthOnWall - 2, artwork.WidthOnWall - 2, thumbnailFileName);
 
