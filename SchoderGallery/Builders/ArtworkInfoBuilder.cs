@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using SchoderGallery.DTOs;
+﻿using SchoderGallery.DTOs;
 using SchoderGallery.Helpers;
 using SchoderGallery.Navigation;
 using SchoderGallery.Painters;

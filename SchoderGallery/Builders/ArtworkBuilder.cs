@@ -118,6 +118,7 @@ public class ArtworkBuilder(
             ClickableAreas.Add(new ClickableArea(_width33 * 2 + 2, SvgHeight - iconSizePlusx4, _width33 - 2, iconSizePlusx4, $"/Artwork/{Artwork.NextId}", "Next artwork"));
         }
 
+        InstagramId = null;
         // HtmlText
         if (Artwork.SizeType == SizeType.Text)
         {
@@ -126,10 +127,11 @@ public class ArtworkBuilder(
             HtmlFontSize = _fontSize;
             HtmlColor = Colours.DarkGray;
         }
+        // Instagram Reel
         else if (Artwork.SizeType == SizeType.InstagramReel)
         {
-            InstagramId = Artwork.FileName;
             HtmlWidth = artworkSize.Width;
+            InstagramId = Artwork.FileName;
         }
         else
         {
