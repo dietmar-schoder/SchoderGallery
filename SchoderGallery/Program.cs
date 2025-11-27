@@ -40,6 +40,7 @@ builder.Services.AddSingleton<ISizeHelper, FixedSizeHelper>();
 builder.Services.AddSingleton<ISizeHelper, RatioSizeHelper>();
 builder.Services.AddSingleton<ISizeHelper, FixedPortLandSizeHelper>();
 builder.Services.AddSingleton<ISizeHelper, TextSizeHelper>();
+builder.Services.AddSingleton<ISizeHelper, InstagramReelSizeHelper>();
 
 builder.Services.AddScoped<BuilderFactory>();
 builder.Services.AddScoped<IArtworkInfoBuilder, ArtworkInfoBuilder>();

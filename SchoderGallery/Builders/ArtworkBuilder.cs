@@ -15,6 +15,7 @@ public interface IArtworkBuilder : IBuilder
     public int HtmlWidth { get; set; }
     public int HtmlFontSize { get; set; }
     public string HtmlColor { get; set; }
+    public string InstagramId { get; set; }
     public ArtworkDto Artwork { get; set; }
     public bool ShowBuyButton => Artwork.IsForSale;
 }
@@ -33,6 +34,7 @@ public class ArtworkBuilder(
     public int HtmlWidth { get; set; }
     public int HtmlFontSize { get; set; }
     public string HtmlColor { get; set; }
+    public string InstagramId { get; set; }
     public ArtworkDto Artwork { get; set; }
 
     public async Task<string> GetHtmlAsync(int screenWidth, int screenHeight, Guid artworkId)
@@ -123,6 +125,11 @@ public class ArtworkBuilder(
             HtmlWidth = artworkSize.Width;
             HtmlFontSize = _fontSize;
             HtmlColor = Colours.DarkGray;
+        }
+        else if (Artwork.SizeType == SizeType.InstagramReel)
+        {
+            InstagramId = Artwork.FileName;
+            HtmlWidth = artworkSize.Width;
         }
         else
         {

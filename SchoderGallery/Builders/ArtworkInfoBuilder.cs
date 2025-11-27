@@ -1,4 +1,5 @@
-﻿using SchoderGallery.DTOs;
+﻿using Microsoft.VisualBasic;
+using SchoderGallery.DTOs;
 using SchoderGallery.Helpers;
 using SchoderGallery.Navigation;
 using SchoderGallery.Painters;
@@ -75,19 +76,37 @@ public class ArtworkInfoBuilder(
             ClickableAreas.Add(new ClickableArea(_width33 * 2 + 2, SvgHeight - iconSizePlusx4, _width33 - 2, iconSizePlusx4, $"/Artwork/{Artwork.NextId}", "Next artwork"));
         }
 
-        var size = Artwork.SizeType == SizeType.PortraitLandscape
-            ? "Up to 411 trillion px (~1 square mile)"
-            : $"{Artwork.Width}x{Artwork.Height} px";
+        var size = string.Empty;
+        if (Artwork.Width > 0)
+        {
+            size = Artwork.SizeType == SizeType.PortraitLandscape
+                ? "Up to 411 trillion px (~1 square mile)"
+                : $"{Artwork.Width}x{Artwork.Height} px";
+            size = $"\nSize: {size}";
+        }
+
+        string owner;
+        string info;
+        if (Artwork.SizeType == SizeType.InstagramReel)
+        {
+            info = "\nInstagram Reel";
+            owner = string.IsNullOrEmpty(Artwork.Info) ? "" : Artwork.Info;
+        }
+        else
+        {
+            info = string.IsNullOrEmpty(Artwork.Info) ? "" : Artwork.Info;
+            owner = Artwork.IsForSale ? $"\nPrice: {Artwork.PriceFormatted}" : string.Empty;
+        }
 
         Html = ConvertToParagraphs(
-            $"{Artwork.Info ?? "Work in progress..."}" +
+            info +
             $"\nTitle: <b>{Artwork.Title}</b>" +
             $"\nYear: {Artwork.Year}" +
-            $"\nSize: {size}" +
+            size +
             $"\nMaterial: Pixels" +
             $"\nArtist: Schoder Factory Ltd" +
             $"\nOwner: {(Artwork.HasOwner ? "Private Collector" : "Schoder Factory Ltd")}" +
-            $"{(Artwork.IsForSale ? $"\nPrice: {Artwork.PriceFormatted}" : string.Empty)}");
+            owner);
         HtmlWidth = artworkSize.Width;
         HtmlFontSize = _fontSize;
         HtmlColor = Colours.DarkGray;

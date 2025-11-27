@@ -6,5 +6,6 @@ public enum SizeType
     Ratio = 1,
     Dynamic = 2,
     PortraitLandscape = 3,
-    Text = 4
+    Text = 4,
+    InstagramReel = 5
 }
