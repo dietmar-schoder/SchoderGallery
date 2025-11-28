@@ -7,5 +7,10 @@ public class InstagramReelSizeHelper : ISizeHelper
     public SizeType SizeType => SizeType.InstagramReel;
 
     public SizeDto GetArtworkSize(ArtworkDto artwork, int screenWidth, int screenHeight, bool isMobile = false)
-        => new(Math.Min(screenWidth * 80 / 100, 540), 0);
+    {
+        int maxWidthFromHeight = (int)(screenHeight * 0.8 / 1.91);
+        int maxWidthFromWidth = screenWidth * 80 / 100;
+        int maxWidth = Math.Min(Math.Min(maxWidthFromHeight, maxWidthFromWidth), 540);
+        return new SizeDto(maxWidth, 0);
+    }
 }
