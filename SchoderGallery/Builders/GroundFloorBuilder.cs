@@ -24,25 +24,25 @@ public class GroundFloorBuilder(
         var offset = factor * 10 / 2;
         var thickness = 1.0 / factor;
 
-        ClickableAreas.Add(new ClickableArea(0, 0, _width33 - 2, _height50 - 2, "/Cafe", "Café"));
+        ClickableAreas.Add(new ClickableArea(0, 0, _width33 - 2, _height50 - 2, "/Cafe", "Café", FloorType: FloorType.Cafe));
         foreach (var (off, colour) in ShadowList)
         {
             _svgPainter.IconCafe(_width25 - offset + off, _height33 - offset + off, factor, colour, thickness);
         }
 
-        ClickableAreas.Add(new ClickableArea(_width66 + 2, 0, _width33 - 2, _height50 - 2, "/Shop", "Shop"));
+        ClickableAreas.Add(new ClickableArea(_width66 + 2, 0, _width33 - 2, _height50 - 2, "/Shop", "Shop", FloorType: FloorType.Shop));
         foreach (var (off, colour) in ShadowList)
         {
             _svgPainter.IconShop(_width75 - offset + off, _height33 - offset + off, factor, colour, thickness);
         }
 
-        ClickableAreas.Add(new ClickableArea(0, _height50 + 2, _width33 - 2, _height50 - 2, "/Toilets", "Toilets"));
+        ClickableAreas.Add(new ClickableArea(0, _height50 + 2, _width33 - 2, _height50 - 2, "/Toilets", "Toilets", FloorType: FloorType.Toilets));
         foreach (var (off, colour) in ShadowList)
         {
             _svgPainter.IconToilets(_width25 - offset + off, _height66 - offset + off, factor, colour, thickness);
         }
 
-        ClickableAreas.Add(new ClickableArea(_width66 + 2, _height50 + 2, _width33 - 2, _height50 - 2, "/Info", "Information"));
+        ClickableAreas.Add(new ClickableArea(_width66 + 2, _height50 + 2, _width33 - 2, _height50 - 2, "/Info", "Information", FloorType: FloorType.Info));
         foreach (var (off, colour) in ShadowList)
         {
             _svgPainter.IconInfo(_width75 - offset + off, _height66 - offset + off, factor, colour, thickness);

@@ -35,9 +35,16 @@ public partial class BuildingRenderer : SvgComponentBase
         await InvokeAsync(StateHasChanged);
         await Task.Yield();
 
-        if (area.Page == "/Lift")
+        await GalleryService.LoadExhibitionsAsync();
+
+        if (area.FloorType is not null)
         {
-            await GalleryService.LoadExhibitionsAsync();
+            var floor = Navigation.GetFloor((FloorType)area.FloorType);
+            if (floor.IsArtworksFloor)
+            {
+                var visitor = await Navigation.GetInitVisitorAsync();
+                await GalleryService.GetExhibitionArtworksAsync(visitor, floor.FloorNumber);
+            };
         }
 
         Nav.NavigateTo(area.Page);
