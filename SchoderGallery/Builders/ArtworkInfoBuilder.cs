@@ -37,6 +37,7 @@ public class ArtworkInfoBuilder(
     public async Task<string> GetHtmlAsync(int screenWidth, int screenHeight, Guid artworkId)
     {
         Init(screenWidth, screenHeight);
+        Visitor = await _navigation.GetInitVisitorAsync();
         Html = string.Empty;
 
         var floor = await _navigation.GetVisitorFloorAsync();

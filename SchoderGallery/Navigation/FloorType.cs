@@ -9,7 +9,7 @@ public enum FloorType
     Shop = 12,
     Toilets = 11,
     Info = 10,
-    Tickets = 9,
+    FREE = 9,
     Lift = 8,
     Atelier = 7,
     Floor6 = 6,
