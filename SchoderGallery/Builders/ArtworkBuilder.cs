@@ -123,7 +123,7 @@ public class ArtworkBuilder(
         // HtmlText
         if (Artwork.SizeType == SizeType.Text)
         {
-            Html = ConvertToParagraphs(Artwork.Title);
+            Html = ConvertToParagraphs(Artwork.Title ?? Artwork.Info);
             HtmlWidth = artworkSize.Width;
             HtmlFontSize = _fontSize;
             HtmlColor = Colours.DarkGray;
