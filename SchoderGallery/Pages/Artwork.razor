@@ -34,14 +34,23 @@
         </svg>
         @if (!string.IsNullOrEmpty(ArtworkBuilder.Html))
         {
-            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); z-index:2; pointer-events:none; width:@(ArtworkBuilder.HtmlWidth)px; font-size:@(ArtworkBuilder.HtmlFontSize)px; color:@(ArtworkBuilder.HtmlColor); font-family:sans-serif; letter-spacing:1.2px; text-align:justify;">
-                @((MarkupString)ArtworkBuilder.Html)
-            </div>
+            @if (ArtworkBuilder.Html.Contains("<a href"))
+            {
+                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:@(ArtworkBuilder.HtmlWidth)px; font-size:@(ArtworkBuilder.HtmlFontSize)px; color:@(ArtworkBuilder.HtmlColor); font-family:sans-serif; letter-spacing:1.2px; text-align:justify;">
+                    @((MarkupString)ArtworkBuilder.Html)
+                </div>
+            }
+            else
+            {
+                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); pointer-events:none; width:@(ArtworkBuilder.HtmlWidth)px; font-size:@(ArtworkBuilder.HtmlFontSize)px; color:@(ArtworkBuilder.HtmlColor); font-family:sans-serif; letter-spacing:1.2px; text-align:justify;">
+                    @((MarkupString)ArtworkBuilder.Html)
+                </div>
+            }
         }
     </div>
     @if (!string.IsNullOrEmpty(ArtworkBuilder.InstagramId))
     {
-        <div @key="ArtworkBuilder.InstagramId" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); z-index:2;">
+        <div @key="ArtworkBuilder.InstagramId" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);">
             <div style="transform: scale(0.66); transform-origin: center center;">
                 <blockquote class="instagram-media"
                     data-instgrm-captioned
